@@ -1,0 +1,42 @@
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+}
+
+android {
+    compileSdk = 30
+
+    defaultConfig {
+        applicationId = "io.github.rsookram.srs"
+        minSdk = 28
+        targetSdk = 30
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles("proguard-rules.pro")
+        }
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
+        kotlinCompilerVersion = "1.5.10"
+    }
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:1.5.0")
+    implementation("androidx.activity:activity-compose:1.3.0-beta01")
+
+    implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
+}
