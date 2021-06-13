@@ -1,0 +1,25 @@
+CREATE TABLE Deck(
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    creationTimestamp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    intervalModifier INTEGER NOT NULL DEFAULT 100
+);
+
+selectAll:
+SELECT * FROM Deck ORDER BY name;
+
+insert:
+INSERT INTO Deck(name) VALUES (?);
+
+deckWithCount:
+SELECT
+    id,
+    name,
+    (SELECT COUNT(*)
+    FROM Deck AS innerDeck
+        JOIN Card ON innerDeck.id = Card.deckId
+        JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE
+        innerDeck.id = d.id AND
+        Schedule.scheduledForTimestamp < ?) AS scheduledCardCount
+FROM Deck AS d;

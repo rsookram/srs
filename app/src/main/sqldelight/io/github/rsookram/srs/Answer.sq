@@ -1,0 +1,11 @@
+CREATE TABLE Answer(
+    cardId INTEGER REFERENCES Card(id),
+    isCorrect INTEGER AS Boolean NOT NULL,
+    timestamp INTEGER DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX answerCardId ON Answer(cardId);
+CREATE INDEX answerTimestamp ON Answer(timestamp);
+
+insert:
+INSERT INTO Answer(cardId, isCorrect) VALUES (?, ?);

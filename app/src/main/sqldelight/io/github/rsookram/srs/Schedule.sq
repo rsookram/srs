@@ -1,0 +1,12 @@
+CREATE TABLE Schedule(
+    cardId INTEGER PRIMARY KEY REFERENCES Card(id),
+    scheduledForTimestamp INTEGER, -- NULL when suspended
+    intervalDays INTEGER, -- NULL when suspended
+    isLeech INTEGER AS Boolean NOT NULL DEFAULT 0
+);
+
+CREATE INDEX scheduleScheduledForTimestamp ON Schedule(scheduledForTimestamp);
+CREATE INDEX scheduleIsLeech ON Schedule(isLeech);
+
+insert:
+INSERT INTO Schedule(cardId, scheduledForTimestamp, intervalDays) VALUES (?, ?, ?);

@@ -1,0 +1,13 @@
+CREATE TABLE Card(
+    id INTEGER PRIMARY KEY,
+    deckId INTEGER NOT NULL REFERENCES Deck(id),
+    front TEXT NOT NULL,
+    back TEXT NOT NULL,
+    creationTimestamp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX cardCreationTimestamp ON Card(creationTimestamp);
+CREATE INDEX cardDeckId ON Card(deckId);
+
+select:
+SELECT * FROM Card WHERE id = ?;
