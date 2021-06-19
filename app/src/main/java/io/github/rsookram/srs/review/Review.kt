@@ -44,9 +44,9 @@ fun Review(
                 style = MaterialTheme.typography.h5,
             )
 
-            Divider()
-
             if (showAnswer) {
+                Divider()
+
                 Text(
                     text = card.back,
                     Modifier
