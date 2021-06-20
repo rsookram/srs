@@ -108,7 +108,7 @@ fun ReviewPreview() {
                 deckId = 2,
                 front = "日",
                 back = "本語",
-                creationTimestamp = 0,
+                creationTimestamp = "",
             ),
             showAnswer = showAnswer,
             onShowAnswerClick = { showAnswer = true },

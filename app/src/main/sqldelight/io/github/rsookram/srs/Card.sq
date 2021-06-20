@@ -3,7 +3,7 @@ CREATE TABLE Card(
     deckId INTEGER NOT NULL REFERENCES Deck(id),
     front TEXT NOT NULL,
     back TEXT NOT NULL,
-    creationTimestamp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+    creationTimestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX cardCreationTimestamp ON Card(creationTimestamp);
@@ -11,3 +11,14 @@ CREATE INDEX cardDeckId ON Card(deckId);
 
 select:
 SELECT * FROM Card WHERE id = ?;
+
+insert:
+INSERT INTO Card(deckId, front, back) VALUES (?, ?, ?);
+
+getLastCreatedId:
+SELECT last_insert_rowid();
+
+update:
+UPDATE Card
+SET front = ?, back = ?
+WHERE id = ?;
