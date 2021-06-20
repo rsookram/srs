@@ -1,6 +1,7 @@
 buildscript {
 
     val compose_version by extra("1.0.0-beta09")
+    val coroutines_version by extra("1.5.0")
     val sqldelight_version by extra("1.5.0")
 
     repositories {

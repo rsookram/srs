@@ -1,7 +1,7 @@
 CREATE TABLE Deck(
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    creationTimestamp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    creationTimestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     intervalModifier INTEGER NOT NULL DEFAULT 100
 );
 
@@ -22,4 +22,5 @@ SELECT
     WHERE
         innerDeck.id = d.id AND
         Schedule.scheduledForTimestamp < ?) AS scheduledCardCount
-FROM Deck AS d;
+FROM Deck AS d
+ORDER BY name;
