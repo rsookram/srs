@@ -1,7 +1,7 @@
 CREATE TABLE Answer(
-    cardId INTEGER REFERENCES Card(id),
+    cardId INTEGER NOT NULL REFERENCES Card(id),
     isCorrect INTEGER AS Boolean NOT NULL,
-    timestamp INTEGER DEFAULT CURRENT_TIMESTAMP
+    timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX answerCardId ON Answer(cardId);
@@ -9,3 +9,13 @@ CREATE INDEX answerTimestamp ON Answer(timestamp);
 
 insert:
 INSERT INTO Answer(cardId, isCorrect) VALUES (?, ?);
+
+updateScheduleInfo:
+SELECT
+    (SELECT isCorrect FROM Answer WHERE cardId = :cardId ORDER BY timestamp DESC LIMIT 1) AS lastAnswerCorrect,
+    (SELECT intervalDays FROM Schedule WHERE cardId = :cardId) AS intervalDays,
+    (SELECT intervalModifier FROM Deck JOIN Card ON Deck.id = Card.deckId WHERE Card.id = :cardId) AS intervalModifier
+;
+
+numWrong:
+SELECT COUNT(*) FROM Answer WHERE cardId = ? AND isCorrect = 0;

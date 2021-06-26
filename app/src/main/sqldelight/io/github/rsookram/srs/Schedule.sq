@@ -10,3 +10,18 @@ CREATE INDEX scheduleIsLeech ON Schedule(isLeech);
 
 insert:
 INSERT INTO Schedule(cardId, scheduledForTimestamp, intervalDays) VALUES (?, ?, ?);
+
+setTimestampAndInterval:
+UPDATE Schedule
+SET scheduledForTimestamp = ?, intervalDays = ?
+WHERE cardId = ?;
+
+setTimestamp:
+UPDATE Schedule
+SET scheduledForTimestamp = ?
+WHERE cardId = ?;
+
+markLeech:
+UPDATE Schedule
+SET isLeech = 1
+WHERE cardId = ?;

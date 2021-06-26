@@ -21,6 +21,7 @@ SELECT
         JOIN Schedule ON Card.id = Schedule.cardId
     WHERE
         innerDeck.id = d.id AND
+        Schedule.isLeech = 0 AND
         Schedule.scheduledForTimestamp < ?) AS scheduledCardCount
 FROM Deck AS d
 ORDER BY name;
