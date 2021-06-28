@@ -43,7 +43,7 @@ class Srs(
             val id = db.cardQueries.getLastCreatedId().executeAsOne()
             db.scheduleQueries.insert(
                 id,
-                scheduledForTimestamp = clock.instant().toEpochMilli(),
+                scheduledForTimestamp = clock.millis(),
                 intervalDays = 0,
             )
         }
@@ -52,6 +52,11 @@ class Srs(
     suspend fun editCard(id: Long, front: String, back: String) = withContext(ioDispatcher) {
         db.cardQueries.update(front, back, id)
     }
+
+    fun getCardsToReview(): Flow<List<CardToReview>> =
+        db.scheduleQueries.cardToReview(clock.millis())
+            .asFlow()
+            .mapToList()
 
     suspend fun answerCorrect(cardId: Long) = withContext(ioDispatcher) {
         db.transaction {
@@ -112,7 +117,7 @@ class Srs(
             db.transaction {
                 db.answerQueries.insert(cardId, isCorrect = false)
 
-                db.scheduleQueries.setTimestamp(clock.instant().toEpochMilli(), cardId)
+                db.scheduleQueries.setTimestamp(clock.millis(), cardId)
 
                 val numWrong = db.answerQueries.numWrong(cardId).executeAsOne()
                 if (numWrong >= WRONG_ANSWERS_FOR_LEECH) {

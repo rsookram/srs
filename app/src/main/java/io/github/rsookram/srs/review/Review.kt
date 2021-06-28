@@ -22,13 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.rsookram.srs.Card
+import io.github.rsookram.srs.CardToReview
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
 fun Review(
     deckName: String,
-    card: Card,
+    card: CardToReview,
     showAnswer: Boolean,
     onShowAnswerClick: () -> Unit,
     onCorrectClick: () -> Unit,
@@ -103,12 +103,10 @@ fun ReviewPreview() {
 
         Review(
             deckName = "日本語",
-            card = Card(
+            card = CardToReview(
                 id = 1,
-                deckId = 2,
                 front = "日",
                 back = "本語",
-                creationTimestamp = "",
             ),
             showAnswer = showAnswer,
             onShowAnswerClick = { showAnswer = true },

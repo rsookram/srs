@@ -25,3 +25,9 @@ markLeech:
 UPDATE Schedule
 SET isLeech = 1
 WHERE cardId = ?;
+
+cardToReview:
+SELECT id, front, back
+FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+WHERE isLeech = 0 AND scheduledForTimestamp < ?
+ORDER BY scheduledForTimestamp;
