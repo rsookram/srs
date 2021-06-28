@@ -31,6 +31,11 @@ class Srs(
         db.deckQueries.insert(name)
     }
 
+    fun getDecks(): Flow<List<Deck>> =
+        db.deckQueries.selectAll()
+            .asFlow()
+            .mapToList()
+
     fun getCard(id: Long): Flow<Card?> =
         db.cardQueries.select(id)
             .asFlow()
