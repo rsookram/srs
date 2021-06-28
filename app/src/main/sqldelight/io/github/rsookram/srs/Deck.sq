@@ -26,3 +26,45 @@ SELECT
         Schedule.scheduledForTimestamp < ?) AS scheduledCardCount
 FROM Deck AS d
 ORDER BY name;
+
+globalStats:
+SELECT
+    (SELECT COUNT(*)
+    FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE scheduledForTimestamp IS NOT NULL AND isLeech = 0) AS activeCount,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE scheduledForTimestamp IS NULL AND isLeech = 0) AS suspendedCount,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE isLeech = 1) AS leechCount,
+
+    (SELECT COUNT(*) FROM Schedule WHERE scheduledForTimestamp < ?) AS forReviewCount
+;
+
+deckStats:
+SELECT
+    name,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE Card.deckId = d.id AND scheduledForTimestamp IS NOT NULL AND isLeech = 0) AS activeCount,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE Card.deckId = d.id AND scheduledForTimestamp IS NULL AND isLeech = 0) AS suspendedCount,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Schedule ON Card.id = Schedule.cardId
+    WHERE Card.deckId = d.id AND isLeech = 1) AS leechCount,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Answer ON Card.id = Answer.cardId
+    WHERE Card.deckId = d.id AND isCorrect = 1) AS correctCount,
+
+    (SELECT COUNT(*)
+    FROM Card JOIN Answer ON Card.id = Answer.cardId
+    WHERE Card.deckId = d.id AND isCorrect = 0) AS wrongCount
+FROM Deck AS d;

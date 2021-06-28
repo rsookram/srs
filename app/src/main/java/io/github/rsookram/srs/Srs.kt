@@ -2,9 +2,11 @@ package io.github.rsookram.srs
 
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
+import com.squareup.sqldelight.runtime.coroutines.mapToOne
 import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import java.time.Clock
 import java.time.temporal.ChronoUnit
@@ -131,4 +133,12 @@ class Srs(
             }
         }
     }
+
+    fun stats(): Flow<Pair<GlobalStats, List<DeckStats>>> =
+        db.deckQueries.globalStats(clock.instant().plus(1, ChronoUnit.DAYS).toEpochMilli())
+            .asFlow()
+            .mapToOne()
+            .combine(db.deckQueries.deckStats().asFlow().mapToList()) { global, decks ->
+                global to decks
+            }
 }
