@@ -84,8 +84,8 @@ fun Home(decks: List<DeckWithCount>, onCreateDeckClick: (DeckName) -> Unit) {
 private fun HomePreview() = SrsTheme {
     Home(
         decks = listOf(
-            DeckWithCount(id = 1, name = "中文", scheduledCardCount = 0),
-            DeckWithCount(id = 2, name = "日本語", scheduledCardCount = 12),
+            DeckWithCount(id = 1, name = "中文", intervalModifier = 100, scheduledCardCount = 0),
+            DeckWithCount(id = 2, name = "日本語", intervalModifier = 100, scheduledCardCount = 12),
         ),
         onCreateDeckClick = {},
     )
@@ -108,7 +108,14 @@ fun DeckItem(modifier: Modifier = Modifier, deck: DeckWithCount) {
 @Preview
 @Composable
 private fun DeckItemPreview() = SrsTheme {
-    DeckItem(deck = DeckWithCount(id = 1, name = "日本語", scheduledCardCount = 12))
+    DeckItem(
+        deck = DeckWithCount(
+            id = 1,
+            name = "日本語",
+            intervalModifier = 100,
+            scheduledCardCount = 12,
+        )
+    )
 }
 
 @Composable

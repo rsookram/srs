@@ -15,6 +15,7 @@ deckWithCount:
 SELECT
     id,
     name,
+    intervalModifier,
     (SELECT COUNT(*)
     FROM Deck AS innerDeck
         JOIN Card ON innerDeck.id = Card.deckId
