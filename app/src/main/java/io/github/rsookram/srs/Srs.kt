@@ -87,7 +87,7 @@ class Srs(
                         (+intervalDays * FUZZ_FACTOR).roundToLong()
                     )
 
-                    val numDays = (intervalDays * 1.3 * (intervalModifier / 100.0)).toLong() + fuzz
+                    val numDays = (intervalDays * 2.5 * (intervalModifier / 100.0)).toLong() + fuzz
                     if (numDays >= 365) {
                         // auto suspend since the card is known well enough
                         db.scheduleQueries.setTimestampAndInterval(
