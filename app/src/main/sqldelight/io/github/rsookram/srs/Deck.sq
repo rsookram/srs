@@ -62,9 +62,9 @@ SELECT
 
     (SELECT COUNT(*)
     FROM Card JOIN Answer ON Card.id = Answer.cardId
-    WHERE Card.deckId = d.id AND isCorrect = 1) AS correctCount,
+    WHERE Card.deckId = d.id AND isCorrect = 1 AND Answer.timestamp > :accuracySinceTimestamp) AS correctCount,
 
     (SELECT COUNT(*)
     FROM Card JOIN Answer ON Card.id = Answer.cardId
-    WHERE Card.deckId = d.id AND isCorrect = 0) AS wrongCount
+    WHERE Card.deckId = d.id AND isCorrect = 0 AND Answer.timestamp > :accuracySinceTimestamp) AS wrongCount
 FROM Deck AS d;

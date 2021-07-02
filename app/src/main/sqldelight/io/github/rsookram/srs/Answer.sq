@@ -1,14 +1,14 @@
 CREATE TABLE Answer(
     cardId INTEGER NOT NULL REFERENCES Card(id),
     isCorrect INTEGER AS Boolean NOT NULL,
-    timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    timestamp INTEGER NOT NULL
 );
 
 CREATE INDEX answerCardId ON Answer(cardId);
 CREATE INDEX answerTimestamp ON Answer(timestamp);
 
 insert:
-INSERT INTO Answer(cardId, isCorrect) VALUES (?, ?);
+INSERT INTO Answer(cardId, isCorrect, timestamp) VALUES (?, ?, ?);
 
 updateScheduleInfo:
 SELECT

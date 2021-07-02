@@ -73,7 +73,7 @@ class Srs(
 
             requireNotNull(intervalDays) { "Tried to answer suspended card with ID=$cardId" }
 
-            db.answerQueries.insert(cardId, isCorrect = true)
+            db.answerQueries.insert(cardId, isCorrect = true, timestamp = clock.millis())
 
             when {
                 // Newly added card answered correctly
@@ -122,7 +122,7 @@ class Srs(
     suspend fun answerWrong(cardId: Long) {
         withContext(ioDispatcher) {
             db.transaction {
-                db.answerQueries.insert(cardId, isCorrect = false)
+                db.answerQueries.insert(cardId, isCorrect = false, timestamp = clock.millis())
 
                 db.scheduleQueries.setTimestamp(clock.millis(), cardId)
 
@@ -138,7 +138,11 @@ class Srs(
         db.deckQueries.globalStats(clock.instant().plus(1, ChronoUnit.DAYS).toEpochMilli())
             .asFlow()
             .mapToOne()
-            .combine(db.deckQueries.deckStats().asFlow().mapToList()) { global, decks ->
-                global to decks
-            }
+            .combine(
+                db.deckQueries.deckStats(
+                    accuracySinceTimestamp = clock.instant().minus(1, ChronoUnit.MONTHS)
+                        .toEpochMilli()
+                ).asFlow().mapToList(),
+                transform = ::Pair,
+            )
 }
