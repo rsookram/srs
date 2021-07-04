@@ -43,7 +43,10 @@ dependencies {
 
     implementation("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${rootProject.extra["sqldelight_version"]}")
+    testImplementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_version"]}")
+
+    testImplementation("junit:junit:4.13.2")
 }

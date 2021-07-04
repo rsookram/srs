@@ -134,15 +134,17 @@ class Srs(
         }
     }
 
-    fun stats(): Flow<Pair<GlobalStats, List<DeckStats>>> =
-        db.deckQueries.globalStats(clock.instant().plus(1, ChronoUnit.DAYS).toEpochMilli())
+    fun stats(): Flow<Pair<GlobalStats, List<DeckStats>>> {
+        val now = clock.instant()
+
+        return db.deckQueries.globalStats(now.plus(1, ChronoUnit.DAYS).toEpochMilli())
             .asFlow()
             .mapToOne()
             .combine(
                 db.deckQueries.deckStats(
-                    accuracySinceTimestamp = clock.instant().minus(1, ChronoUnit.MONTHS)
-                        .toEpochMilli()
+                    accuracySinceTimestamp = now.minus(30, ChronoUnit.DAYS).toEpochMilli()
                 ).asFlow().mapToList(),
                 transform = ::Pair,
             )
+    }
 }
