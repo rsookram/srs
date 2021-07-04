@@ -24,13 +24,17 @@ import io.github.rsookram.srs.ui.TopLevelScreen
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
-fun Stats(global: GlobalStats, decks: List<DeckStats>) {
+fun Stats(
+    global: GlobalStats,
+    decks: List<DeckStats>,
+    onNavItemClick: (TopLevelScreen) -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Stats") })
         },
         bottomBar = {
-            BottomBar(selected = TopLevelScreen.STATS, onItemClick = { /*TODO*/ })
+            BottomBar(selected = TopLevelScreen.STATS, onItemClick = onNavItemClick)
         },
     ) {
         LazyColumn {
@@ -138,5 +142,6 @@ private fun StatsPreview() = SrsTheme {
                 wrongCount = 1,
             ),
         ),
+        onNavItemClick = {},
     )
 }

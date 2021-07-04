@@ -44,16 +44,21 @@ import kotlinx.coroutines.delay
 typealias DeckName = String
 
 @Composable
-fun Home(decks: List<DeckWithCount>, onCreateDeckClick: (DeckName) -> Unit) {
+fun Home(
+    decks: List<DeckWithCount>,
+    onCreateDeckClick: (DeckName) -> Unit,
+    onNavItemClick: (TopLevelScreen) -> Unit,
+    onAddCardClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.app_name)) })
         },
         bottomBar = {
-            BottomBar(selected = TopLevelScreen.HOME, onItemClick = { /*TODO*/ })
+            BottomBar(selected = TopLevelScreen.HOME, onItemClick = onNavItemClick)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = onAddCardClick) {
                 Icon(Icons.Default.Add, contentDescription = "Add card")
             }
         }
@@ -88,6 +93,8 @@ private fun HomePreview() = SrsTheme {
             DeckWithCount(id = 2, name = "日本語", intervalModifier = 100, scheduledCardCount = 12),
         ),
         onCreateDeckClick = {},
+        onNavItemClick = {},
+        onAddCardClick = {},
     )
 }
 

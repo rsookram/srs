@@ -31,25 +31,30 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.rsookram.srs.Card
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 /**
  * Screen which allows the user to enter the content of a new card, or to edit the content of an
  * existing one.
- *
- * @param card The card to edit. `null` if creating a new card.
- * @param selectedDeck The deck that [card] is part of. `null` if creating a new card.
  */
 @Composable
-fun Card(decks: List<Deck>, selectedDeck: Deck?, card: Card?) {
+fun Card(
+    front: String,
+    onFrontChange: (String) -> Unit,
+    back: String,
+    onBackChange: (String) -> Unit,
+    selectedDeck: Deck,
+    onDeckClick: (Deck) -> Unit,
+    decks: List<Deck>,
+    onUpClick: () -> Unit,
+    onConfirmClick: () -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar {
@@ -57,7 +62,7 @@ fun Card(decks: List<Deck>, selectedDeck: Deck?, card: Card?) {
                     CompositionLocalProvider(
                         LocalContentAlpha provides ContentAlpha.high,
                         content = {
-                            IconButton(onClick = { /*TODO*/ }) {
+                            IconButton(onClick = onUpClick) {
                                 Icon(Icons.Filled.ArrowBack, contentDescription = null)
                             }
                         }
@@ -75,7 +80,7 @@ fun Card(decks: List<Deck>, selectedDeck: Deck?, card: Card?) {
                         Alignment.CenterStart,
                     ) {
                         Text(
-                            text = selectedDeck?.name ?: decks.first().name,
+                            text = selectedDeck.name,
                             Modifier.padding(horizontal = 16.dp),
                         )
                     }
@@ -85,7 +90,7 @@ fun Card(decks: List<Deck>, selectedDeck: Deck?, card: Card?) {
                         onDismissRequest = { expanded = false }
                     ) {
                         decks.forEach { deck ->
-                            DropdownMenuItem(onClick = { /*TODO*/ }) {
+                            DropdownMenuItem(onClick = { onDeckClick(deck) }) {
                                 Text(deck.name)
                             }
                         }
@@ -94,28 +99,24 @@ fun Card(decks: List<Deck>, selectedDeck: Deck?, card: Card?) {
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = onConfirmClick) {
                 Icon(Icons.Default.Check, contentDescription = "Confirm changes")
             }
         }
     ) {
         Column(Modifier.padding(16.dp)) {
-            var front by rememberSaveable { mutableStateOf(card?.front.orEmpty()) }
-
             OutlinedTextField(
                 value = front,
-                onValueChange = { front = it },
+                onValueChange = onFrontChange,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Front") },
             )
 
             Spacer(Modifier.height(16.dp))
 
-            var back by rememberSaveable { mutableStateOf(card?.back.orEmpty()) }
-
             OutlinedTextField(
                 value = back,
-                onValueChange = { back = it },
+                onValueChange = onBackChange,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Back") },
             )
@@ -125,13 +126,20 @@ fun Card(decks: List<Deck>, selectedDeck: Deck?, card: Card?) {
 
 @Preview
 @Composable
-fun CardPreview() = SrsTheme {
-    Card(
-        decks = listOf(
-            Deck(id = 1, name = "中文", creationTimestamp = "", intervalModifier = 100),
-            Deck(id = 2, name = "日本語", creationTimestamp = "", intervalModifier = 100),
-        ),
-        selectedDeck = null,
-        card = null,
+private fun CardPreview() = SrsTheme {
+    val decks = listOf(
+        Deck(id = 1, name = "中文", creationTimestamp = "", intervalModifier = 100),
+        Deck(id = 2, name = "日本語", creationTimestamp = "", intervalModifier = 100),
     )
+
+    Card(
+        front = "",
+        onFrontChange = {},
+        back = "",
+        onBackChange = {},
+        selectedDeck = decks.first(),
+        decks = decks,
+        onUpClick = {},
+        onDeckClick = {},
+    ) {}
 }
