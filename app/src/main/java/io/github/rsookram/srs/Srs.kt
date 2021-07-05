@@ -33,6 +33,14 @@ class Srs(
         db.deckQueries.insert(name)
     }
 
+    suspend fun editDeck(
+        id: Long,
+        name: String,
+        intervalModifier: Long,
+    ) = withContext(ioDispatcher) {
+        db.deckQueries.update(name, intervalModifier, id)
+    }
+
     fun getDecks(): Flow<List<Deck>> =
         db.deckQueries.selectAll()
             .asFlow()

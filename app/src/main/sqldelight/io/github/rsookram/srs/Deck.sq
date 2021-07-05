@@ -11,6 +11,11 @@ SELECT * FROM Deck ORDER BY name;
 insert:
 INSERT INTO Deck(name) VALUES (?);
 
+update:
+UPDATE Deck
+SET name = ?, intervalModifier = ?
+WHERE id = ?;
+
 deckWithCount:
 SELECT
     id,
