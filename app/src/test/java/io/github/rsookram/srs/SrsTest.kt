@@ -15,17 +15,15 @@ class SrsTest {
         Database.Schema.create(this)
     }
 
-    private val db = Database(inMemorySqlDriver)
-
     private val srs = Srs(
-        db,
+        Database(inMemorySqlDriver),
         Random.Default,
         Clock.systemUTC(),
         Dispatchers.Unconfined,
     )
 
     @Test
-    fun emptyDb(): Unit = runBlocking {
+    fun emptyDb() = runBlocking {
         assertEquals(emptyList<Deck>(), srs.getDecks().first())
         assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
 
@@ -41,5 +39,43 @@ class SrsTest {
             ),
             srs.stats().first()
         )
+    }
+
+    @Test
+    fun createDeck() = runBlocking {
+        val deckName = "testName"
+
+        srs.createDeck(deckName)
+
+        val decks = srs.getDecks().first()
+        assertEquals(1, decks.size)
+
+        val deck = decks.first()
+        assertEquals(deckName, deck.name)
+        assertEquals(100, deck.intervalModifier)
+
+        val deckWithCounts = srs.getDecksWithCount().first()
+        assertEquals(1, decks.size)
+
+        val deckWithCount = deckWithCounts.first()
+        assertEquals(deckName, deckWithCount.name)
+        assertEquals(100, deckWithCount.intervalModifier)
+        assertEquals(0, deckWithCount.scheduledCardCount)
+    }
+
+    @Test
+    fun editDeck() = runBlocking {
+        srs.createDeck("testName")
+
+        srs.editDeck(getDeck().id, name = "anotherName", intervalModifier = 120)
+
+        val deck = getDeck()
+        assertEquals("anotherName", deck.name)
+        assertEquals(120, deck.intervalModifier)
+    }
+
+    private suspend fun getDeck(): Deck {
+        val decks = srs.getDecks().first()
+        return decks.first()
     }
 }
