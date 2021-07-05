@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.roundToLong
 import kotlin.random.Random
@@ -16,6 +18,9 @@ import kotlin.random.Random
 private const val WRONG_ANSWERS_FOR_LEECH = 4
 private const val WRONG_ANSWER_PENALTY = 0.7
 private const val FUZZ_FACTOR = 0.05
+
+/** See [Srs.startOfTomorrow] */
+private const val START_HOUR_OF_DAY = 4
 
 class Srs(
     private val db: Database,
@@ -25,7 +30,7 @@ class Srs(
 ) {
 
     fun getDecksWithCount(): Flow<List<DeckWithCount>> =
-        db.deckQueries.deckWithCount(clock.instant().plus(1, ChronoUnit.DAYS).toEpochMilli())
+        db.deckQueries.deckWithCount(startOfTomorrow(clock.instant()).toEpochMilli())
             .asFlow()
             .mapToList()
 
@@ -69,7 +74,7 @@ class Srs(
     }
 
     fun getCardsToReview(): Flow<List<CardToReview>> =
-        db.scheduleQueries.cardToReview(clock.millis())
+        db.scheduleQueries.cardToReview(startOfTomorrow(clock.instant()).toEpochMilli())
             .asFlow()
             .mapToList()
 
@@ -127,17 +132,16 @@ class Srs(
         )
     }
 
-    suspend fun answerWrong(cardId: Long) {
-        withContext(ioDispatcher) {
-            db.transaction {
-                db.answerQueries.insert(cardId, isCorrect = false, timestamp = clock.millis())
+    suspend fun answerWrong(cardId: Long) = withContext(ioDispatcher) {
+        db.transaction {
+            val now = clock.millis()
+            db.answerQueries.insert(cardId, isCorrect = false, timestamp = now)
 
-                db.scheduleQueries.setTimestamp(clock.millis(), cardId)
+            db.scheduleQueries.setTimestamp(now, cardId)
 
-                val numWrong = db.answerQueries.numWrong(cardId).executeAsOne()
-                if (numWrong >= WRONG_ANSWERS_FOR_LEECH) {
-                    db.scheduleQueries.markLeech(cardId)
-                }
+            val numWrong = db.answerQueries.numWrong(cardId).executeAsOne()
+            if (numWrong >= WRONG_ANSWERS_FOR_LEECH) {
+                db.scheduleQueries.markLeech(cardId)
             }
         }
     }
@@ -145,7 +149,15 @@ class Srs(
     fun stats(): Flow<Pair<GlobalStats, List<DeckStats>>> {
         val now = clock.instant()
 
-        return db.deckQueries.globalStats(now.plus(1, ChronoUnit.DAYS).toEpochMilli())
+        val tomorrowStart = startOfTomorrow(now)
+        val tomorrowEnd = tomorrowStart.plus(1, ChronoUnit.DAYS)
+
+        val statsQuery = db.deckQueries.globalStats(
+            reviewSpanStart = tomorrowStart.toEpochMilli(),
+            reviewSpanEnd = tomorrowEnd.toEpochMilli()
+        )
+
+        return statsQuery
             .asFlow()
             .mapToOne()
             .combine(
@@ -154,5 +166,21 @@ class Srs(
                 ).asFlow().mapToList(),
                 transform = ::Pair,
             )
+    }
+
+    /**
+     * Returns an [Instant] of the beginning of the next day relative to [now], where the first
+     * hour of the day is given by [START_HOUR_OF_DAY].
+     */
+    private fun startOfTomorrow(now: Instant): Instant {
+        val localNow = now.atZone(ZoneId.systemDefault())
+
+        val localTomorrowStart = if (localNow.hour < START_HOUR_OF_DAY) {
+            localNow.withHour(START_HOUR_OF_DAY)
+        } else {
+            localNow.plusDays(1).withHour(START_HOUR_OF_DAY)
+        }
+
+        return localTomorrowStart.toInstant()
     }
 }

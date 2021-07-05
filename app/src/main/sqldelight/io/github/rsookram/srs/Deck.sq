@@ -46,7 +46,9 @@ SELECT
     FROM Card JOIN Schedule ON Card.id = Schedule.cardId
     WHERE isLeech = 1) AS leechCount,
 
-    (SELECT COUNT(*) FROM Schedule WHERE scheduledForTimestamp < ?) AS forReviewCount
+    (SELECT COUNT(*)
+    FROM Schedule
+    WHERE scheduledForTimestamp BETWEEN :reviewSpanStart AND :reviewSpanEnd) AS forReviewCount
 ;
 
 deckStats:
