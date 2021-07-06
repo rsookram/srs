@@ -9,17 +9,26 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import java.time.Clock
+import javax.inject.Qualifier
+import javax.inject.Singleton
 import kotlin.random.Random
 
 @HiltAndroidApp
 class App : Application()
 
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class ApplicationScope
+
 @InstallIn(SingletonComponent::class)
 @Module
 class AppModule {
 
+    @Singleton
     @Provides
     fun provideSrs(@ApplicationContext context: Context) =
         Srs(
@@ -28,4 +37,9 @@ class AppModule {
             clock = Clock.systemUTC(),
             ioDispatcher = Dispatchers.IO,
         )
+
+    @Singleton
+    @ApplicationScope
+    @Provides
+    fun providesCoroutineScope() = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 }
