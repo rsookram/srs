@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.Clock
+import java.time.ZoneOffset
 import kotlin.random.Random
 
 class SrsTest {
@@ -20,6 +21,7 @@ class SrsTest {
         Random.Default,
         Clock.systemUTC(),
         Dispatchers.Unconfined,
+        getZoneId = { ZoneOffset.UTC },
     )
 
     @Test

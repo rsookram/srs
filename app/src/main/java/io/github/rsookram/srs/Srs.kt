@@ -27,6 +27,7 @@ class Srs(
     private val random: Random,
     private val clock: Clock,
     private val ioDispatcher: CoroutineDispatcher,
+    private val getZoneId: (() -> ZoneId) = { ZoneId.systemDefault() },
 ) {
 
     fun getDecksWithCount(): Flow<List<DeckWithCount>> =
@@ -173,7 +174,7 @@ class Srs(
      * hour of the day is given by [START_HOUR_OF_DAY].
      */
     private fun startOfTomorrow(now: Instant): Instant {
-        val localNow = now.atZone(ZoneId.systemDefault())
+        val localNow = now.atZone(getZoneId())
 
         val localTomorrowStart = if (localNow.hour < START_HOUR_OF_DAY) {
             localNow.withHour(START_HOUR_OF_DAY)
