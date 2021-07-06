@@ -1,7 +1,9 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlin-kapt")
 
+    id("dagger.hilt.android.plugin")
     id("com.squareup.sqldelight")
 }
 
@@ -47,6 +49,9 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_version"]}")
+
+    implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
+    kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hilt_version"]}")
 
     testImplementation("junit:junit:4.13.2")
 }
