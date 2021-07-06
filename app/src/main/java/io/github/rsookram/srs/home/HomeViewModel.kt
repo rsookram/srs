@@ -5,10 +5,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
 import io.github.rsookram.srs.DeckWithCount
 import io.github.rsookram.srs.Srs
+import io.github.rsookram.srs.ui.TopLevelScreen
+import io.github.rsookram.srs.ui.navigate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -30,13 +33,15 @@ class HomeViewModel @Inject constructor(
 }
 
 @Composable
-fun HomeScreen(vm: HomeViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, vm: HomeViewModel = viewModel()) {
     val decks by vm.decks.collectAsState(initial = emptyList())
 
     Home(
         decks,
         vm::onCreateDeckClick,
-        onNavItemClick = { /*TODO*/ },
-        onAddCardClick = { /*TODO*/ },
+        onNavItemClick = { screen ->
+            if (screen != TopLevelScreen.HOME) navController.navigate(screen)
+        },
+        onAddCardClick = { navController.navigate("card") },
     )
 }

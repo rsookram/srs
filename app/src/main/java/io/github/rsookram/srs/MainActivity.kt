@@ -19,6 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SrsTheme {
                 Surface(color = MaterialTheme.colors.background) {
+                    Main()
                 }
             }
         }

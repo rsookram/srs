@@ -10,6 +10,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 enum class TopLevelScreen {
@@ -38,6 +40,16 @@ fun BottomBar(selected: TopLevelScreen, onItemClick: (TopLevelScreen) -> Unit) {
             )
         }
     }
+}
+
+fun NavController.navigate(screen: TopLevelScreen) {
+    val route = when (screen) {
+        TopLevelScreen.HOME -> "home"
+        TopLevelScreen.BROWSER -> "browser"
+        TopLevelScreen.STATS -> "stats"
+    }
+
+    navigate(route, NavOptions.Builder().setLaunchSingleTop(true).build())
 }
 
 @Preview
