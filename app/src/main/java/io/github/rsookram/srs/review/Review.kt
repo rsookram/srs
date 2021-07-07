@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,9 +37,19 @@ fun Review(
     onShowAnswerClick: () -> Unit,
     onCorrectClick: () -> Unit,
     onWrongClick: () -> Unit,
+    onUpClick: () -> Unit
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text(deckName) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text(deckName) },
+                navigationIcon = {
+                    IconButton(onClick = onUpClick) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+            )
+        },
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
@@ -112,6 +126,7 @@ fun ReviewPreview() {
             onShowAnswerClick = { showAnswer = true },
             onCorrectClick = { showAnswer = false },
             onWrongClick = { showAnswer = false },
+            onUpClick = {},
         )
     }
 }
