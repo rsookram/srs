@@ -48,6 +48,7 @@ fun Home(
     decks: List<DeckWithCount>,
     onCreateDeckClick: (DeckName) -> Unit,
     onNavItemClick: (TopLevelScreen) -> Unit,
+    showAddCard: Boolean,
     onAddCardClick: () -> Unit,
 ) {
     Scaffold(
@@ -58,8 +59,10 @@ fun Home(
             BottomBar(selected = TopLevelScreen.HOME, onItemClick = onNavItemClick)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddCardClick) {
-                Icon(Icons.Default.Add, contentDescription = "Add card")
+            if (showAddCard) {
+                FloatingActionButton(onClick = onAddCardClick) {
+                    Icon(Icons.Default.Add, contentDescription = "Add card")
+                }
             }
         }
     ) {
@@ -94,6 +97,7 @@ private fun HomePreview() = SrsTheme {
         ),
         onCreateDeckClick = {},
         onNavItemClick = {},
+        showAddCard = true,
         onAddCardClick = {},
     )
 }

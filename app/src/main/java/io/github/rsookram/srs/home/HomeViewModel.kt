@@ -42,6 +42,8 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = viewModel()) {
         onNavItemClick = { screen ->
             if (screen != TopLevelScreen.HOME) navController.navigate(screen)
         },
+        // Adding a card requires a deck to add the card to
+        showAddCard = decks.isNotEmpty(),
         onAddCardClick = { navController.navigate("card") },
     )
 }
