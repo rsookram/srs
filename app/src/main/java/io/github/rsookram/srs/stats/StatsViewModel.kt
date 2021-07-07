@@ -23,13 +23,11 @@ class StatsViewModel @Inject constructor(srs: Srs) : ViewModel() {
 
 @Composable
 fun StatsScreen(navController: NavController, vm: StatsViewModel = viewModel()) {
-    val stats by vm.stats.collectAsState(initial = TODO("add loading state"))
-
-    val (global, decks) = stats
+    val stats by vm.stats.collectAsState(initial = null)
 
     Stats(
-        global,
-        decks,
+        global = stats?.first,
+        decks = stats?.second.orEmpty(),
         onNavItemClick = { screen ->
             if (screen != TopLevelScreen.STATS) navController.navigate(screen)
         },

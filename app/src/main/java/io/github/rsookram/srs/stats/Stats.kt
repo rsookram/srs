@@ -25,7 +25,7 @@ import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
 fun Stats(
-    global: GlobalStats,
+    global: GlobalStats?,
     decks: List<DeckStats>,
     onNavItemClick: (TopLevelScreen) -> Unit,
 ) {
@@ -38,7 +38,9 @@ fun Stats(
         },
     ) {
         LazyColumn {
-            item { GlobalCard(global) }
+            if (global != null) {
+                item { GlobalCard(global) }
+            }
 
             items(decks) { deck -> DeckCard(deck) }
         }
