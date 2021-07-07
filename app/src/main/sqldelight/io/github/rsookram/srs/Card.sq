@@ -20,5 +20,5 @@ SELECT last_insert_rowid();
 
 update:
 UPDATE Card
-SET front = ?, back = ?
+SET deckId = ?, front = ?, back = ?
 WHERE id = ?;

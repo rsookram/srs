@@ -29,7 +29,7 @@ class SrsTest {
         assertEquals(emptyList<Deck>(), srs.getDecks().first())
         assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
 
-        assertEquals(null, srs.getCard(id = 1).first())
+        assertEquals(null, srs.getCardAndDeck(id = 1))
         assertEquals(emptyList<CardToReview>(), srs.getCardsToReview().first())
 
         assertEquals(

@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.rsookram.srs.Deck
+import io.github.rsookram.srs.home.DeckName
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 /**
@@ -49,7 +50,7 @@ fun Card(
     onFrontChange: (String) -> Unit,
     back: String,
     onBackChange: (String) -> Unit,
-    selectedDeck: Deck,
+    selectedDeckName: DeckName,
     onDeckClick: (Deck) -> Unit,
     decks: List<Deck>,
     onUpClick: () -> Unit,
@@ -80,7 +81,7 @@ fun Card(
                         Alignment.CenterStart,
                     ) {
                         Text(
-                            text = selectedDeck.name,
+                            text = selectedDeckName,
                             Modifier.padding(horizontal = 16.dp),
                         )
                     }
@@ -137,7 +138,7 @@ private fun CardPreview() = SrsTheme {
         onFrontChange = {},
         back = "",
         onBackChange = {},
-        selectedDeck = decks.first(),
+        selectedDeckName = decks.first().name,
         decks = decks,
         onUpClick = {},
         onDeckClick = {},

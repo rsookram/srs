@@ -1,9 +1,12 @@
 package io.github.rsookram.srs
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import io.github.rsookram.srs.card.CardScreen
 import io.github.rsookram.srs.home.HomeScreen
 import io.github.rsookram.srs.stats.StatsScreen
 
@@ -18,6 +21,19 @@ fun Main() {
 
         composable("stats") {
             StatsScreen(navController)
+        }
+
+        composable(
+            "card/{id}",
+            listOf(
+                navArgument("id") {
+                    type = NavType.LongType
+                    nullable = true
+                }
+            ),
+        ) { backStackEntry ->
+            val cardId = backStackEntry.arguments?.getLong("id")
+            CardScreen(navController, cardId)
         }
     }
 }

@@ -52,10 +52,15 @@ class Srs(
             .asFlow()
             .mapToList()
 
-    fun getCard(id: Long): Flow<Card?> =
-        db.cardQueries.select(id)
-            .asFlow()
-            .mapToOneOrNull()
+    suspend fun getCardAndDeck(id: Long): Pair<Card, Deck>? = withContext(ioDispatcher) {
+        val card = db.cardQueries.select(id).executeAsOneOrNull()
+
+        if (card != null) {
+            card to db.deckQueries.select(card.deckId).executeAsOne()
+        } else {
+            null
+        }
+    }
 
     suspend fun createCard(deckId: Long, front: String, back: String) = withContext(ioDispatcher) {
         db.transaction {
@@ -70,8 +75,8 @@ class Srs(
         }
     }
 
-    suspend fun editCard(id: Long, front: String, back: String) = withContext(ioDispatcher) {
-        db.cardQueries.update(front, back, id)
+    suspend fun editCard(id: Long, deckId: Long, front: String, back: String) = withContext(ioDispatcher) {
+        db.cardQueries.update(deckId, front, back, id)
     }
 
     fun getCardsToReview(): Flow<List<CardToReview>> =

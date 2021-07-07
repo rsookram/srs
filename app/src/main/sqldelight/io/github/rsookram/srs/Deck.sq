@@ -5,6 +5,9 @@ CREATE TABLE Deck(
     intervalModifier INTEGER NOT NULL DEFAULT 100
 );
 
+select:
+SELECT * FROM Deck WHERE id = ?;
+
 selectAll:
 SELECT * FROM Deck ORDER BY name;
 
