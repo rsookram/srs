@@ -26,13 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.rsookram.srs.CardToReview
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
 fun Review(
     deckName: String,
-    card: CardToReview,
+    front: String,
+    back: String,
     showAnswer: Boolean,
     onShowAnswerClick: () -> Unit,
     onCorrectClick: () -> Unit,
@@ -53,7 +53,7 @@ fun Review(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = card.front,
+                text = front,
                 Modifier.padding(horizontal = 16.dp, vertical = 48.dp),
                 style = MaterialTheme.typography.h5,
             )
@@ -62,7 +62,7 @@ fun Review(
                 Divider()
 
                 Text(
-                    text = card.back,
+                    text = back,
                     Modifier
                         .padding(horizontal = 16.dp, vertical = 48.dp)
                         .weight(1f),
@@ -117,11 +117,8 @@ fun ReviewPreview() {
 
         Review(
             deckName = "日本語",
-            card = CardToReview(
-                id = 1,
-                front = "日",
-                back = "本語",
-            ),
+            front = "日",
+            back = "本語",
             showAnswer = showAnswer,
             onShowAnswerClick = { showAnswer = true },
             onCorrectClick = { showAnswer = false },
