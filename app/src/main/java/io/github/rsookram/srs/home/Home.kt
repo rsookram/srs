@@ -50,6 +50,7 @@ fun Home(
     onNavItemClick: (TopLevelScreen) -> Unit,
     showAddCard: Boolean,
     onAddCardClick: () -> Unit,
+    onDeckClick: (DeckWithCount) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -70,7 +71,7 @@ fun Home(
 
         LazyColumn {
             items(decks) { deck ->
-                DeckItem(deck = deck)
+                DeckItem(Modifier.clickable { onDeckClick(deck) }, deck = deck)
             }
 
             item {
@@ -99,6 +100,7 @@ private fun HomePreview() = SrsTheme {
         onNavItemClick = {},
         showAddCard = true,
         onAddCardClick = {},
+        onDeckClick = {},
     )
 }
 

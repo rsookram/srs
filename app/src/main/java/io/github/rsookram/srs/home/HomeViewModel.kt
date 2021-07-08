@@ -45,5 +45,10 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = viewModel()) {
         // Adding a card requires a deck to add the card to
         showAddCard = decks.isNotEmpty(),
         onAddCardClick = { navController.navigate("card") },
+        onDeckClick = { deck ->
+            if (deck.scheduledCardCount > 0) {
+                navController.navigate("review/${deck.id}")
+            }
+        }
     )
 }
