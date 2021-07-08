@@ -8,6 +8,7 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import io.github.rsookram.srs.card.CardScreen
 import io.github.rsookram.srs.home.HomeScreen
+import io.github.rsookram.srs.review.ReviewScreen
 import io.github.rsookram.srs.stats.StatsScreen
 
 @Composable
@@ -34,6 +35,14 @@ fun Main() {
         ) { backStackEntry ->
             val cardId = backStackEntry.arguments?.getLong("id")
             CardScreen(navController, cardId)
+        }
+
+        composable(
+            "review/{deckId}",
+            listOf(navArgument("deckId") { type = NavType.LongType }),
+        ) { backStackEntry ->
+            val deckId = backStackEntry.arguments!!.getLong("deckId")
+            ReviewScreen(navController, deckId)
         }
     }
 }
