@@ -3,7 +3,6 @@ package io.github.rsookram.srs
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
-import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -79,8 +78,8 @@ class Srs(
         db.cardQueries.update(deckId, front, back, id)
     }
 
-    fun getCardsToReview(): Flow<List<CardToReview>> =
-        db.scheduleQueries.cardToReview(startOfTomorrow(clock.instant()).toEpochMilli())
+    fun getCardsToReview(deckId: Long): Flow<List<CardToReview>> =
+        db.scheduleQueries.cardToReview(startOfTomorrow(clock.instant()).toEpochMilli(), deckId)
             .asFlow()
             .mapToList()
 

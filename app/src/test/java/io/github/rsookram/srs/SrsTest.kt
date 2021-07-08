@@ -30,7 +30,6 @@ class SrsTest {
         assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
 
         assertEquals(null, srs.getCardAndDeck(id = 1))
-        assertEquals(emptyList<CardToReview>(), srs.getCardsToReview().first())
 
         assertEquals(
             Pair(
