@@ -87,7 +87,7 @@ fun DeckSettingsDialog(
 
 @Preview
 @Composable
-fun DeckSettingsDialogPreview() = SrsTheme {
+private fun DeckSettingsDialogPreview() = SrsTheme {
     DeckSettingsDialog(
         deckWithCount = DeckWithCount(
             id = 1,

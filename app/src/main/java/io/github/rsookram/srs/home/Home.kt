@@ -1,6 +1,8 @@
 package io.github.rsookram.srs.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,6 +46,7 @@ import kotlinx.coroutines.delay
 
 typealias DeckName = String
 
+@OptIn(ExperimentalFoundationApi::class) // For Modifier.combinedClickable
 @Composable
 fun Home(
     decks: List<DeckWithCount>,
@@ -51,6 +55,7 @@ fun Home(
     showAddCard: Boolean,
     onAddCardClick: () -> Unit,
     onDeckClick: (DeckWithCount) -> Unit,
+    onDeckSaveClick: (deckId: Long, DeckName, IntervalModifier) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -68,10 +73,17 @@ fun Home(
         }
     ) {
         var showCreateDeckDialog by rememberSaveable { mutableStateOf(false) }
+        var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
 
         LazyColumn {
             items(decks) { deck ->
-                DeckItem(Modifier.clickable { onDeckClick(deck) }, deck = deck)
+                DeckItem(
+                    Modifier.combinedClickable(
+                        onClick = { onDeckClick(deck) },
+                        onLongClick = { selectedDeck = deck }
+                    ),
+                    deck = deck
+                )
             }
 
             item {
@@ -83,6 +95,16 @@ fun Home(
             CreateDeckDialog(
                 onCreateDeckClick,
                 onDismiss = { showCreateDeckDialog = false },
+            )
+        }
+
+        selectedDeck?.let { deck ->
+            DeckSettingsDialog(
+                deck,
+                onSaveClick = { name, intervalModifier ->
+                    onDeckSaveClick(deck.id, name, intervalModifier)
+                },
+                onDismiss = { selectedDeck = null },
             )
         }
     }
@@ -101,6 +123,7 @@ private fun HomePreview() = SrsTheme {
         showAddCard = true,
         onAddCardClick = {},
         onDeckClick = {},
+        onDeckSaveClick = { _, _, _ -> },
     )
 }
 

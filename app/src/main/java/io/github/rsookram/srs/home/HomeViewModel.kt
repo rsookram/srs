@@ -30,6 +30,12 @@ class HomeViewModel @Inject constructor(
             srs.createDeck(deckName)
         }
     }
+
+    fun onDeckSaveClick(deckId: Long, name: DeckName, intervalModifier: IntervalModifier) {
+        applicationScope.launch {
+            srs.editDeck(deckId, name, intervalModifier)
+        }
+    }
 }
 
 @Composable
@@ -49,6 +55,7 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = viewModel()) {
             if (deck.scheduledCardCount > 0) {
                 navController.navigate("review/${deck.id}")
             }
-        }
+        },
+        onDeckSaveClick = vm::onDeckSaveClick,
     )
 }
