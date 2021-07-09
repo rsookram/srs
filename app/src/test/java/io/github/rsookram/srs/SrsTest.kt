@@ -55,6 +55,8 @@ class SrsTest {
         assertEquals(deckName, deck.name)
         assertEquals(100, deck.intervalModifier)
 
+        assertEquals(deck, srs.getDeck(deck.id).first())
+
         val deckWithCounts = srs.getDecksWithCount().first()
         assertEquals(1, decks.size)
 

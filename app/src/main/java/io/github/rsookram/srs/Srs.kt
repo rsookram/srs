@@ -29,6 +29,11 @@ class Srs(
     private val getZoneId: (() -> ZoneId) = { ZoneId.systemDefault() },
 ) {
 
+    fun getDeck(id: Long): Flow<Deck> =
+        db.deckQueries.select(id)
+            .asFlow()
+            .mapToOne()
+
     fun getDecksWithCount(): Flow<List<DeckWithCount>> =
         db.deckQueries.deckWithCount(startOfTomorrow(clock.instant()).toEpochMilli())
             .asFlow()
