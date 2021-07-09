@@ -22,3 +22,13 @@ update:
 UPDATE Card
 SET deckId = ?, front = ?, back = ?
 WHERE id = ?;
+
+countCards:
+SELECT COUNT(*) FROM Card;
+
+browserCard:
+SELECT id, front, isLeech
+FROM Card
+JOIN Schedule ON Card.id = Schedule.cardId
+ORDER BY isLeech DESC, creationTimestamp DESC
+LIMIT :limit OFFSET :offset;

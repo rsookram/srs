@@ -1,5 +1,7 @@
 package io.github.rsookram.srs
 
+import androidx.paging.PagingSource
+import com.squareup.sqldelight.android.paging3.QueryPagingSource
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOne
@@ -64,6 +66,17 @@ class Srs(
         } else {
             null
         }
+    }
+
+    fun browseCards(): PagingSource<Long, BrowserCard> {
+        val cardQueries = db.cardQueries
+
+        return QueryPagingSource(
+            countQuery = cardQueries.countCards(),
+            transacter = cardQueries,
+            dispatcher = ioDispatcher,
+            queryProvider = cardQueries::browserCard,
+        )
     }
 
     suspend fun createCard(deckId: Long, front: String, back: String) = withContext(ioDispatcher) {

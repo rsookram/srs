@@ -40,6 +40,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.3.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha11")
 
     implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
@@ -47,6 +48,7 @@ dependencies {
 
     implementation("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${rootProject.extra["sqldelight_version"]}")
+    implementation("com.squareup.sqldelight:android-paging3-extensions:${rootProject.extra["sqldelight_version"]}")
     testImplementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
