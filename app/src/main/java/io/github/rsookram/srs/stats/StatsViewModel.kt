@@ -3,6 +3,7 @@ package io.github.rsookram.srs.stats
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -22,7 +23,7 @@ class StatsViewModel @Inject constructor(srs: Srs) : ViewModel() {
 }
 
 @Composable
-fun StatsScreen(navController: NavController, vm: StatsViewModel = viewModel()) {
+fun StatsScreen(navController: NavController, vm: StatsViewModel = hiltViewModel()) {
     val stats by vm.stats.collectAsState(initial = null)
 
     Stats(

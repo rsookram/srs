@@ -6,6 +6,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -86,7 +87,7 @@ class CardViewModel @Inject constructor(
 }
 
 @Composable
-fun CardScreen(navController: NavController, cardId: Long?, vm: CardViewModel = viewModel()) {
+fun CardScreen(navController: NavController, cardId: Long?, vm: CardViewModel = hiltViewModel()) {
     vm.cardId = cardId
 
     Card(

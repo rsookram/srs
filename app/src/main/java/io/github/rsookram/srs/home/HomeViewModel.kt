@@ -3,6 +3,7 @@ package io.github.rsookram.srs.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -39,7 +40,7 @@ class HomeViewModel @Inject constructor(
 }
 
 @Composable
-fun HomeScreen(navController: NavController, vm: HomeViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()) {
     val decks by vm.decks.collectAsState(initial = emptyList())
 
     Home(

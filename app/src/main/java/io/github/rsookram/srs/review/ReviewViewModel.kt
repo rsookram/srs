@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,7 +85,11 @@ class ReviewViewModel @Inject constructor(
 }
 
 @Composable
-fun ReviewScreen(navController: NavController, deckId: Long, vm: ReviewViewModel = viewModel()) {
+fun ReviewScreen(
+    navController: NavController,
+    deckId: Long,
+    vm: ReviewViewModel = hiltViewModel(),
+) {
     vm.setDeckId(deckId)
 
     val isFinished by vm.finishedReview.collectAsState(initial = false)

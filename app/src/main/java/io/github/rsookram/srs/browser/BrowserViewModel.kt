@@ -1,6 +1,7 @@
 package io.github.rsookram.srs.browser
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -26,7 +27,7 @@ class BrowserViewModel @Inject constructor(srs: Srs) : ViewModel() {
 }
 
 @Composable
-fun BrowserScreen(navController: NavController, vm: BrowserViewModel = viewModel()) {
+fun BrowserScreen(navController: NavController, vm: BrowserViewModel = hiltViewModel()) {
     val cardItems = vm.pager.flow.collectAsLazyPagingItems()
 
     Browser(
