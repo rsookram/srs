@@ -3,7 +3,6 @@ package io.github.rsookram.srs.browser
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
