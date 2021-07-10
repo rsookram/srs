@@ -1,6 +1,7 @@
 package io.github.rsookram.srs.card
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -9,7 +10,6 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
@@ -88,7 +88,9 @@ class CardViewModel @Inject constructor(
 
 @Composable
 fun CardScreen(navController: NavController, cardId: Long?, vm: CardViewModel = hiltViewModel()) {
-    vm.cardId = cardId
+    LaunchedEffect(key1 = cardId) {
+        vm.cardId = cardId
+    }
 
     Card(
         front = vm.front,
