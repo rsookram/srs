@@ -29,16 +29,15 @@ fun Main() {
             StatsScreen(navController)
         }
 
+        composable("card") {
+            CardScreen(navController, cardId = null)
+        }
+
         composable(
             "card/{id}",
-            listOf(
-                navArgument("id") {
-                    type = NavType.LongType
-                    nullable = true
-                }
-            ),
+            listOf(navArgument("id") { type = NavType.LongType }),
         ) { backStackEntry ->
-            val cardId = backStackEntry.arguments?.getLong("id")
+            val cardId = backStackEntry.arguments?.getLong("id")!!
             CardScreen(navController, cardId)
         }
 
