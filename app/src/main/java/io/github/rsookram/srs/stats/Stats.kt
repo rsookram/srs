@@ -99,7 +99,8 @@ private fun DeckCard(deck: DeckStats) {
             )
 
             val answerCount = deck.correctCount + deck.wrongCount
-            val percentCorrect = deck.correctCount * 100 / answerCount
+            val percentCorrect =
+                if (answerCount > 0) deck.correctCount * 100 / answerCount else 0
             Text(
                 "Past month accuracy: $percentCorrect% (${deck.correctCount} / $answerCount)",
                 Modifier.padding(top = 8.dp),
