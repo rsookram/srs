@@ -51,6 +51,9 @@ class ReviewViewModel @Inject constructor(
         cardsToReview.map { it?.firstOrNull() }
             .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = null)
 
+    val currentCardId: Long?
+        get() = card.value?.id
+
     val front = card.map { it?.front.orEmpty() }
     val back = card.map { it?.back.orEmpty() }
 
@@ -109,5 +112,11 @@ fun ReviewScreen(
         onCorrectClick = vm::onCorrectClick,
         onWrongClick = vm::onWrongClick,
         onUpClick = { navController.popBackStack() },
+        onEditCardClick = {
+            val id = vm.currentCardId
+            if (id != null) {
+                navController.navigate("card/$id")
+            }
+        }
     )
 }
