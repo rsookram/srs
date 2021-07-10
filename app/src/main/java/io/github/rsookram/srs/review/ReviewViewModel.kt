@@ -1,6 +1,7 @@
 package io.github.rsookram.srs.review
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,13 +10,13 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
 import io.github.rsookram.srs.CardToReview
 import io.github.rsookram.srs.Srs
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class) // for flatMapLatest
 @HiltViewModel
 class ReviewViewModel @Inject constructor(
     private val srs: Srs,
@@ -93,7 +95,9 @@ fun ReviewScreen(
     deckId: Long,
     vm: ReviewViewModel = hiltViewModel(),
 ) {
-    vm.setDeckId(deckId)
+    LaunchedEffect(key1 = deckId) {
+        vm.setDeckId(deckId)
+    }
 
     val isFinished by vm.finishedReview.collectAsState(initial = false)
     if (isFinished) {
