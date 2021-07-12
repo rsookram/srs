@@ -1,6 +1,6 @@
 package io.github.rsookram.srs.ui
 
-import androidx.compose.material.BottomNavigation
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -10,8 +10,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import com.google.accompanist.insets.ui.BottomNavigation
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 enum class TopLevelScreen {
@@ -19,8 +21,12 @@ enum class TopLevelScreen {
 }
 
 @Composable
-fun BottomBar(selected: TopLevelScreen, onItemClick: (TopLevelScreen) -> Unit) {
-    BottomNavigation {
+fun BottomBar(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    selected: TopLevelScreen,
+    onItemClick: (TopLevelScreen) -> Unit,
+) {
+    BottomNavigation(contentPadding = contentPadding) {
         val screens = TopLevelScreen.values()
 
         screens.forEach { item ->

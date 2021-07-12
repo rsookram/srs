@@ -19,7 +19,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -37,6 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.TopAppBar
 import io.github.rsookram.srs.DeckWithCount
 import io.github.rsookram.srs.R
 import io.github.rsookram.srs.ui.BottomBar
@@ -59,23 +62,45 @@ fun Home(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.app_name)) })
+            TopAppBar(
+                title = { Text(stringResource(R.string.app_name)) },
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.systemBars,
+                    applyBottom = false,
+                ),
+            )
         },
         bottomBar = {
-            BottomBar(selected = TopLevelScreen.HOME, onItemClick = onNavItemClick)
+            BottomBar(
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.navigationBars
+                ),
+                selected = TopLevelScreen.HOME,
+                onItemClick = onNavItemClick,
+            )
         },
         floatingActionButton = {
             if (showAddCard) {
-                FloatingActionButton(onClick = onAddCardClick) {
+                FloatingActionButton(
+                    onClick = onAddCardClick,
+                    modifier = Modifier.navigationBarsPadding(bottom = false),
+                ) {
                     Icon(Icons.Default.Add, contentDescription = "Add card")
                 }
             }
         }
-    ) {
+    ) { contentPadding ->
         var showCreateDeckDialog by rememberSaveable { mutableStateOf(false) }
         var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
 
-        LazyColumn {
+        LazyColumn(
+            contentPadding = rememberInsetsPaddingValues(
+                insets = LocalWindowInsets.current.navigationBars,
+                applyBottom = false,
+                additionalTop = contentPadding.calculateTopPadding(),
+                additionalBottom = contentPadding.calculateBottomPadding(),
+            )
+        ) {
             items(decks) { deck ->
                 DeckItem(
                     Modifier.combinedClickable(

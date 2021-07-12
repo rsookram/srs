@@ -47,6 +47,9 @@ dependencies {
     implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
 
+    implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["accompanist_version"]}")
+    implementation("com.google.accompanist:accompanist-insets-ui:${rootProject.extra["accompanist_version"]}")
+
     implementation("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${rootProject.extra["sqldelight_version"]}")
     implementation("com.squareup.sqldelight:android-paging3-extensions:${rootProject.extra["sqldelight_version"]}")
