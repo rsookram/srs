@@ -11,12 +11,14 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.TopAppBar
 import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.GlobalStats
 import io.github.rsookram.srs.ui.BottomBar
@@ -31,13 +33,32 @@ fun Stats(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Stats") })
+            TopAppBar(
+                title = { Text("Stats") },
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.systemBars,
+                    applyBottom = false,
+                ),
+            )
         },
         bottomBar = {
-            BottomBar(selected = TopLevelScreen.STATS, onItemClick = onNavItemClick)
+            BottomBar(
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.navigationBars
+                ),
+                selected = TopLevelScreen.STATS,
+                onItemClick = onNavItemClick,
+            )
         },
-    ) {
-        LazyColumn {
+    ) { contentPadding ->
+        LazyColumn(
+            contentPadding = rememberInsetsPaddingValues(
+                insets = LocalWindowInsets.current.navigationBars,
+                applyBottom = false,
+                additionalTop = contentPadding.calculateTopPadding(),
+                additionalBottom = contentPadding.calculateBottomPadding(),
+            )
+        ) {
             if (global != null) {
                 item { GlobalCard(global) }
             }

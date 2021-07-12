@@ -10,13 +10,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.TopAppBar
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.ui.BottomBar
 import io.github.rsookram.srs.ui.TopLevelScreen
@@ -30,13 +32,32 @@ fun Browser(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Browser") })
+            TopAppBar(
+                title = { Text("Browser") },
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.systemBars,
+                    applyBottom = false,
+                ),
+            )
         },
         bottomBar = {
-            BottomBar(selected = TopLevelScreen.BROWSER, onItemClick = onNavItemClick)
+            BottomBar(
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.navigationBars
+                ),
+                selected = TopLevelScreen.BROWSER,
+                onItemClick = onNavItemClick,
+            )
         },
-    ) {
-        LazyColumn {
+    ) { contentPadding ->
+        LazyColumn(
+            contentPadding = rememberInsetsPaddingValues(
+                insets = LocalWindowInsets.current.navigationBars,
+                applyBottom = false,
+                additionalTop = contentPadding.calculateTopPadding(),
+                additionalBottom = contentPadding.calculateBottomPadding(),
+            )
+        ) {
             items(cardItems) { item ->
                 val modifier = Modifier.heightIn(min = 48.dp)
                 if (item != null) {

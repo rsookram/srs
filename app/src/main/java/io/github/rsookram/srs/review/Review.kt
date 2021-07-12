@@ -17,7 +17,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
@@ -30,6 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.TopAppBar
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
@@ -48,6 +52,10 @@ fun Review(
         topBar = {
             TopAppBar(
                 title = { Text(deckName) },
+                contentPadding = rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.systemBars,
+                    applyBottom = false,
+                ),
                 navigationIcon = {
                     IconButton(onClick = onUpClick) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
@@ -73,8 +81,14 @@ fun Review(
                 }
             )
         },
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        bottomBar = {
+            Spacer(Modifier.navigationBarsHeight().fillMaxWidth())
+        }
+    ) { contentPadding ->
+        Column(
+            Modifier.padding(contentPadding).navigationBarsPadding(bottom = false),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(
                 text = front,
                 Modifier.padding(horizontal = 16.dp, vertical = 48.dp),

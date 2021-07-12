@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -19,13 +21,16 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -36,6 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.home.DeckName
 import io.github.rsookram.srs.ui.theme.SrsTheme
@@ -58,41 +66,50 @@ fun Card(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar {
-                Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
-                    CompositionLocalProvider(
-                        LocalContentAlpha provides ContentAlpha.high,
-                        content = {
-                            IconButton(onClick = onUpClick) {
-                                Icon(Icons.Filled.ArrowBack, contentDescription = null)
+            Surface(color = MaterialTheme.colors.primarySurface) {
+                TopAppBar(
+                    modifier = Modifier.padding(
+                        rememberInsetsPaddingValues(
+                            insets = LocalWindowInsets.current.systemBars,
+                            applyBottom = false,
+                        )
+                    ),
+                ) {
+                    Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
+                        CompositionLocalProvider(
+                            LocalContentAlpha provides ContentAlpha.high,
+                            content = {
+                                IconButton(onClick = onUpClick) {
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                                }
                             }
-                        }
-                    )
-                }
-
-                var expanded by remember { mutableStateOf(false) }
-
-                Box(Modifier.fillMaxSize()) {
-                    Box(
-                        Modifier
-                            .clickable { expanded = true }
-                            .fillMaxHeight()
-                            .widthIn(min = 128.dp),
-                        Alignment.CenterStart,
-                    ) {
-                        Text(
-                            text = selectedDeckName,
-                            Modifier.padding(horizontal = 16.dp),
                         )
                     }
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        decks.forEach { deck ->
-                            DropdownMenuItem(onClick = { onDeckClick(deck) }) {
-                                Text(deck.name)
+                    var expanded by remember { mutableStateOf(false) }
+
+                    Box(Modifier.fillMaxSize()) {
+                        Box(
+                            Modifier
+                                .clickable { expanded = true }
+                                .fillMaxHeight()
+                                .widthIn(min = 128.dp),
+                            Alignment.CenterStart,
+                        ) {
+                            Text(
+                                text = selectedDeckName,
+                                Modifier.padding(horizontal = 16.dp),
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            decks.forEach { deck ->
+                                DropdownMenuItem(onClick = { onDeckClick(deck) }) {
+                                    Text(deck.name)
+                                }
                             }
                         }
                     }
@@ -100,12 +117,28 @@ fun Card(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onConfirmClick) {
+            FloatingActionButton(
+                onClick = onConfirmClick,
+                modifier = Modifier.navigationBarsWithImePadding(),
+            ) {
                 Icon(Icons.Default.Check, contentDescription = "Confirm changes")
             }
         }
-    ) {
-        Column(Modifier.padding(16.dp)) {
+    ) { contentPadding ->
+        val windowInsets = LocalWindowInsets.current
+
+        Column(
+            Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+                .padding(
+                    rememberInsetsPaddingValues(
+                        insets = windowInsets.navigationBars + LocalWindowInsets.current.ime,
+                        additionalTop = contentPadding.calculateTopPadding(),
+                        additionalBottom = contentPadding.calculateBottomPadding(),
+                    )
+                )
+        ) {
             OutlinedTextField(
                 value = front,
                 onValueChange = onFrontChange,
