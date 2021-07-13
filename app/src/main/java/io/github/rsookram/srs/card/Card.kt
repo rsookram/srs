@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -26,16 +27,19 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +67,11 @@ fun Card(
     decks: List<Deck>,
     onUpClick: () -> Unit,
     onConfirmClick: () -> Unit,
+    enableDeletion: Boolean,
+    onDeleteCardClick: () -> Unit,
 ) {
+    var showConfirmDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             Surface(color = MaterialTheme.colors.primarySurface) {
@@ -86,12 +94,12 @@ fun Card(
                         )
                     }
 
-                    var expanded by remember { mutableStateOf(false) }
+                    var deckListExpanded by remember { mutableStateOf(false) }
 
-                    Box(Modifier.fillMaxSize()) {
+                    Box(Modifier.weight(1f)) {
                         Box(
                             Modifier
-                                .clickable { expanded = true }
+                                .clickable { deckListExpanded = true }
                                 .fillMaxHeight()
                                 .widthIn(min = 128.dp),
                             Alignment.CenterStart,
@@ -103,8 +111,8 @@ fun Card(
                         }
 
                         DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            expanded = deckListExpanded,
+                            onDismissRequest = { deckListExpanded = false }
                         ) {
                             decks.forEach { deck ->
                                 DropdownMenuItem(onClick = { onDeckClick(deck) }) {
@@ -112,6 +120,10 @@ fun Card(
                                 }
                             }
                         }
+                    }
+
+                    if (enableDeletion) {
+                        OverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
                     }
                 }
             }
@@ -155,7 +167,58 @@ fun Card(
                 label = { Text("Back") },
             )
         }
+
+        if (showConfirmDeleteDialog) {
+            ConfirmDeleteDialog(
+                onDeleteCardClick,
+                onDismiss = { showConfirmDeleteDialog = false },
+            )
+        }
     }
+}
+
+@Composable
+private fun OverflowMenu(onDeleteClick: () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "More options",
+            )
+        }
+
+        DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuItem(
+                onClick = {
+                    expanded = false
+                    onDeleteClick()
+                }
+            ) {
+                Text("Delete card")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConfirmDeleteDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Delete Card") },
+        text = { Text("Are you sure you want to delete this card?") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Dismiss")
+            }
+        }
+    )
 }
 
 @Preview
@@ -175,5 +238,8 @@ private fun CardPreview() = SrsTheme {
         decks = decks,
         onUpClick = {},
         onDeckClick = {},
-    ) {}
+        onConfirmClick = {},
+        enableDeletion = false,
+        onDeleteCardClick = {},
+    )
 }

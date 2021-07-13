@@ -96,6 +96,10 @@ class Srs(
         db.cardQueries.update(deckId, front, back, id)
     }
 
+    suspend fun deleteCard(id: Long) = withContext(ioDispatcher) {
+        db.cardQueries.delete(id)
+    }
+
     fun getCardsToReview(deckId: Long): Flow<List<CardToReview>> =
         db.scheduleQueries.cardToReview(startOfTomorrow(clock.instant()).toEpochMilli(), deckId)
             .asFlow()

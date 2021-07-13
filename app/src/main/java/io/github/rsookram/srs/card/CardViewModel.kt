@@ -31,6 +31,8 @@ class CardViewModel @Inject constructor(
         set(value) {
             field = value
 
+            enableDeletion = value != null
+
             viewModelScope.launch {
                 if (value != null) {
                     val cardAndDeck = srs.getCardAndDeck(value)
@@ -60,6 +62,8 @@ class CardViewModel @Inject constructor(
     private var deck by mutableStateOf<Deck?>(null)
     val selectedDeckName: String by derivedStateOf { deck?.name.orEmpty() }
 
+    var enableDeletion by mutableStateOf(false)
+
     fun onFrontChange(s: String) {
         front = s
     }
@@ -84,6 +88,14 @@ class CardViewModel @Inject constructor(
             }
         }
     }
+
+    fun onDeleteCardClick() {
+        val id = cardId ?: return
+
+        applicationScope.launch {
+            srs.deleteCard(id)
+        }
+    }
 }
 
 @Composable
@@ -104,6 +116,11 @@ fun CardScreen(navController: NavController, cardId: Long?, vm: CardViewModel = 
         onConfirmClick = {
             // TODO: Add support for adding multiple cards without leaving screen
             vm.onConfirmClick()
+            navController.popBackStack()
+        },
+        enableDeletion = vm.enableDeletion,
+        onDeleteCardClick = {
+            vm.onDeleteCardClick()
             navController.popBackStack()
         }
     )

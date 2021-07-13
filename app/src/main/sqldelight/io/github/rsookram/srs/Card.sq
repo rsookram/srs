@@ -23,6 +23,10 @@ UPDATE Card
 SET deckId = ?, front = ?, back = ?
 WHERE id = ?;
 
+delete:
+DELETE FROM Card
+WHERE id = ?;
+
 countCards:
 SELECT COUNT(*) FROM Card;
 
