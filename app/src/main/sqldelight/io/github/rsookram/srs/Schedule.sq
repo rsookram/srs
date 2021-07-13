@@ -1,5 +1,5 @@
 CREATE TABLE Schedule(
-    cardId INTEGER PRIMARY KEY REFERENCES Card(id),
+    cardId INTEGER PRIMARY KEY REFERENCES Card(id) ON DELETE CASCADE,
     scheduledForTimestamp INTEGER, -- In milliseconds since Unix epoch, NULL when suspended
     intervalDays INTEGER, -- 0 for new cards, NULL when suspended
     isLeech INTEGER AS Boolean NOT NULL DEFAULT 0

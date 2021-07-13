@@ -2,6 +2,7 @@ package io.github.rsookram.srs
 
 import android.app.Application
 import android.content.Context
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
 import dagger.Provides
@@ -32,7 +33,18 @@ class AppModule {
     @Provides
     fun provideSrs(@ApplicationContext context: Context) =
         Srs(
-            Database(AndroidSqliteDriver(Database.Schema, context, name = "srs.db")),
+            Database(
+                AndroidSqliteDriver(
+                    Database.Schema,
+                    context,
+                    name = "srs.db",
+                    callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
+                        override fun onOpen(db: SupportSQLiteDatabase) {
+                            db.execSQL("PRAGMA foreign_keys=ON;")
+                        }
+                    }
+                )
+            ),
             random = Random.Default,
             clock = Clock.systemUTC(),
             ioDispatcher = Dispatchers.IO,
