@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -26,12 +25,10 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -49,6 +46,8 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.home.DeckName
+import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
+import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 /**
@@ -122,7 +121,7 @@ fun Card(
                     }
 
                     if (enableDeletion) {
-                        OverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
+                        DeleteOverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
                     }
                 }
             }
@@ -168,7 +167,7 @@ fun Card(
         }
 
         if (showConfirmDeleteDialog) {
-            ConfirmDeleteDialog(
+            ConfirmDeleteCardDialog(
                 onDeleteCardClick,
                 onDismiss = { showConfirmDeleteDialog = false },
             )
@@ -177,47 +176,19 @@ fun Card(
 }
 
 @Composable
-private fun OverflowMenu(onDeleteClick: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
+private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
+    val expanded = remember { mutableStateOf(false) }
 
-    Box {
-        IconButton(onClick = { expanded = true }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "More options",
-            )
-        }
-
-        DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onDeleteClick()
-                }
-            ) {
-                Text("Delete card")
+    OverflowMenu(expanded) {
+        DropdownMenuItem(
+            onClick = {
+                expanded.value = false
+                onDeleteClick()
             }
+        ) {
+            Text("Delete card")
         }
     }
-}
-
-@Composable
-fun ConfirmDeleteDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Delete Card") },
-        text = { Text("Are you sure you want to delete this card?") },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Dismiss")
-            }
-        }
-    )
 }
 
 @Preview

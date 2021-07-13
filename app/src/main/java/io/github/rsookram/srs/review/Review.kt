@@ -1,6 +1,5 @@
 package io.github.rsookram.srs.review
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -19,7 +17,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +32,8 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
-import io.github.rsookram.srs.card.ConfirmDeleteDialog
+import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
+import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
@@ -67,39 +65,36 @@ fun Review(
                     }
                 },
                 actions = {
-                    var expanded by remember { mutableStateOf(false) }
+                    val expanded = rememberSaveable { mutableStateOf(false) }
 
-                    Box {
-                        IconButton(onClick = { expanded = true }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "More options",
-                            )
+                    OverflowMenu(expanded) {
+                        DropdownMenuItem(onClick = onEditCardClick) {
+                            Text("Edit card")
                         }
-
-                        DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
-                            DropdownMenuItem(onClick = onEditCardClick) {
-                                Text("Edit card")
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded.value = false
+                                showConfirmDeleteDialog = true
                             }
-                            DropdownMenuItem(
-                                onClick = {
-                                    expanded = false
-                                    showConfirmDeleteDialog = true
-                                }
-                            ) {
-                                Text("Delete card")
-                            }
+                        ) {
+                            Text("Delete card")
                         }
                     }
                 }
             )
         },
         bottomBar = {
-            Spacer(Modifier.navigationBarsHeight().fillMaxWidth())
+            Spacer(
+                Modifier
+                    .navigationBarsHeight()
+                    .fillMaxWidth()
+            )
         }
     ) { contentPadding ->
         Column(
-            Modifier.padding(contentPadding).navigationBarsPadding(bottom = false),
+            Modifier
+                .padding(contentPadding)
+                .navigationBarsPadding(bottom = false),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -141,7 +136,7 @@ fun Review(
         }
 
         if (showConfirmDeleteDialog) {
-            ConfirmDeleteDialog(
+            ConfirmDeleteCardDialog(
                 onConfirm = {
                     onDeleteCardClick()
                     showConfirmDeleteDialog = false
