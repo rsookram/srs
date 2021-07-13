@@ -87,6 +87,16 @@ class ReviewViewModel @Inject constructor(
 
         showAnswer = false
     }
+
+    fun onDeleteClick() {
+        val cardId = currentCardId ?: return
+
+        showAnswer = false
+
+        applicationScope.launch {
+            srs.deleteCard(cardId)
+        }
+    }
 }
 
 @Composable
@@ -121,6 +131,7 @@ fun ReviewScreen(
             if (id != null) {
                 navController.navigate("card/$id")
             }
-        }
+        },
+        onDeleteCardClick = vm::onDeleteClick
     )
 }

@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
+import io.github.rsookram.srs.card.ConfirmDeleteDialog
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
@@ -47,7 +49,10 @@ fun Review(
     onWrongClick: () -> Unit,
     onUpClick: () -> Unit,
     onEditCardClick: () -> Unit,
+    onDeleteCardClick: () -> Unit,
 ) {
+    var showConfirmDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,6 +80,14 @@ fun Review(
                         DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
                             DropdownMenuItem(onClick = onEditCardClick) {
                                 Text("Edit card")
+                            }
+                            DropdownMenuItem(
+                                onClick = {
+                                    expanded = false
+                                    showConfirmDeleteDialog = true
+                                }
+                            ) {
+                                Text("Delete card")
                             }
                         }
                     }
@@ -126,6 +139,16 @@ fun Review(
                 }
             }
         }
+
+        if (showConfirmDeleteDialog) {
+            ConfirmDeleteDialog(
+                onConfirm = {
+                    onDeleteCardClick()
+                    showConfirmDeleteDialog = false
+                },
+                onDismiss = { showConfirmDeleteDialog = false },
+            )
+        }
     }
 }
 
@@ -162,6 +185,7 @@ private fun ReviewPreview() {
             onWrongClick = { showAnswer = false },
             onUpClick = {},
             onEditCardClick = {},
+            onDeleteCardClick = {},
         )
     }
 }
