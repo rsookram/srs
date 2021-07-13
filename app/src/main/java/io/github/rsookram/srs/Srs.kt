@@ -58,6 +58,10 @@ class Srs(
             .asFlow()
             .mapToList()
 
+    suspend fun deleteDeck(id: Long) = withContext(ioDispatcher) {
+        db.deckQueries.delete(id)
+    }
+
     suspend fun getCardAndDeck(id: Long): Pair<Card, Deck>? = withContext(ioDispatcher) {
         val card = db.cardQueries.select(id).executeAsOneOrNull()
 

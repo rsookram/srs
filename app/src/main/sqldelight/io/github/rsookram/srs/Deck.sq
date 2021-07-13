@@ -19,6 +19,10 @@ UPDATE Deck
 SET name = ?, intervalModifier = ?
 WHERE id = ?;
 
+delete:
+DELETE FROM Deck
+WHERE id = ?;
+
 deckWithCount:
 SELECT
     id,

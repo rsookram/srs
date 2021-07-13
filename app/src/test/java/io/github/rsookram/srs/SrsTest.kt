@@ -77,6 +77,18 @@ class SrsTest {
         assertEquals(120, deck.intervalModifier)
     }
 
+    @Test
+    fun deleteDeck() = runBlocking {
+        srs.createDeck("testName")
+
+        val deck = getDeck()
+
+        srs.deleteDeck(deck.id)
+
+        assertEquals(emptyList<Deck>(), srs.getDecks().first())
+        assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
+    }
+
     private suspend fun getDeck(): Deck {
         val decks = srs.getDecks().first()
         return decks.first()
