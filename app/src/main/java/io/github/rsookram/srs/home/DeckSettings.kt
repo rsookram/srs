@@ -1,10 +1,11 @@
 package io.github.rsookram.srs.home
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -27,9 +28,12 @@ typealias IntervalModifier = Long
 @Composable
 fun DeckSettingsDialog(
     deckWithCount: DeckWithCount,
+    onDeleteClick: () -> Unit,
     onSaveClick: (DeckName, IntervalModifier) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    var showConfirmDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
     Dialog(onDismissRequest = onDismiss) {
         Card {
             var deckName by rememberSaveable { mutableStateOf(deckWithCount.name) }
@@ -63,10 +67,13 @@ fun DeckSettingsDialog(
                     label = { Text("Interval Modifier") },
                 )
 
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
+                Row(Modifier.fillMaxWidth()) {
+                    TextButton(onClick = { showConfirmDeleteDialog = true }) {
+                        Text(text = "DELETE")
+                    }
+
+                    Spacer(Modifier.weight(1f))
+
                     TextButton(onClick = onDismiss) {
                         Text(text = "CANCEL")
                     }
@@ -74,7 +81,6 @@ fun DeckSettingsDialog(
                     TextButton(
                         onClick = {
                             onSaveClick(deckName, intervalModifier)
-                            onDismiss()
                         }
                     ) {
                         Text(text = "SAVE")
@@ -83,6 +89,35 @@ fun DeckSettingsDialog(
             }
         }
     }
+
+    if (showConfirmDeleteDialog) {
+        ConfirmDeleteDeckDialog(
+            onConfirm = {
+                onDeleteClick()
+                onDismiss()
+            },
+            onDismiss = { showConfirmDeleteDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun ConfirmDeleteDeckDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Delete Deck") },
+        text = { Text("Are you sure you want to delete this deck?") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Dismiss")
+            }
+        }
+    )
 }
 
 @Preview
@@ -95,6 +130,7 @@ private fun DeckSettingsDialogPreview() = SrsTheme {
             intervalModifier = 100,
             scheduledCardCount = 12,
         ),
+        onDeleteClick = {},
         onSaveClick = { _, _ -> },
         onDismiss = {},
     )

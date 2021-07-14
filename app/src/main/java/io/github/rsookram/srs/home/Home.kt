@@ -59,6 +59,7 @@ fun Home(
     onAddCardClick: () -> Unit,
     onDeckClick: (DeckWithCount) -> Unit,
     onDeckSaveClick: (deckId: Long, DeckName, IntervalModifier) -> Unit,
+    onDeckDeleteClick: (deckId: Long) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -126,8 +127,13 @@ fun Home(
         selectedDeck?.let { deck ->
             DeckSettingsDialog(
                 deck,
+                onDeleteClick = {
+                    onDeckDeleteClick(deck.id)
+                    selectedDeck = null
+                },
                 onSaveClick = { name, intervalModifier ->
                     onDeckSaveClick(deck.id, name, intervalModifier)
+                    selectedDeck = null
                 },
                 onDismiss = { selectedDeck = null },
             )
@@ -149,6 +155,7 @@ private fun HomePreview() = SrsTheme {
         onAddCardClick = {},
         onDeckClick = {},
         onDeckSaveClick = { _, _, _ -> },
+        onDeckDeleteClick = {},
     )
 }
 

@@ -36,6 +36,12 @@ class HomeViewModel @Inject constructor(
             srs.editDeck(deckId, name, intervalModifier)
         }
     }
+
+    fun onDeckDeleteClick(deckId: Long) {
+        applicationScope.launch {
+            srs.deleteDeck(deckId)
+        }
+    }
 }
 
 @Composable
@@ -57,5 +63,6 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
             }
         },
         onDeckSaveClick = vm::onDeckSaveClick,
+        onDeckDeleteClick = vm::onDeckDeleteClick,
     )
 }
