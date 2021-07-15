@@ -18,6 +18,8 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlin.random.Random
 
+private const val DATABASE_NAME = "srs.db"
+
 @HiltAndroidApp
 class App : Application()
 
@@ -37,9 +39,13 @@ class AppModule {
                 AndroidSqliteDriver(
                     Database.Schema,
                     context,
-                    name = "srs.db",
+                    name = DATABASE_NAME,
                     callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
                         override fun onOpen(db: SupportSQLiteDatabase) {
+                            // Disabled to simplify the backup / restore process by only needing to
+                            // handle a single file.
+                            db.disableWriteAheadLogging()
+
                             db.execSQL("PRAGMA foreign_keys=ON;")
                         }
                     }
@@ -49,6 +55,11 @@ class AppModule {
             clock = Clock.systemUTC(),
             ioDispatcher = Dispatchers.IO,
         )
+
+    @Singleton
+    @Provides
+    fun provideBackup(@ApplicationContext context: Context): Backup =
+        AndroidBackup(context, DATABASE_NAME, Dispatchers.IO)
 
     @Singleton
     @ApplicationScope

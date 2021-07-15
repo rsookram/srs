@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,6 +46,7 @@ import com.google.accompanist.insets.ui.TopAppBar
 import io.github.rsookram.srs.DeckWithCount
 import io.github.rsookram.srs.R
 import io.github.rsookram.srs.ui.BottomBar
+import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.TopLevelScreen
 import io.github.rsookram.srs.ui.theme.SrsTheme
 import kotlinx.coroutines.delay
@@ -52,7 +56,9 @@ typealias DeckName = String
 @OptIn(ExperimentalFoundationApi::class) // For Modifier.combinedClickable
 @Composable
 fun Home(
+    snackbarHostState: SnackbarHostState,
     decks: List<DeckWithCount>,
+    onExportClick: () -> Unit,
     onCreateDeckClick: (DeckName) -> Unit,
     onNavItemClick: (TopLevelScreen) -> Unit,
     showAddCard: Boolean,
@@ -62,6 +68,7 @@ fun Home(
     onDeckDeleteClick: (deckId: Long) -> Unit,
 ) {
     Scaffold(
+        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
@@ -69,6 +76,19 @@ fun Home(
                     insets = LocalWindowInsets.current.systemBars,
                     applyBottom = false,
                 ),
+                actions = {
+                    val expanded = rememberSaveable { mutableStateOf(false) }
+                    OverflowMenu(expanded) {
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded.value = false
+                                onExportClick()
+                            }
+                        ) {
+                            Text("Export")
+                        }
+                    }
+                }
             )
         },
         bottomBar = {
@@ -144,11 +164,15 @@ fun Home(
 @Preview
 @Composable
 private fun HomePreview() = SrsTheme {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Home(
+        snackbarHostState,
         decks = listOf(
             DeckWithCount(id = 1, name = "中文", intervalModifier = 100, scheduledCardCount = 0),
             DeckWithCount(id = 2, name = "日本語", intervalModifier = 100, scheduledCardCount = 12),
         ),
+        onExportClick = {},
         onCreateDeckClick = {},
         onNavItemClick = {},
         showAddCard = true,
