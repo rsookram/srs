@@ -1,7 +1,7 @@
 buildscript {
 
-    val accompanist_version by extra("0.13.0")
-    val compose_version by extra("1.0.0-rc01")
+    val accompanist_version by extra("0.14.0")
+    val compose_version by extra("1.0.0-rc02")
     val coroutines_version by extra("1.5.0")
     val hilt_version by extra("2.37")
     val sqldelight_version by extra("1.5.0")
