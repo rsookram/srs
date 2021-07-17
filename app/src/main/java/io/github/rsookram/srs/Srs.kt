@@ -83,7 +83,7 @@ class Srs(
         )
     }
 
-    fun searchCards(query: String): PagingSource<Long, BrowserSearchCard> {
+    fun searchCards(query: String): PagingSource<Long, BrowserCard> {
         val cardQueries = db.cardQueries
 
         return QueryPagingSource(
@@ -91,7 +91,7 @@ class Srs(
             transacter = cardQueries,
             dispatcher = ioDispatcher,
             queryProvider = { limit, offset ->
-                cardQueries.browserSearchCard(query, limit, offset)
+                cardQueries.browserSearchCard(query, limit, offset, ::BrowserCard)
             },
         )
     }
