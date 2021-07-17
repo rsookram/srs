@@ -83,6 +83,19 @@ class Srs(
         )
     }
 
+    fun searchCards(query: String): PagingSource<Long, BrowserSearchCard> {
+        val cardQueries = db.cardQueries
+
+        return QueryPagingSource(
+            countQuery = cardQueries.countSearchCards(query),
+            transacter = cardQueries,
+            dispatcher = ioDispatcher,
+            queryProvider = { limit, offset ->
+                cardQueries.browserSearchCard(query, limit, offset)
+            },
+        )
+    }
+
     suspend fun createCard(deckId: Long, front: String, back: String) = withContext(ioDispatcher) {
         db.transaction {
             db.cardQueries.insert(deckId, front, back)
@@ -96,9 +109,10 @@ class Srs(
         }
     }
 
-    suspend fun editCard(id: Long, deckId: Long, front: String, back: String) = withContext(ioDispatcher) {
-        db.cardQueries.update(deckId, front, back, id)
-    }
+    suspend fun editCard(id: Long, deckId: Long, front: String, back: String) =
+        withContext(ioDispatcher) {
+            db.cardQueries.update(deckId, front, back, id)
+        }
 
     suspend fun deleteCard(id: Long) = withContext(ioDispatcher) {
         db.cardQueries.delete(id)
