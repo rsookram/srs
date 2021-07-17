@@ -58,8 +58,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideBackup(@ApplicationContext context: Context): Backup =
-        AndroidBackup(context, DATABASE_NAME, Dispatchers.IO)
+    fun provideBackup(@ApplicationContext context: Context) =
+        Backup(context.getDatabasePath(DATABASE_NAME), Dispatchers.IO)
 
     @Singleton
     @ApplicationScope
