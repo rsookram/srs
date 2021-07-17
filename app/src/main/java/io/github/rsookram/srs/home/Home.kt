@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
@@ -59,6 +60,7 @@ fun Home(
     snackbarHostState: SnackbarHostState,
     decks: List<DeckWithCount>,
     onExportClick: () -> Unit,
+    onImportClick: () -> Unit,
     onCreateDeckClick: (DeckName) -> Unit,
     onNavItemClick: (TopLevelScreen) -> Unit,
     showAddCard: Boolean,
@@ -67,6 +69,8 @@ fun Home(
     onDeckSaveClick: (deckId: Long, DeckName, IntervalModifier) -> Unit,
     onDeckDeleteClick: (deckId: Long) -> Unit,
 ) {
+    var showImportWarningDialog by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
         topBar = {
@@ -86,6 +90,14 @@ fun Home(
                             }
                         ) {
                             Text("Export")
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded.value = false
+                                showImportWarningDialog = true
+                            }
+                        ) {
+                            Text("Import")
                         }
                     }
                 }
@@ -144,6 +156,13 @@ fun Home(
             )
         }
 
+        if (showImportWarningDialog) {
+            ImportWarningDialog(
+                onImportClick,
+                onDismiss = { showImportWarningDialog = false },
+            )
+        }
+
         selectedDeck?.let { deck ->
             DeckSettingsDialog(
                 deck,
@@ -173,6 +192,7 @@ private fun HomePreview() = SrsTheme {
             DeckWithCount(id = 2, name = "日本語", intervalModifier = 100, scheduledCardCount = 12),
         ),
         onExportClick = {},
+        onImportClick = {},
         onCreateDeckClick = {},
         onNavItemClick = {},
         showAddCard = true,
@@ -283,4 +303,29 @@ private fun CreateDeckDialog(
             }
         }
     }
+}
+
+@Composable
+private fun ImportWarningDialog(onImportClick: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Import data") },
+        text = {
+            Text(
+                "Importing data will overwrite the stored data and will require an app restart. " +
+                    "After the import file is selected, " +
+                    "the app will close and you will need to start it again."
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onImportClick) {
+                Text("Continue")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }

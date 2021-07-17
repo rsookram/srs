@@ -1,5 +1,6 @@
 package io.github.rsookram.srs.home
 
+import android.os.Process
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.SnackbarHostState
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
 
@@ -39,6 +41,9 @@ class HomeViewModel @Inject constructor(
 
     private val _exportResults = Channel<Backup.CreateResult>()
     val exportResults = _exportResults.receiveAsFlow()
+
+    private val _importErrors = Channel<Backup.ImportError>()
+    val importErrors = _importErrors.receiveAsFlow()
 
     fun onCreateDeckClick(deckName: DeckName) {
         applicationScope.launch {
@@ -64,6 +69,19 @@ class HomeViewModel @Inject constructor(
             _exportResults.send(result)
         }
     }
+
+    fun onImportLocationSelect(stream: InputStream) {
+        applicationScope.launch {
+            val error = backup.restore(stream)
+            if (error == null) {
+                // TODO: inject for testing
+                Process.killProcess(Process.myPid())
+                return@launch
+            }
+
+            _importErrors.send(error)
+        }
+    }
 }
 
 @Composable
@@ -83,6 +101,17 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
         }
     }
 
+    val getInputFile = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            val stream = context.contentResolver.openInputStream(uri)
+            if (stream != null) {
+                vm.onImportLocationSelect(stream)
+            }
+        }
+    }
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(vm.exportResults) {
@@ -97,10 +126,22 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
         }
     }
 
+    LaunchedEffect(vm.exportResults) {
+        vm.importErrors.collect { result ->
+            val message = when (result) {
+                Backup.ImportError.TRANSACTION_IN_PROGRESS -> "Failed to import. Try again later."
+                Backup.ImportError.FAILED -> "Failed to import"
+            }
+
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     Home(
         snackbarHostState,
         decks,
         onExportClick = { getOutputFile.launch("srs.db") },
+        onImportClick = { getInputFile.launch(arrayOf("application/octet-stream")) },
         vm::onCreateDeckClick,
         onNavItemClick = { screen ->
             if (screen != TopLevelScreen.HOME) navController.navigate(screen)
