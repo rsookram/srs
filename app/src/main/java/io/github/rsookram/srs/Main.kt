@@ -44,9 +44,9 @@ fun Main() {
         composable(
             "review/{deckId}",
             listOf(navArgument("deckId") { type = NavType.LongType }),
-        ) { backStackEntry ->
-            val deckId = backStackEntry.arguments!!.getLong("deckId")
-            ReviewScreen(navController, deckId)
+        ) {
+            // deckId is retrieved through SavedStateHandle
+            ReviewScreen(navController)
         }
     }
 }
