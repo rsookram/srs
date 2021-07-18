@@ -44,15 +44,12 @@ class SrsTest {
 
     @Test
     fun createDeck() = runBlocking {
-        val deckName = "testName"
-
-        srs.createDeck(deckName)
+        val deck = createAndReturnDeck("testName")
 
         val decks = srs.getDecks().first()
         assertEquals(1, decks.size)
 
-        val deck = decks.first()
-        assertEquals(deckName, deck.name)
+        assertEquals("testName", deck.name)
         assertEquals(100, deck.intervalModifier)
 
         assertEquals(deck, srs.getDeck(deck.id).first())
@@ -61,27 +58,25 @@ class SrsTest {
         assertEquals(1, decks.size)
 
         val deckWithCount = deckWithCounts.first()
-        assertEquals(deckName, deckWithCount.name)
+        assertEquals("testName", deckWithCount.name)
         assertEquals(100, deckWithCount.intervalModifier)
         assertEquals(0, deckWithCount.scheduledCardCount)
     }
 
     @Test
     fun editDeck() = runBlocking {
-        srs.createDeck("testName")
+        val deck = createAndReturnDeck("testName")
 
-        srs.editDeck(getDeck().id, name = "anotherName", intervalModifier = 120)
+        srs.editDeck(deck.id, name = "anotherName", intervalModifier = 120)
 
-        val deck = getDeck()
-        assertEquals("anotherName", deck.name)
-        assertEquals(120, deck.intervalModifier)
+        val editedDeck = srs.getDeck(deck.id).first()
+        assertEquals("anotherName", editedDeck.name)
+        assertEquals(120, editedDeck.intervalModifier)
     }
 
     @Test
     fun deleteDeck() = runBlocking {
-        srs.createDeck("testName")
-
-        val deck = getDeck()
+        val deck = createAndReturnDeck("testName")
 
         srs.deleteDeck(deck.id)
 
@@ -89,8 +84,11 @@ class SrsTest {
         assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
     }
 
-    private suspend fun getDeck(): Deck {
+    private suspend fun createAndReturnDeck(name: String): Deck {
+        srs.createDeck("testName")
+
         val decks = srs.getDecks().first()
-        return decks.first()
+
+        return decks.find { it.name == name }!!
     }
 }
