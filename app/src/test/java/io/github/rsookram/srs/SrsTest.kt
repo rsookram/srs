@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import java.time.Clock
 import java.time.ZoneOffset
@@ -55,7 +56,7 @@ class SrsTest {
         assertEquals(deck, srs.getDeck(deck.id).first())
 
         val deckWithCounts = srs.getDecksWithCount().first()
-        assertEquals(1, decks.size)
+        assertEquals(1, deckWithCounts.size)
 
         val deckWithCount = deckWithCounts.first()
         assertEquals("testName", deckWithCount.name)
@@ -84,11 +85,103 @@ class SrsTest {
         assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
     }
 
+    @Test
+    fun createCard() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+
+        val card = createAndReturnCard(deck, "front", "back")
+
+        assertEquals(deck.id, card.deckId)
+        assertEquals("front", card.front)
+        assertEquals("back", card.back)
+
+        val deckWithCounts = srs.getDecksWithCount().first()
+        assertEquals(
+            DeckWithCount(deck.id, deck.name, deck.intervalModifier, scheduledCardCount = 1),
+            deckWithCounts.first()
+        )
+
+        assertEquals(
+            Pair(
+                GlobalStats(
+                    activeCount = 1, suspendedCount = 0, leechCount = 0, forReviewCount = 0
+                ),
+                listOf(
+                    DeckStats(
+                        name = deck.name,
+                        activeCount = 1,
+                        suspendedCount = 0,
+                        leechCount = 0,
+                        correctCount = 0,
+                        wrongCount = 0,
+                    )
+                ),
+            ),
+            srs.stats().first()
+        )
+    }
+
+    @Test
+    fun editCard() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        srs.editCard(card.id, deck.id, "new front", "new back")
+
+        val (editedCard, _) = srs.getCardAndDeck(card.id)!!
+        assertEquals(deck.id, editedCard.deckId)
+        assertEquals("new front", editedCard.front)
+        assertEquals("new back", editedCard.back)
+    }
+
+    @Test
+    fun moveCardBetweenDecks() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val deck2 = createAndReturnDeck("another deck")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        srs.editCard(card.id, deck2.id, card.front, card.back)
+
+        val (editedCard, _) = srs.getCardAndDeck(card.id)!!
+        assertEquals(deck2.id, editedCard.deckId)
+        assertEquals("front", editedCard.front)
+        assertEquals("back", editedCard.back)
+
+        val deckWithCounts = srs.getDecksWithCount().first()
+        assertEquals(
+            setOf(
+                DeckWithCount(deck.id, deck.name, deck.intervalModifier, scheduledCardCount = 0),
+                DeckWithCount(deck2.id, deck2.name, deck2.intervalModifier, scheduledCardCount = 1),
+            ),
+            deckWithCounts.toSet()
+        )
+    }
+
+    @Test
+    fun deleteCard() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        srs.deleteCard(card.id)
+
+        assertNull(srs.getCardAndDeck(card.id))
+    }
+
     private suspend fun createAndReturnDeck(name: String): Deck {
-        srs.createDeck("testName")
+        srs.createDeck(name)
 
         val decks = srs.getDecks().first()
 
         return decks.find { it.name == name }!!
+    }
+
+    private suspend fun createAndReturnCard(deck: Deck, front: String, back: String): Card {
+        srs.createCard(deck.id, front, back)
+
+        val cardToReview = srs.getCardsToReview(deck.id)
+            .first()
+            .find { it.front == front }!!
+
+        return srs.getCardAndDeck(cardToReview.id)!!.first
     }
 }
