@@ -147,7 +147,7 @@ class Srs(
                     if (lastAnswer) {
                         val fuzz = random.nextLong(
                             (-intervalDays * FUZZ_FACTOR).roundToLong(),
-                            (+intervalDays * FUZZ_FACTOR).roundToLong()
+                            (+intervalDays * FUZZ_FACTOR).roundToLong() + 1
                         )
 
                         val numDays = (intervalDays * 2.5 * (intervalModifier / 100.0)).toLong() + fuzz
