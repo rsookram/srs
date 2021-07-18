@@ -167,6 +167,41 @@ class SrsTest {
         assertNull(srs.getCardAndDeck(card.id))
     }
 
+    @Test
+    fun answeringCorrectRemovesCardFromReviewQueue() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        srs.answerCorrect(card.id)
+
+        val deckWithCounts = srs.getDecksWithCount().first()
+        assertEquals(
+            DeckWithCount(deck.id, deck.name, deck.intervalModifier, scheduledCardCount = 0),
+            deckWithCounts.first()
+        )
+
+        assertEquals(emptyList<CardToReview>(), srs.getCardsToReview(deck.id).first())
+    }
+
+    @Test
+    fun answeringWrongLeavesCardInReviewQueue() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        srs.answerWrong(card.id)
+
+        val deckWithCounts = srs.getDecksWithCount().first()
+        assertEquals(
+            DeckWithCount(deck.id, deck.name, deck.intervalModifier, scheduledCardCount = 1),
+            deckWithCounts.first()
+        )
+
+        assertEquals(
+            listOf(CardToReview(card.id, card.front, card.back)),
+            srs.getCardsToReview(deck.id).first()
+        )
+    }
+
     private suspend fun createAndReturnDeck(name: String): Deck {
         srs.createDeck(name)
 

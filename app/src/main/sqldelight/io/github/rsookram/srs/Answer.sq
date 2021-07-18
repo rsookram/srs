@@ -13,7 +13,6 @@ INSERT INTO Answer(cardId, isCorrect, timestamp) VALUES (?, ?, ?);
 updateScheduleInfo:
 SELECT
     (SELECT isCorrect FROM Answer WHERE cardId = :cardId ORDER BY timestamp DESC LIMIT 1) AS lastAnswerCorrect,
-    (SELECT intervalDays FROM Schedule WHERE cardId = :cardId) AS intervalDays,
     (SELECT intervalModifier FROM Deck JOIN Card ON Deck.id = Card.deckId WHERE Card.id = :cardId) AS intervalModifier
 ;
 

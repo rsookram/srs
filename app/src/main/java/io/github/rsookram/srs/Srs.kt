@@ -125,51 +125,56 @@ class Srs(
 
     suspend fun answerCorrect(cardId: Long) = withContext(ioDispatcher) {
         db.transaction {
-            val (lastAnswer, intervalDays, intervalModifier) = db.answerQueries
-                .updateScheduleInfo(cardId)
-                .executeAsOne()
-
+            val intervalDays = db.scheduleQueries
+                .intervalDays(cardId)
+                .executeAsOneOrNull()
+                ?.intervalDays
             requireNotNull(intervalDays) { "Tried to answer suspended card with ID=$cardId" }
 
             db.answerQueries.insert(cardId, isCorrect = true, timestamp = clock.millis())
 
-            when {
+            when (intervalDays) {
                 // Newly added card answered correctly
-                intervalDays == 0L -> db.scheduleQueries.increaseIntervalTo(cardId, numDays = 1L)
+                0L -> db.scheduleQueries.scheduleCardIn(cardId, numDays = 1L)
                 // First review
-                intervalDays == 1L -> db.scheduleQueries.increaseIntervalTo(cardId, numDays = 4L)
-                // Previous answer was correct
-                lastAnswer -> {
-                    val fuzz = random.nextLong(
-                        (-intervalDays * FUZZ_FACTOR).roundToLong(),
-                        (+intervalDays * FUZZ_FACTOR).roundToLong()
-                    )
-
-                    val numDays = (intervalDays * 2.5 * (intervalModifier / 100.0)).toLong() + fuzz
-                    if (numDays >= 365) {
-                        // auto suspend since the card is known well enough
-                        db.scheduleQueries.setTimestampAndInterval(
-                            scheduledForTimestamp = null,
-                            intervalDays = null,
-                            cardId,
-                        )
-                    } else {
-                        db.scheduleQueries.increaseIntervalTo(cardId, numDays)
-                    }
-                }
-                // Last answer was wrong
+                1L -> db.scheduleQueries.scheduleCardIn(cardId, numDays = 4L)
                 else -> {
-                    val numDays = (intervalDays.toDouble() * WRONG_ANSWER_PENALTY)
-                        .toLong()
-                        .coerceAtLeast(1)
+                    val (lastAnswer, intervalModifier) = db.answerQueries
+                        .updateScheduleInfo(cardId)
+                        .executeAsOne()
 
-                    db.scheduleQueries.increaseIntervalTo(cardId, numDays)
+                    // Previous answer was correct
+                    if (lastAnswer) {
+                        val fuzz = random.nextLong(
+                            (-intervalDays * FUZZ_FACTOR).roundToLong(),
+                            (+intervalDays * FUZZ_FACTOR).roundToLong()
+                        )
+
+                        val numDays = (intervalDays * 2.5 * (intervalModifier / 100.0)).toLong() + fuzz
+                        if (numDays >= 365) {
+                            // auto suspend since the card is known well enough
+                            db.scheduleQueries.setTimestampAndInterval(
+                                scheduledForTimestamp = null,
+                                intervalDays = null,
+                                cardId,
+                            )
+                        } else {
+                            db.scheduleQueries.scheduleCardIn(cardId, numDays)
+                        }
+                    } else {
+                        // Last answer was wrong
+                        val numDays = (intervalDays.toDouble() * WRONG_ANSWER_PENALTY)
+                            .toLong()
+                            .coerceAtLeast(1)
+
+                        db.scheduleQueries.scheduleCardIn(cardId, numDays)
+                    }
                 }
             }
         }
     }
 
-    private fun ScheduleQueries.increaseIntervalTo(cardId: Long, numDays: Long) {
+    private fun ScheduleQueries.scheduleCardIn(cardId: Long, numDays: Long) {
         setTimestampAndInterval(
             scheduledForTimestamp = clock.instant().plus(numDays, ChronoUnit.DAYS).toEpochMilli(),
             intervalDays = numDays,

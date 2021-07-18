@@ -8,6 +8,9 @@ CREATE TABLE Schedule(
 CREATE INDEX scheduleScheduledForTimestamp ON Schedule(scheduledForTimestamp);
 CREATE INDEX scheduleIsLeech ON Schedule(isLeech);
 
+intervalDays:
+SELECT intervalDays FROM Schedule WHERE cardId = :cardId;
+
 insert:
 INSERT INTO Schedule(cardId, scheduledForTimestamp, intervalDays) VALUES (?, ?, ?);
 
