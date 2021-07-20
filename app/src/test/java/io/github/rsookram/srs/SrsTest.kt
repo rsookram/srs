@@ -7,9 +7,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import java.time.Clock
+import java.time.Instant
 import java.time.ZoneOffset
-import kotlin.random.Random
+import java.time.temporal.ChronoUnit
 
 class SrsTest {
 
@@ -17,10 +17,14 @@ class SrsTest {
         Database.Schema.create(this)
     }
 
+    private val now = Instant.parse("2021-07-19T21:52:30.00Z")
+
+    private val clock = AdjustableClock(now)
+
     private val srs = Srs(
         Database(inMemorySqlDriver),
-        Random.Default,
-        Clock.systemUTC(),
+        NotRandom(),
+        clock,
         Dispatchers.Unconfined,
         getZoneId = { ZoneOffset.UTC },
     )
@@ -200,6 +204,140 @@ class SrsTest {
             listOf(CardToReview(card.id, card.front, card.back)),
             srs.getCardsToReview(deck.id).first()
         )
+    }
+
+    @Test
+    fun answeringCorrectIncreasesInterval() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        var days = 0L
+
+        srs.answerCorrect(card.id)
+
+        days += 1
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 4
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 10
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 25
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 62
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 155
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+        card.assertNotScheduled() // auto suspend
+    }
+
+    @Test
+    fun answeringCorrectIncreasesIntervalWithIntervalModifier() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        srs.editDeck(deck.id, deck.name, intervalModifier = 200)
+        val card = createAndReturnCard(deck, "front", "back")
+
+        var days = 0L
+
+        srs.answerCorrect(card.id)
+
+        days += 1
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 4
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 20
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        days += 100
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+
+        card.assertNotScheduled() // auto suspend
+    }
+
+    @Test
+    fun answeringWrongDecreasesInterval() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        var days = 0L
+
+        srs.answerCorrect(card.id)
+        days += 1
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+        days += 4
+        card.assertScheduledIn(days)
+
+        srs.answerCorrect(card.id)
+        days += 10
+
+        card.assertScheduledIn(days)
+
+        srs.answerWrong(card.id)
+        srs.answerCorrect(card.id)
+        days += 7
+
+        card.assertScheduledIn(days)
+    }
+
+    @Test
+    fun markLeechAfterTooManyWrongAnswers() = runBlocking {
+        val deck = createAndReturnDeck("testName")
+        val card = createAndReturnCard(deck, "front", "back")
+
+        repeat(4) {
+            srs.answerWrong(card.id)
+        }
+
+        card.assertNotScheduled()
+    }
+
+    // TODO: Explicitly advance time in caller
+    private suspend fun Card.assertScheduledIn(days: Long) {
+        clock.instant = now.plus(days - 1, ChronoUnit.DAYS)
+        val reviewsBeforeDay = srs.getCardsToReview(deckId).first()
+        assertEquals(0, reviewsBeforeDay.size)
+
+        clock.instant = now.plus(days, ChronoUnit.DAYS)
+        val reviewsOnDay = srs.getCardsToReview(deckId).first()
+        assertEquals(1, reviewsOnDay.size)
+
+        val cardToReview = reviewsOnDay.first()
+        assertEquals(id, cardToReview.id)
+        assertEquals(front, cardToReview.front)
+        assertEquals(back, cardToReview.back)
+    }
+
+    private suspend fun Card.assertNotScheduled() {
+        clock.instant = now.plus(1024, ChronoUnit.DAYS)
+        assertEquals(0, srs.getCardsToReview(deckId).first().size)
     }
 
     private suspend fun createAndReturnDeck(name: String): Deck {
