@@ -1,4 +1,4 @@
-package io.github.rsookram.srs.stats
+package io.github.rsookram.srs.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

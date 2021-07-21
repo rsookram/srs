@@ -53,7 +53,6 @@ import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.DeckWithCount
 import io.github.rsookram.srs.GlobalStats
 import io.github.rsookram.srs.R
-import io.github.rsookram.srs.stats.Stats
 import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 import kotlinx.coroutines.delay
