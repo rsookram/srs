@@ -17,7 +17,7 @@ import com.google.accompanist.insets.ui.BottomNavigation
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 enum class TopLevelScreen {
-    HOME, BROWSER, STATS,
+    HOME, STATS,
 }
 
 @Composable
@@ -34,7 +34,6 @@ fun BottomBar(
                 icon = {
                     val icon = when (item) {
                         TopLevelScreen.HOME -> Icons.Default.Home
-                        TopLevelScreen.BROWSER -> Icons.Default.Search
                         TopLevelScreen.STATS -> Icons.Default.Star
                     }
 
@@ -51,7 +50,6 @@ fun BottomBar(
 fun NavController.navigate(screen: TopLevelScreen) {
     val route = when (screen) {
         TopLevelScreen.HOME -> "home"
-        TopLevelScreen.BROWSER -> "browser"
         TopLevelScreen.STATS -> "stats"
     }
 

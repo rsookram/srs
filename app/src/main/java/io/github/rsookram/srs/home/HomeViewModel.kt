@@ -140,6 +140,7 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
     Home(
         snackbarHostState,
         decks,
+        onSearchClick = { navController.navigate("browser") },
         onExportClick = { getOutputFile.launch("srs.db") },
         onImportClick = { getInputFile.launch(arrayOf("application/octet-stream")) },
         vm::onCreateDeckClick,

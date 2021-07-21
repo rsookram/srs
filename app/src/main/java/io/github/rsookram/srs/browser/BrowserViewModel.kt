@@ -12,8 +12,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.Srs
-import io.github.rsookram.srs.ui.TopLevelScreen
-import io.github.rsookram.srs.ui.navigate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -58,9 +56,6 @@ fun BrowserScreen(navController: NavController, vm: BrowserViewModel = hiltViewM
         cardItems,
         vm.queries.collectAsState("").value,
         vm::onQueryChange,
-        onNavItemClick = { screen ->
-            if (screen != TopLevelScreen.BROWSER) navController.navigate(screen)
-        },
         onCardClick = { cardId ->
             navController.navigate("card/$cardId")
         }

@@ -29,17 +29,15 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.BrowserCard
-import io.github.rsookram.srs.ui.BottomBar
-import io.github.rsookram.srs.ui.TopLevelScreen
 
 @Composable
 fun Browser(
     cardItems: LazyPagingItems<BrowserCard>,
     query: String,
     onQueryChange: (String) -> Unit,
-    onNavItemClick: (TopLevelScreen) -> Unit,
     onCardClick: (cardId: Long) -> Unit,
 ) {
     Scaffold(
@@ -54,12 +52,10 @@ fun Browser(
             )
         },
         bottomBar = {
-            BottomBar(
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.navigationBars
-                ),
-                selected = TopLevelScreen.BROWSER,
-                onItemClick = onNavItemClick,
+            Spacer(
+                Modifier
+                    .navigationBarsHeight()
+                    .fillMaxWidth()
             )
         },
     ) { contentPadding ->
