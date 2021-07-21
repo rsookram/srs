@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,21 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.BackdropScaffold
+import androidx.compose.material.BackdropValue
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,37 +49,49 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
+import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.DeckWithCount
+import io.github.rsookram.srs.GlobalStats
 import io.github.rsookram.srs.R
-import io.github.rsookram.srs.ui.BottomBar
+import io.github.rsookram.srs.stats.Stats
 import io.github.rsookram.srs.ui.OverflowMenu
-import io.github.rsookram.srs.ui.TopLevelScreen
 import io.github.rsookram.srs.ui.theme.SrsTheme
 import kotlinx.coroutines.delay
 
 typealias DeckName = String
 
-@OptIn(ExperimentalFoundationApi::class) // For Modifier.combinedClickable
+@OptIn(
+    ExperimentalFoundationApi::class, // For Modifier.combinedClickable
+    ExperimentalMaterialApi::class, // For BackdropScaffold
+)
 @Composable
 fun Home(
     snackbarHostState: SnackbarHostState,
     decks: List<DeckWithCount>,
+    globalStats: GlobalStats?,
+    deckStats: List<DeckStats>,
     onSearchClick: () -> Unit,
     onExportClick: () -> Unit,
     onImportClick: () -> Unit,
     onCreateDeckClick: (DeckName) -> Unit,
-    onNavItemClick: (TopLevelScreen) -> Unit,
     showAddCard: Boolean,
     onAddCardClick: () -> Unit,
     onDeckClick: (DeckWithCount) -> Unit,
     onDeckSaveClick: (deckId: Long, DeckName, IntervalModifier) -> Unit,
     onDeckDeleteClick: (deckId: Long) -> Unit,
 ) {
+    val scaffoldState = rememberBackdropScaffoldState(
+        BackdropValue.Concealed,
+        snackbarHostState = snackbarHostState,
+    )
+
     var showImportWarningDialog by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(
-        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
-        topBar = {
+    BackdropScaffold(
+        scaffoldState = scaffoldState,
+        peekHeight = 256.dp,
+        headerHeight = 128.dp,
+        appBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 contentPadding = rememberInsetsPaddingValues(
@@ -110,81 +125,85 @@ fun Home(
                 }
             )
         },
-        bottomBar = {
-            BottomBar(
+        backLayerContent = {
+            Stats(
                 contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.navigationBars
+                    insets = LocalWindowInsets.current.navigationBars,
+                    applyBottom = false,
                 ),
-                selected = TopLevelScreen.HOME,
-                onItemClick = onNavItemClick,
+                global = globalStats,
+                decks = deckStats,
             )
         },
-        floatingActionButton = {
-            if (showAddCard) {
-                FloatingActionButton(
-                    onClick = onAddCardClick,
-                    modifier = Modifier.navigationBarsPadding(bottom = false),
+        frontLayerContent = {
+            var showCreateDeckDialog by rememberSaveable { mutableStateOf(false) }
+            var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
+
+            Box {
+                LazyColumn(
+                    contentPadding = rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.navigationBars,
+                    )
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = "Add card")
+                    items(decks) { deck ->
+                        DeckItem(
+                            Modifier.combinedClickable(
+                                onClick = { onDeckClick(deck) },
+                                onLongClick = { selectedDeck = deck }
+                            ),
+                            deck = deck
+                        )
+                    }
+
+                    item {
+                        CreateDeckItem(Modifier.clickable { showCreateDeckDialog = true })
+                    }
+                }
+
+                if (showAddCard) {
+                    FloatingActionButton(
+                        onClick = onAddCardClick,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .navigationBarsPadding()
+                            .padding(16.dp),
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Add card")
+                    }
                 }
             }
-        }
-    ) { contentPadding ->
-        var showCreateDeckDialog by rememberSaveable { mutableStateOf(false) }
-        var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
 
-        LazyColumn(
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.navigationBars,
-                applyBottom = false,
-                additionalTop = contentPadding.calculateTopPadding(),
-                additionalBottom = contentPadding.calculateBottomPadding(),
-            )
-        ) {
-            items(decks) { deck ->
-                DeckItem(
-                    Modifier.combinedClickable(
-                        onClick = { onDeckClick(deck) },
-                        onLongClick = { selectedDeck = deck }
-                    ),
-                    deck = deck
+
+            if (showCreateDeckDialog) {
+                CreateDeckDialog(
+                    onCreateDeckClick,
+                    onDismiss = { showCreateDeckDialog = false },
                 )
             }
 
-            item {
-                CreateDeckItem(Modifier.clickable { showCreateDeckDialog = true })
+            if (showImportWarningDialog) {
+                ImportWarningDialog(
+                    onImportClick,
+                    onDismiss = { showImportWarningDialog = false },
+                )
             }
-        }
 
-        if (showCreateDeckDialog) {
-            CreateDeckDialog(
-                onCreateDeckClick,
-                onDismiss = { showCreateDeckDialog = false },
-            )
-        }
-
-        if (showImportWarningDialog) {
-            ImportWarningDialog(
-                onImportClick,
-                onDismiss = { showImportWarningDialog = false },
-            )
-        }
-
-        selectedDeck?.let { deck ->
-            DeckSettingsDialog(
-                deck,
-                onDeleteClick = {
-                    onDeckDeleteClick(deck.id)
-                    selectedDeck = null
-                },
-                onSaveClick = { name, intervalModifier ->
-                    onDeckSaveClick(deck.id, name, intervalModifier)
-                    selectedDeck = null
-                },
-                onDismiss = { selectedDeck = null },
-            )
-        }
-    }
+            selectedDeck?.let { deck ->
+                DeckSettingsDialog(
+                    deck,
+                    onDeleteClick = {
+                        onDeckDeleteClick(deck.id)
+                        selectedDeck = null
+                    },
+                    onSaveClick = { name, intervalModifier ->
+                        onDeckSaveClick(deck.id, name, intervalModifier)
+                        selectedDeck = null
+                    },
+                    onDismiss = { selectedDeck = null },
+                )
+            }
+        },
+    )
 }
 
 @Preview
@@ -198,11 +217,42 @@ private fun HomePreview() = SrsTheme {
             DeckWithCount(id = 1, name = "中文", intervalModifier = 100, scheduledCardCount = 0),
             DeckWithCount(id = 2, name = "日本語", intervalModifier = 100, scheduledCardCount = 12),
         ),
+        globalStats = GlobalStats(
+            activeCount = 1375,
+            suspendedCount = 278,
+            leechCount = 0,
+            forReviewCount = 37,
+        ),
+        deckStats = listOf(
+            DeckStats(
+                name = "prog",
+                activeCount = 1177,
+                suspendedCount = 266,
+                leechCount = 0,
+                correctCount = 391,
+                wrongCount = 17,
+            ),
+            DeckStats(
+                name = "中文",
+                activeCount = 60,
+                suspendedCount = 7,
+                leechCount = 0,
+                correctCount = 40,
+                wrongCount = 1,
+            ),
+            DeckStats(
+                name = "日本語",
+                activeCount = 138,
+                suspendedCount = 5,
+                leechCount = 0,
+                correctCount = 52,
+                wrongCount = 1,
+            ),
+        ),
         onSearchClick = {},
         onExportClick = {},
         onImportClick = {},
         onCreateDeckClick = {},
-        onNavItemClick = {},
         showAddCard = true,
         onAddCardClick = {},
         onDeckClick = {},

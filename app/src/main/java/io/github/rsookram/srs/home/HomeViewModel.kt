@@ -16,10 +16,10 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
 import io.github.rsookram.srs.Backup
+import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.DeckWithCount
+import io.github.rsookram.srs.GlobalStats
 import io.github.rsookram.srs.Srs
-import io.github.rsookram.srs.ui.TopLevelScreen
-import io.github.rsookram.srs.ui.navigate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +38,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val decks: Flow<List<DeckWithCount>> = srs.getDecksWithCount()
+
+    val stats: Flow<Pair<GlobalStats, List<DeckStats>>> = srs.stats()
 
     private val _exportResults = Channel<Backup.CreateResult>()
     val exportResults = _exportResults.receiveAsFlow()
@@ -90,6 +92,8 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
 
     val decks by vm.decks.collectAsState(initial = emptyList())
 
+    val stats by vm.stats.collectAsState(initial = null)
+
     val getOutputFile = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument()
     ) { uri ->
@@ -140,13 +144,12 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
     Home(
         snackbarHostState,
         decks,
+        globalStats = stats?.first,
+        deckStats = stats?.second.orEmpty(),
         onSearchClick = { navController.navigate("browser") },
         onExportClick = { getOutputFile.launch("srs.db") },
         onImportClick = { getInputFile.launch(arrayOf("application/octet-stream")) },
         vm::onCreateDeckClick,
-        onNavItemClick = { screen ->
-            if (screen != TopLevelScreen.HOME) navController.navigate(screen)
-        },
         // Adding a card requires a deck to add the card to
         showAddCard = decks.isNotEmpty(),
         onAddCardClick = { navController.navigate("card") },

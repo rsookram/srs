@@ -2,6 +2,7 @@ package io.github.rsookram.srs.stats
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,62 +10,28 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.ui.TopAppBar
 import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.GlobalStats
-import io.github.rsookram.srs.ui.BottomBar
-import io.github.rsookram.srs.ui.TopLevelScreen
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
 fun Stats(
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     global: GlobalStats?,
     decks: List<DeckStats>,
-    onNavItemClick: (TopLevelScreen) -> Unit,
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Stats") },
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.systemBars,
-                    applyBottom = false,
-                ),
-            )
-        },
-        bottomBar = {
-            BottomBar(
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.navigationBars
-                ),
-                selected = TopLevelScreen.STATS,
-                onItemClick = onNavItemClick,
-            )
-        },
-    ) { contentPadding ->
-        LazyColumn(
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.navigationBars,
-                applyBottom = false,
-                additionalTop = contentPadding.calculateTopPadding(),
-                additionalBottom = contentPadding.calculateBottomPadding(),
-            )
-        ) {
-            if (global != null) {
-                item { GlobalCard(global) }
-            }
-
-            items(decks) { deck -> DeckCard(deck) }
+    LazyColumn(contentPadding = contentPadding) {
+        if (global != null) {
+            item { GlobalCard(global) }
         }
+
+        items(decks) { deck -> DeckCard(deck) }
     }
 }
 
@@ -166,6 +133,5 @@ private fun StatsPreview() = SrsTheme {
                 wrongCount = 1,
             ),
         ),
-        onNavItemClick = {},
     )
 }

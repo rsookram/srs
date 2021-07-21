@@ -10,7 +10,6 @@ import io.github.rsookram.srs.browser.BrowserScreen
 import io.github.rsookram.srs.card.CardScreen
 import io.github.rsookram.srs.home.HomeScreen
 import io.github.rsookram.srs.review.ReviewScreen
-import io.github.rsookram.srs.stats.StatsScreen
 
 @Composable
 fun Main() {
@@ -23,10 +22,6 @@ fun Main() {
 
         composable("browser") {
             BrowserScreen(navController)
-        }
-
-        composable("stats") {
-            StatsScreen(navController)
         }
 
         composable("card") {
