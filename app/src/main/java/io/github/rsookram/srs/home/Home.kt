@@ -59,10 +59,7 @@ import kotlinx.coroutines.delay
 
 typealias DeckName = String
 
-@OptIn(
-    ExperimentalFoundationApi::class, // For Modifier.combinedClickable
-    ExperimentalMaterialApi::class, // For BackdropScaffold
-)
+@OptIn(ExperimentalMaterialApi::class) // For BackdropScaffold
 @Composable
 fun Home(
     snackbarHostState: SnackbarHostState,
@@ -139,25 +136,12 @@ fun Home(
             var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
 
             Box {
-                LazyColumn(
-                    contentPadding = rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.navigationBars,
-                    )
-                ) {
-                    items(decks) { deck ->
-                        DeckItem(
-                            Modifier.combinedClickable(
-                                onClick = { onDeckClick(deck) },
-                                onLongClick = { selectedDeck = deck }
-                            ),
-                            deck = deck
-                        )
-                    }
-
-                    item {
-                        CreateDeckItem(Modifier.clickable { showCreateDeckDialog = true })
-                    }
-                }
+                DeckList(
+                    decks,
+                    onDeckClick,
+                    onItemLongClick = { selectedDeck = it },
+                    onCreateClick = { showCreateDeckDialog = true },
+                )
 
                 if (showAddCard) {
                     FloatingActionButton(
@@ -258,6 +242,35 @@ private fun HomePreview() = SrsTheme {
         onDeckSaveClick = { _, _, _ -> },
         onDeckDeleteClick = {},
     )
+}
+
+@OptIn(ExperimentalFoundationApi::class) // For Modifier.combinedClickable
+@Composable
+private fun DeckList(
+    decks: List<DeckWithCount>,
+    onItemClick: (DeckWithCount) -> Unit,
+    onItemLongClick: (DeckWithCount) -> Unit,
+    onCreateClick: () -> Unit,
+) {
+    LazyColumn(
+        contentPadding = rememberInsetsPaddingValues(
+            insets = LocalWindowInsets.current.navigationBars,
+        )
+    ) {
+        items(decks) { deck ->
+            DeckItem(
+                Modifier.combinedClickable(
+                    onClick = { onItemClick(deck) },
+                    onLongClick = { onItemLongClick(deck) }
+                ),
+                deck = deck
+            )
+        }
+
+        item {
+            CreateDeckItem(Modifier.clickable(onClick = onCreateClick))
+        }
+    }
 }
 
 @Composable
