@@ -257,6 +257,10 @@ private fun DeckList(
             insets = LocalWindowInsets.current.navigationBars,
         )
     ) {
+        item {
+            Text("Decks", Modifier.padding(16.dp), style = MaterialTheme.typography.h6)
+        }
+
         items(decks) { deck ->
             DeckItem(
                 Modifier.combinedClickable(
