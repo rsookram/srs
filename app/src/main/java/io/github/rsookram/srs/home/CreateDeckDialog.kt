@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,7 +38,7 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
                     style = MaterialTheme.typography.h6,
                 )
 
-                val focusRequester = FocusRequester()
+                val focusRequester = remember { FocusRequester() }
 
                 LaunchedEffect(Unit) {
                     delay(16) // Workaround to make keyboard show
