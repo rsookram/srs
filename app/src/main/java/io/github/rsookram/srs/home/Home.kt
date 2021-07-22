@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -83,110 +84,115 @@ fun Home(
 
     var showImportWarningDialog by rememberSaveable { mutableStateOf(false) }
 
-    BackdropScaffold(
-        scaffoldState = scaffoldState,
-        peekHeight = 256.dp,
-        headerHeight = 128.dp,
-        appBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.systemBars,
-                    applyBottom = false,
-                ),
-                actions = {
-                    IconButton(onClick = onSearchClick) {
-                        Icon(Icons.Default.Search, contentDescription = null)
-                    }
+    BoxWithConstraints {
+        val tallDisplay = maxHeight > 480.dp
 
-                    val expanded = rememberSaveable { mutableStateOf(false) }
-                    OverflowMenu(expanded) {
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded.value = false
-                                onExportClick()
-                            }
-                        ) {
-                            Text("Export")
+        BackdropScaffold(
+            scaffoldState = scaffoldState,
+            peekHeight = if (tallDisplay) 256.dp else 128.dp,
+            headerHeight = if (tallDisplay) 128.dp else 64.dp,
+            appBar = {
+                TopAppBar(
+                    title = { Text(stringResource(R.string.app_name)) },
+                    contentPadding = rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.systemBars,
+                        applyBottom = false,
+                    ),
+                    actions = {
+                        IconButton(onClick = onSearchClick) {
+                            Icon(Icons.Default.Search, contentDescription = null)
                         }
-                        DropdownMenuItem(
-                            onClick = {
-                                expanded.value = false
-                                showImportWarningDialog = true
+
+                        val expanded = rememberSaveable { mutableStateOf(false) }
+                        OverflowMenu(expanded) {
+                            DropdownMenuItem(
+                                onClick = {
+                                    expanded.value = false
+                                    onExportClick()
+                                }
+                            ) {
+                                Text("Export")
                             }
+                            DropdownMenuItem(
+                                onClick = {
+                                    expanded.value = false
+                                    showImportWarningDialog = true
+                                }
+                            ) {
+                                Text("Import")
+                            }
+                        }
+                    }
+                )
+            },
+            backLayerContent = {
+                Stats(
+                    contentPadding = rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.navigationBars,
+                        applyBottom = false,
+                    ),
+                    global = globalStats,
+                    decks = deckStats,
+                )
+            },
+            frontLayerContent = {
+                var showCreateDeckDialog by rememberSaveable { mutableStateOf(false) }
+                var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
+
+                Box {
+                    DeckList(
+                        decks,
+                        onDeckClick,
+                        onItemLongClick = { selectedDeck = it },
+                        onCreateClick = { showCreateDeckDialog = true },
+                    )
+
+                    if (showAddCard) {
+                        FloatingActionButton(
+                            onClick = onAddCardClick,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .navigationBarsPadding()
+                                .padding(16.dp),
                         ) {
-                            Text("Import")
+                            Icon(Icons.Default.Add, contentDescription = "Add card")
                         }
                     }
                 }
-            )
-        },
-        backLayerContent = {
-            Stats(
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.navigationBars,
-                    applyBottom = false,
-                ),
-                global = globalStats,
-                decks = deckStats,
-            )
-        },
-        frontLayerContent = {
-            var showCreateDeckDialog by rememberSaveable { mutableStateOf(false) }
-            var selectedDeck by remember { mutableStateOf<DeckWithCount?>(null) }
 
-            Box {
-                DeckList(
-                    decks,
-                    onDeckClick,
-                    onItemLongClick = { selectedDeck = it },
-                    onCreateClick = { showCreateDeckDialog = true },
-                )
 
-                if (showAddCard) {
-                    FloatingActionButton(
-                        onClick = onAddCardClick,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .navigationBarsPadding()
-                            .padding(16.dp),
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Add card")
-                    }
+                if (showCreateDeckDialog) {
+                    CreateDeckDialog(
+                        onCreateDeckClick,
+                        onDismiss = { showCreateDeckDialog = false },
+                    )
                 }
-            }
 
+                if (showImportWarningDialog) {
+                    ImportWarningDialog(
+                        onImportClick,
+                        onDismiss = { showImportWarningDialog = false },
+                    )
+                }
 
-            if (showCreateDeckDialog) {
-                CreateDeckDialog(
-                    onCreateDeckClick,
-                    onDismiss = { showCreateDeckDialog = false },
-                )
-            }
+                selectedDeck?.let { deck ->
+                    DeckSettingsDialog(
+                        deck,
+                        onDeleteClick = {
+                            onDeckDeleteClick(deck.id)
+                            selectedDeck = null
+                        },
+                        onSaveClick = { name, intervalModifier ->
+                            onDeckSaveClick(deck.id, name, intervalModifier)
+                            selectedDeck = null
+                        },
+                        onDismiss = { selectedDeck = null },
+                    )
+                }
+            },
+        )
+    }
 
-            if (showImportWarningDialog) {
-                ImportWarningDialog(
-                    onImportClick,
-                    onDismiss = { showImportWarningDialog = false },
-                )
-            }
-
-            selectedDeck?.let { deck ->
-                DeckSettingsDialog(
-                    deck,
-                    onDeleteClick = {
-                        onDeckDeleteClick(deck.id)
-                        selectedDeck = null
-                    },
-                    onSaveClick = { name, intervalModifier ->
-                        onDeckSaveClick(deck.id, name, intervalModifier)
-                        selectedDeck = null
-                    },
-                    onDismiss = { selectedDeck = null },
-                )
-            }
-        },
-    )
 }
 
 @Preview
