@@ -19,8 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import io.github.rsookram.srs.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -30,7 +32,10 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
             var deckName by rememberSaveable { mutableStateOf("") }
 
             Column(Modifier.padding(16.dp)) {
-                Text(text = "Create Deck", style = MaterialTheme.typography.h6)
+                Text(
+                    stringResource(R.string.create_card_deck_title),
+                    style = MaterialTheme.typography.h6,
+                )
 
                 val focusRequester = FocusRequester()
 
@@ -46,7 +51,7 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .focusRequester(focusRequester),
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.card_deck_name)) },
                 )
 
                 Row(
@@ -54,7 +59,7 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
                     horizontalArrangement = Arrangement.End,
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text(text = "CANCEL")
+                        Text(stringResource(R.string.cancel_action))
                     }
 
                     TextButton(
@@ -63,7 +68,7 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
                             onDismiss()
                         }
                     ) {
-                        Text(text = "CREATE")
+                        Text(stringResource(R.string.create_deck_button))
                     }
                 }
             }

@@ -6,5 +6,11 @@
     <string name="import_data">Import</string>
 
     <string name="card_deck_list">Decks</string>
+
     <string name="create_card_deck">Create deck</string>
+    <string name="create_card_deck_title">Create Deck</string>
+    <string name="card_deck_name">Name</string>
+
+    <string name="create_deck_button">CREATE</string>
+    <string name="cancel_action">CANCEL</string>
 </resources>
