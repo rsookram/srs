@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.Card
@@ -45,7 +44,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -284,7 +282,7 @@ private fun DeckList(
 }
 
 @Composable
-fun DeckItem(modifier: Modifier = Modifier, deck: DeckWithCount) {
+private fun DeckItem(modifier: Modifier = Modifier, deck: DeckWithCount) {
     Row(modifier.heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             deck.name,
@@ -311,7 +309,7 @@ private fun DeckItemPreview() = SrsTheme {
 }
 
 @Composable
-fun CreateDeckItem(modifier: Modifier = Modifier) {
+private fun CreateDeckItem(modifier: Modifier = Modifier) {
     Row(modifier.heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(
             Icons.Default.Add,
@@ -332,80 +330,4 @@ fun CreateDeckItem(modifier: Modifier = Modifier) {
 @Composable
 private fun CreateDeckItemPreview() = SrsTheme {
     CreateDeckItem()
-}
-
-@Composable
-private fun CreateDeckDialog(
-    onCreateClick: (DeckName) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    Dialog(onDismissRequest = onDismiss) {
-        Card {
-            var deckName by rememberSaveable { mutableStateOf("") }
-
-            Column(Modifier.padding(16.dp)) {
-                Text(text = "Create Deck", style = MaterialTheme.typography.h6)
-
-                val focusRequester = FocusRequester()
-
-                LaunchedEffect(Unit) {
-                    delay(16) // Workaround to make keyboard show
-                    focusRequester.requestFocus()
-                }
-
-                OutlinedTextField(
-                    value = deckName,
-                    onValueChange = { deckName = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .focusRequester(focusRequester),
-                    label = { Text("Name") },
-                )
-
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(text = "CANCEL")
-                    }
-
-                    TextButton(
-                        onClick = {
-                            onCreateClick(deckName)
-                            onDismiss()
-                        }
-                    ) {
-                        Text(text = "CREATE")
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ImportWarningDialog(onImportClick: () -> Unit, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Import data") },
-        text = {
-            Text(
-                "Importing data will overwrite the stored data and will require an app restart. " +
-                    "After the import file is selected, " +
-                    "the app will close and you will need to start it again."
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onImportClick) {
-                Text("Continue")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
 }
