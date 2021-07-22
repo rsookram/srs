@@ -44,7 +44,7 @@ private fun GlobalCard(global: GlobalStats) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("All", style = MaterialTheme.typography.h6)
+                Text("Stats", style = MaterialTheme.typography.h6)
                 Text(
                     "Total ${global.activeCount + global.suspendedCount + global.leechCount}",
                     style = MaterialTheme.typography.body2,
