@@ -1,3 +1,10 @@
 <resources>
+
     <string name="app_name">srs</string>
+
+    <string name="export_data">Export</string>
+    <string name="import_data">Import</string>
+
+    <string name="card_deck_list">Decks</string>
+    <string name="create_card_deck">Create deck</string>
 </resources>

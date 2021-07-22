@@ -109,7 +109,7 @@ fun Home(
                                     onExportClick()
                                 }
                             ) {
-                                Text("Export")
+                                Text(stringResource(R.string.export_data))
                             }
                             DropdownMenuItem(
                                 onClick = {
@@ -117,7 +117,7 @@ fun Home(
                                     showImportWarningDialog = true
                                 }
                             ) {
-                                Text("Import")
+                                Text(stringResource(R.string.import_data))
                             }
                         }
                     }
@@ -262,7 +262,11 @@ private fun DeckList(
         )
     ) {
         item {
-            Text("Decks", Modifier.padding(16.dp), style = MaterialTheme.typography.h6)
+            Text(
+                stringResource(R.string.card_deck_list),
+                Modifier.padding(16.dp),
+                style = MaterialTheme.typography.h6,
+            )
         }
 
         items(decks) { deck ->
@@ -318,7 +322,7 @@ private fun CreateDeckItem(modifier: Modifier = Modifier) {
         )
 
         Text(
-            "Create deck",
+            stringResource(R.string.create_card_deck),
             Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp),
