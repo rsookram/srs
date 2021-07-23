@@ -37,4 +37,7 @@
     <string name="delete_card">Delete card</string>
 
     <string name="show_answer_to_card">Show Answer</string>
+    <string name="answered_wrong">Wrong</string>
+    <string name="answered_correct">Correct</string>
+
 </resources>

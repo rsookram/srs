@@ -17,6 +17,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -160,9 +162,19 @@ private fun AnswerButtons(
             .fillMaxHeight()
             .weight(1f)
 
-        TextButton(onClick = onWrongClick, size) { Text(text = "X") }
+        IconButton(onWrongClick, size) {
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.answered_wrong),
+            )
+        }
 
-        TextButton(onClick = onCorrectClick, size) { Text(text = "O") }
+        IconButton(onCorrectClick, size) {
+            Icon(
+                Icons.Filled.Check,
+                contentDescription = stringResource(R.string.answered_correct),
+            )
+        }
     }
 }
 
