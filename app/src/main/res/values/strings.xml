@@ -43,4 +43,5 @@
     <string name="answered_wrong">Wrong</string>
     <string name="answered_correct">Correct</string>
 
+    <string name="view_more_options">More options</string>
 </resources>

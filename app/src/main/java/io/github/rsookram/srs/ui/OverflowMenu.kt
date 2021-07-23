@@ -8,6 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
+import io.github.rsookram.srs.R
 
 @Composable
 fun OverflowMenu(expanded: MutableState<Boolean>, content: @Composable () -> Unit) {
@@ -15,7 +17,7 @@ fun OverflowMenu(expanded: MutableState<Boolean>, content: @Composable () -> Uni
         IconButton(onClick = { expanded.value = true }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = "More options",
+                contentDescription = stringResource(R.string.view_more_options),
             )
         }
 
