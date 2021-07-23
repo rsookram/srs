@@ -2,9 +2,6 @@
 
     <string name="app_name">srs</string>
 
-    <string name="export_data">Export</string>
-    <string name="import_data">Import</string>
-
     <string name="card_deck_list">Decks</string>
 
     <string name="create_card_deck">Create deck</string>
@@ -44,4 +41,14 @@
     <string name="answered_correct">Correct</string>
 
     <string name="view_more_options">More options</string>
+
+    <string name="export_data">Export</string>
+    <string name="import_data">Import</string>
+
+    <string name="successfully_exported_app_data">Successfully exported</string>
+    <string name="failed_to_export_app_data">Failed to export</string>
+    <string name="failed_to_export_app_data_try_again">Failed to export. Try again later.</string>
+
+    <string name="failed_to_import_app_data">Failed to import</string>
+    <string name="failed_to_import_app_data_try_again">Failed to import. Try again later.</string>
 </resources>

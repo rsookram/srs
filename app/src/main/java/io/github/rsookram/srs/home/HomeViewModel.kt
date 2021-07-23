@@ -19,6 +19,7 @@ import io.github.rsookram.srs.Backup
 import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.DeckWithCount
 import io.github.rsookram.srs.GlobalStats
+import io.github.rsookram.srs.R
 import io.github.rsookram.srs.Srs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -121,23 +122,25 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
     LaunchedEffect(vm.exportResults) {
         vm.exportResults.collect { result ->
             val message = when (result) {
-                Backup.CreateResult.SUCCESS -> "Successfully exported"
-                Backup.CreateResult.TRANSACTION_IN_PROGRESS -> "Failed to export. Try again later."
-                Backup.CreateResult.FAILED -> "Failed to export"
+                Backup.CreateResult.SUCCESS -> R.string.successfully_exported_app_data
+                Backup.CreateResult.TRANSACTION_IN_PROGRESS ->
+                    R.string.failed_to_export_app_data_try_again
+                Backup.CreateResult.FAILED -> R.string.failed_to_export_app_data
             }
 
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(context.getString(message))
         }
     }
 
     LaunchedEffect(vm.exportResults) {
         vm.importErrors.collect { result ->
             val message = when (result) {
-                Backup.ImportError.TRANSACTION_IN_PROGRESS -> "Failed to import. Try again later."
-                Backup.ImportError.FAILED -> "Failed to import"
+                Backup.ImportError.TRANSACTION_IN_PROGRESS ->
+                    R.string.failed_to_import_app_data_try_again
+                Backup.ImportError.FAILED -> R.string.failed_to_import_app_data
             }
 
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(context.getString(message))
         }
     }
 
