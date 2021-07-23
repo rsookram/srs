@@ -34,7 +34,10 @@
     <string name="confirm_changes_to_card">Confirm changes</string>
 
     <string name="edit_card">Edit card</string>
+
     <string name="delete_card">Delete card</string>
+    <string name="delete_card_title">Delete Card</string>
+    <string name="delete_card_confirmation">Are you sure you want to delete this card?</string>
 
     <string name="show_answer_to_card">Show Answer</string>
     <string name="answered_wrong">Wrong</string>
