@@ -13,4 +13,18 @@
 
     <string name="create_deck_button">CREATE</string>
     <string name="cancel_action">CANCEL</string>
+
+    <string name="card_deck_settings_title">Deck Settings</string>
+
+    <string name="review_interval_modifier">Interval Modifier</string>
+
+    <string name="save_changes_button">SAVE</string>
+
+    <string name="delete_card_deck_title">Delete Deck</string>
+    <string name="delete_card_deck_confirmation">Are you sure you want to delete this deck?</string>
+    <string name="delete_content_button">DELETE</string>
+
+    <string name="confirm_changes_button">CONFIRM</string>
+    <string name="dismiss_dialog_button">DISMISS</string>
+
 </resources>

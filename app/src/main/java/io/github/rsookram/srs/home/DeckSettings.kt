@@ -17,10 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import io.github.rsookram.srs.DeckWithCount
+import io.github.rsookram.srs.R
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 typealias IntervalModifier = Long
@@ -42,7 +44,10 @@ fun DeckSettingsDialog(
             }
 
             Column(Modifier.padding(16.dp)) {
-                Text(text = "Deck Settings", style = MaterialTheme.typography.h6)
+                Text(
+                    stringResource(R.string.card_deck_settings_title),
+                    style = MaterialTheme.typography.h6,
+                )
 
                 OutlinedTextField(
                     value = deckName,
@@ -50,7 +55,7 @@ fun DeckSettingsDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.card_deck_name)) },
                 )
 
                 OutlinedTextField(
@@ -64,18 +69,18 @@ fun DeckSettingsDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    label = { Text("Interval Modifier") },
+                    label = { Text(stringResource(R.string.review_interval_modifier)) },
                 )
 
                 Row(Modifier.fillMaxWidth()) {
                     TextButton(onClick = { showConfirmDeleteDialog = true }) {
-                        Text(text = "DELETE")
+                        Text(stringResource(R.string.delete_content_button))
                     }
 
                     Spacer(Modifier.weight(1f))
 
                     TextButton(onClick = onDismiss) {
-                        Text(text = "CANCEL")
+                        Text(stringResource(R.string.cancel_action))
                     }
 
                     TextButton(
@@ -83,7 +88,7 @@ fun DeckSettingsDialog(
                             onSaveClick(deckName, intervalModifier)
                         }
                     ) {
-                        Text(text = "SAVE")
+                        Text(stringResource(R.string.save_changes_button))
                     }
                 }
             }
@@ -105,16 +110,16 @@ fun DeckSettingsDialog(
 private fun ConfirmDeleteDeckDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Delete Deck") },
-        text = { Text("Are you sure you want to delete this deck?") },
+        title = { Text(stringResource(R.string.delete_card_deck_title)) },
+        text = { Text(stringResource(R.string.delete_card_deck_confirmation)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text("Confirm")
+                Text(stringResource(R.string.confirm_changes_button))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Dismiss")
+                Text(stringResource(R.string.dismiss_dialog_button))
             }
         }
     )
