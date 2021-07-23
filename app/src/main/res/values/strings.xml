@@ -27,4 +27,5 @@
     <string name="confirm_changes_button">CONFIRM</string>
     <string name="dismiss_dialog_button">DISMISS</string>
 
+    <string name="search_for_card">Search</string>
 </resources>

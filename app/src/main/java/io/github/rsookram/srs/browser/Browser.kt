@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -32,6 +33,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.BrowserCard
+import io.github.rsookram.srs.R
 
 @Composable
 fun Browser(
@@ -98,7 +100,7 @@ private fun SearchField(
                         Modifier.padding(8.dp)
                     )
                 },
-                placeholder = { Text("Search") },
+                placeholder = { Text(stringResource(R.string.search_for_card)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 // The Surface below handles the shape and the background colour
