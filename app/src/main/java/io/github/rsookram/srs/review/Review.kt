@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
@@ -32,6 +33,7 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.TopAppBar
+import io.github.rsookram.srs.R
 import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
 import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
@@ -69,7 +71,7 @@ fun Review(
 
                     OverflowMenu(expanded) {
                         DropdownMenuItem(onClick = onEditCardClick) {
-                            Text("Edit card")
+                            Text(stringResource(R.string.edit_card))
                         }
                         DropdownMenuItem(
                             onClick = {
@@ -77,7 +79,7 @@ fun Review(
                                 showConfirmDeleteDialog = true
                             }
                         ) {
-                            Text("Delete card")
+                            Text(stringResource(R.string.delete_card))
                         }
                     }
                 }
@@ -130,7 +132,7 @@ fun Review(
                         .fillMaxWidth()
                         .height(56.dp),
                 ) {
-                    Text(text = "Show Answer")
+                    Text(stringResource(R.string.show_answer_to_card))
                 }
             }
         }
