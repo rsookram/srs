@@ -39,12 +39,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.Deck
+import io.github.rsookram.srs.R
 import io.github.rsookram.srs.home.DeckName
 import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
 import io.github.rsookram.srs.ui.OverflowMenu
@@ -131,7 +133,10 @@ fun Card(
                 onClick = onConfirmClick,
                 modifier = Modifier.navigationBarsWithImePadding(),
             ) {
-                Icon(Icons.Default.Check, contentDescription = "Confirm changes")
+                Icon(
+                    Icons.Default.Check,
+                    contentDescription = stringResource(R.string.confirm_changes_to_card),
+                )
             }
         }
     ) { contentPadding ->
@@ -153,7 +158,7 @@ fun Card(
                 value = front,
                 onValueChange = onFrontChange,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Front") },
+                label = { Text(stringResource(R.string.front_side_of_card)) },
             )
 
             Spacer(Modifier.height(16.dp))
@@ -162,7 +167,7 @@ fun Card(
                 value = back,
                 onValueChange = onBackChange,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Back") },
+                label = { Text(stringResource(R.string.back_side_of_card)) },
             )
         }
 
@@ -186,7 +191,7 @@ private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
                 onDeleteClick()
             }
         ) {
-            Text("Delete card")
+            Text(stringResource(R.string.delete_card))
         }
     }
 }

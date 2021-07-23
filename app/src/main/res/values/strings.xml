@@ -28,4 +28,10 @@
     <string name="dismiss_dialog_button">DISMISS</string>
 
     <string name="search_for_card">Search</string>
+
+    <string name="front_side_of_card">Front</string>
+    <string name="back_side_of_card">Back</string>
+    <string name="confirm_changes_to_card">Confirm changes</string>
+
+    <string name="delete_card">Delete card</string>
 </resources>
