@@ -45,6 +45,12 @@
     <string name="export_data">Export</string>
     <string name="import_data">Import</string>
 
+    <string name="import_data_title">Import Data</string>
+    <string name="import_warning">
+        Importing data will overwrite the stored data and will require an app restart. After the import file is selected, the app will close and you will need to start it again.
+    </string>
+    <string name="proceed_with_import">CONTINUE</string>
+
     <string name="successfully_exported_app_data">Successfully exported</string>
     <string name="failed_to_export_app_data">Failed to export</string>
     <string name="failed_to_export_app_data_try_again">Failed to export. Try again later.</string>

@@ -4,27 +4,25 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import io.github.rsookram.srs.R
 
 @Composable
 fun ImportWarningDialog(onImportClick: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Import data") },
+        title = { Text(stringResource(R.string.import_data_title)) },
         text = {
-            Text(
-                "Importing data will overwrite the stored data and will require an app restart. " +
-                    "After the import file is selected, " +
-                    "the app will close and you will need to start it again."
-            )
+            Text(stringResource(R.string.import_warning))
         },
         confirmButton = {
             TextButton(onClick = onImportClick) {
-                Text("Continue")
+                Text(stringResource(R.string.proceed_with_import))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel_action))
             }
         },
     )
