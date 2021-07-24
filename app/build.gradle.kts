@@ -18,8 +18,33 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+
+        if (file("app.keystore").exists()) {
+            create("release") {
+                storeFile = file("app.keystore")
+                storePassword = project.property("STORE_PASSWORD").toString()
+                keyAlias = project.property("KEY_ALIAS").toString()
+                keyPassword = project.property("KEY_PASSWORD").toString()
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
         release {
+            signingConfig =
+                signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles("proguard-rules.pro")
