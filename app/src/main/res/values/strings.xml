@@ -57,4 +57,10 @@
 
     <string name="failed_to_import_app_data">Failed to import</string>
     <string name="failed_to_import_app_data_try_again">Failed to import. Try again later.</string>
+
+    <string name="deck_statistics">Stats</string>
+
+    <string name="total_card_count">Total %d</string>
+    <string name="cards_for_review_tomorrow">Review tomorrow: %d</string>
+    <string name="past_month_answer_accuracy">Past month accuracy: %s%% (%d / %d)</string>
 </resources>

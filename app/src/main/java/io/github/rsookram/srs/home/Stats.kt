@@ -14,10 +14,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.GlobalStats
+import io.github.rsookram.srs.R
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
@@ -44,9 +46,11 @@ private fun GlobalCard(global: GlobalStats) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Stats", style = MaterialTheme.typography.h6)
+                Text(stringResource(R.string.deck_statistics), style = MaterialTheme.typography.h6)
+
+                val total = global.activeCount + global.suspendedCount + global.leechCount
                 Text(
-                    "Total ${global.activeCount + global.suspendedCount + global.leechCount}",
+                    stringResource(R.string.total_card_count, total.toInt(), total),
                     style = MaterialTheme.typography.body2,
                 )
             }
@@ -58,7 +62,14 @@ private fun GlobalCard(global: GlobalStats) {
                 Modifier.padding(top = 16.dp),
             )
 
-            Text("Review tomorrow: ${global.forReviewCount}", Modifier.padding(top = 8.dp))
+            Text(
+                stringResource(
+                    R.string.cards_for_review_tomorrow,
+                    global.forReviewCount.toInt(),
+                    global.forReviewCount,
+                ),
+                Modifier.padding(top = 8.dp)
+            )
         }
     }
 }
@@ -73,8 +84,10 @@ private fun DeckCard(deck: DeckStats) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(deck.name, style = MaterialTheme.typography.h6)
+
+                val total = deck.activeCount + deck.suspendedCount + deck.leechCount
                 Text(
-                    "Total ${deck.activeCount + deck.suspendedCount + deck.leechCount}",
+                    stringResource(R.string.total_card_count, total.toInt(), total),
                     style = MaterialTheme.typography.body2,
                 )
             }
@@ -90,7 +103,12 @@ private fun DeckCard(deck: DeckStats) {
             val percentCorrect =
                 if (answerCount > 0) deck.correctCount * 100 / answerCount else 0
             Text(
-                "Past month accuracy: $percentCorrect% (${deck.correctCount} / $answerCount)",
+                stringResource(
+                    R.string.past_month_answer_accuracy,
+                    percentCorrect,
+                    deck.correctCount,
+                    answerCount,
+                ),
                 Modifier.padding(top = 8.dp),
             )
         }
