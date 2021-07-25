@@ -22,6 +22,11 @@ android {
         resourceConfigurations += "en"
     }
 
+    lint {
+        // TODO: Run lint on CI
+        isCheckReleaseBuilds = false
+    }
+
     signingConfigs {
         getByName("debug") {
             storeFile = file("debug.keystore")
