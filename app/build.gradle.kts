@@ -12,10 +12,14 @@ android {
 
     defaultConfig {
         applicationId = "io.github.rsookram.srs"
+
         minSdk = 28
         targetSdk = 30
+
         versionCode = 1
         versionName = "1.0"
+
+        resourceConfigurations += "en"
     }
 
     signingConfigs {
