@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import io.github.rsookram.srs.DeckStats
 import io.github.rsookram.srs.GlobalStats
 import io.github.rsookram.srs.R
+import io.github.rsookram.srs.quantityStringResource
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
@@ -127,17 +128,22 @@ private fun CardCounts(
     leechCount: Long,
 ) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
-        // %d active | %d suspended | %d leeches
-        Text("$activeCount active")
+        Text(quantityStringResource(R.plurals.card_count_active, activeCount.toInt(), activeCount))
 
         VerticalDivider(Modifier.padding(horizontal = 4.dp))
 
-        Text("$suspendedCount suspended")
+        Text(
+            quantityStringResource(
+                R.plurals.card_count_suspended,
+                suspendedCount.toInt(),
+                suspendedCount
+            )
+        )
 
         if (leechCount > 0) {
             VerticalDivider(Modifier.padding(horizontal = 4.dp))
 
-            Text("$leechCount leeches")
+            Text(quantityStringResource(R.plurals.card_count_leech, leechCount.toInt(), leechCount))
         }
     }
 }

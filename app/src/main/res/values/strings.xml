@@ -60,6 +60,19 @@
 
     <string name="deck_statistics">Stats</string>
 
+    <plurals name="card_count_active">
+        <item quantity="one">%d active</item>
+        <item quantity="other">%d active</item>
+    </plurals>
+    <plurals name="card_count_suspended">
+        <item quantity="one">%d suspended</item>
+        <item quantity="other">%d suspended</item>
+    </plurals>
+    <plurals name="card_count_leech">
+        <item quantity="one">%d leech</item>
+        <item quantity="other">%d leeches</item>
+    </plurals>
+
     <string name="total_card_count">Total %d</string>
     <string name="cards_for_review_tomorrow">Review tomorrow: %d</string>
     <string name="past_month_answer_accuracy">Past month accuracy: %s%% (%d / %d)</string>
