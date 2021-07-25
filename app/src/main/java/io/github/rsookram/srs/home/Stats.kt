@@ -1,11 +1,15 @@
 package io.github.rsookram.srs.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
@@ -55,11 +59,11 @@ private fun GlobalCard(global: GlobalStats) {
                 )
             }
 
-            Text(
-                "${global.activeCount} active, " +
-                    "${global.suspendedCount} suspended, " +
-                    "${global.leechCount} leeches",
+            CardCounts(
                 Modifier.padding(top = 16.dp),
+                global.activeCount,
+                global.suspendedCount,
+                global.leechCount,
             )
 
             Text(
@@ -92,11 +96,11 @@ private fun DeckCard(deck: DeckStats) {
                 )
             }
 
-            Text(
-                "${deck.activeCount} active, " +
-                    "${deck.suspendedCount} suspended, " +
-                    "${deck.leechCount} leeches",
+            CardCounts(
                 Modifier.padding(top = 16.dp),
+                deck.activeCount,
+                deck.suspendedCount,
+                deck.leechCount,
             )
 
             val answerCount = deck.correctCount + deck.wrongCount
@@ -115,6 +119,39 @@ private fun DeckCard(deck: DeckStats) {
     }
 }
 
+@Composable
+private fun CardCounts(
+    modifier: Modifier = Modifier,
+    activeCount: Long,
+    suspendedCount: Long,
+    leechCount: Long,
+) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+        // %d active | %d suspended | %d leeches
+        Text("$activeCount active")
+
+        VerticalDivider(Modifier.padding(horizontal = 4.dp))
+
+        Text("$suspendedCount suspended")
+
+        if (leechCount > 0) {
+            VerticalDivider(Modifier.padding(horizontal = 4.dp))
+
+            Text("$leechCount leeches")
+        }
+    }
+}
+
+@Composable
+private fun VerticalDivider(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .height(16.dp)
+            .width(1.dp)
+            .background(MaterialTheme.colors.onSurface.copy(alpha = 0.32f))
+    )
+}
+
 @Preview
 @Composable
 private fun StatsPreview() = SrsTheme {
@@ -122,7 +159,7 @@ private fun StatsPreview() = SrsTheme {
         global = GlobalStats(
             activeCount = 1375,
             suspendedCount = 278,
-            leechCount = 0,
+            leechCount = 1,
             forReviewCount = 37,
         ),
         decks = listOf(
@@ -138,7 +175,7 @@ private fun StatsPreview() = SrsTheme {
                 name = "中文",
                 activeCount = 60,
                 suspendedCount = 7,
-                leechCount = 0,
+                leechCount = 1,
                 correctCount = 40,
                 wrongCount = 1,
             ),
