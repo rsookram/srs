@@ -27,6 +27,13 @@ android {
         isCheckReleaseBuilds = false
     }
 
+    packagingOptions.resources {
+        excludes += setOf(
+            "kotlin/**",
+            "META-INF/*.version",
+        )
+    }
+
     signingConfigs {
         getByName("debug") {
             storeFile = file("debug.keystore")
