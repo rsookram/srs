@@ -34,6 +34,10 @@ android {
         )
     }
 
+    dependenciesInfo {
+        includeInApk = false
+    }
+
     signingConfigs {
         getByName("debug") {
             storeFile = file("debug.keystore")
