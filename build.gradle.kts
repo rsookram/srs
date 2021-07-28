@@ -1,10 +1,10 @@
 buildscript {
 
-    val accompanist_version by extra("0.14.0")
-    val compose_version by extra("1.0.0-rc02")
+    val accompanist_version by extra("0.15.0")
+    val compose_version by extra("1.0.0")
     val coroutines_version by extra("1.5.0")
-    val hilt_version by extra("2.37")
-    val sqldelight_version by extra("1.5.0")
+    val hilt_version by extra("2.38.1")
+    val sqldelight_version by extra("1.5.1")
 
     repositories {
         google()
@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-rc01")
+        classpath("com.android.tools.build:gradle:7.0.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
 
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
