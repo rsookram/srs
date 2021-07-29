@@ -75,5 +75,5 @@
 
     <string name="total_card_count">Total %d</string>
     <string name="cards_for_review_tomorrow">Review tomorrow: %d</string>
-    <string name="past_month_answer_accuracy">Past month accuracy: %s%% (%d / %d)</string>
+    <string name="past_month_answer_accuracy">Past month accuracy: %1$s%% (%2$d / %3$d)</string>
 </resources>
