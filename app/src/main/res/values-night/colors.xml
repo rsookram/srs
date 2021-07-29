@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bg_window">#121212</color>
-    <color name="navigation_bar">#B3121212</color>
+    <color name="system_bar">#B3121212</color>
 </resources>

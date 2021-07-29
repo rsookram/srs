@@ -7,7 +7,7 @@
 
         <item name="android:windowBackground">@color/bg_window</item>
 
-        <item name="android:statusBarColor">#B3121212</item>
-        <item name="android:navigationBarColor">@color/navigation_bar</item>
+        <item name="android:statusBarColor">@color/system_bar</item>
+        <item name="android:navigationBarColor">@color/system_bar</item>
     </style>
 </resources>

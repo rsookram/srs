@@ -94,6 +94,7 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["accompanist_version"]}")
     implementation("com.google.accompanist:accompanist-insets-ui:${rootProject.extra["accompanist_version"]}")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:${rootProject.extra["accompanist_version"]}")
 
     implementation("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${rootProject.extra["sqldelight_version"]}")
