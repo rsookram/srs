@@ -84,14 +84,11 @@ fun Card(
                     ),
                 ) {
                     Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
-                        CompositionLocalProvider(
-                            LocalContentAlpha provides ContentAlpha.high,
-                            content = {
-                                IconButton(onClick = onUpClick) {
-                                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
-                                }
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                            IconButton(onClick = onUpClick) {
+                                Icon(Icons.Filled.ArrowBack, contentDescription = null)
                             }
-                        )
+                        }
                     }
 
                     var deckListExpanded by remember { mutableStateOf(false) }
@@ -130,11 +127,12 @@ fun Card(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onConfirmClick,
-                modifier = Modifier.navigationBarsWithImePadding(),
+                onConfirmClick,
+                Modifier.navigationBarsWithImePadding(),
             ) {
                 Icon(
                     Icons.Default.Check,
+                    // contentDescription = Strings.confirmChangesToCard(),
                     contentDescription = stringResource(R.string.confirm_changes_to_card),
                 )
             }
