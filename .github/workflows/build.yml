@@ -16,7 +16,10 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
- 
+
+      - name: Check formatting
+        run: ./gradlew ktfmtCheck
+
       - name: Test
         run: ./gradlew testDebug
  
