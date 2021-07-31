@@ -10,6 +10,9 @@
 - Export saved data to a file on your device (and import later)
 - Follows [low-key Anki](https://refold.la/roadmap/stage-1/a/anki-setup/)
 - Auto-suspends cards that are known well enough (the next interval is > 1 year)
+- Data is stored locally
+- Requires no permissions
+- Small app (< 2 MB)
 
 
 ## Technologies
@@ -17,8 +20,10 @@
 - Kotlin
 - Kotlin coroutines
 - Dagger 2 + Hilt
-- Jetpack Compose
+- Jetpack Compose, Navigation, Paging, and ViewModel
+- Accompanist
 - SQLDelight
+- JUnit 4
 
 
 ## License
