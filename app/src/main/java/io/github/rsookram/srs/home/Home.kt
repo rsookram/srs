@@ -270,7 +270,8 @@ private fun DeckList(
                     onClick = { onItemClick(deck) },
                     onLongClick = { onItemLongClick(deck) }
                 ),
-                deck = deck
+                deck.name,
+                deck.scheduledCardCount,
             )
         }
 
@@ -281,16 +282,20 @@ private fun DeckList(
 }
 
 @Composable
-private fun DeckItem(modifier: Modifier = Modifier, deck: DeckWithCount) {
+private fun DeckItem(
+    modifier: Modifier = Modifier,
+    deckName: String,
+    scheduledCardCount: Long,
+) {
     Row(modifier.heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
-            deck.name,
+            deckName,
             Modifier
                 .weight(1f)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
         )
 
-        Text(deck.scheduledCardCount.toString(), Modifier.padding(end = 16.dp))
+        Text(scheduledCardCount.toString(), Modifier.padding(end = 16.dp))
     }
 }
 
@@ -298,15 +303,12 @@ private fun DeckItem(modifier: Modifier = Modifier, deck: DeckWithCount) {
 @Composable
 private fun DeckItemPreview() = SrsTheme {
     DeckItem(
-        deck = DeckWithCount(
-            id = 1,
-            name = "日本語",
-            intervalModifier = 100,
-            scheduledCardCount = 12,
-        )
+        deckName = "日本語",
+        scheduledCardCount = 12,
     )
 }
 
+@Preview
 @Composable
 private fun CreateDeckItem(modifier: Modifier = Modifier) {
     Row(modifier.heightIn(min = 56.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -323,10 +325,4 @@ private fun CreateDeckItem(modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp),
         )
     }
-}
-
-@Preview
-@Composable
-private fun CreateDeckItemPreview() = SrsTheme {
-    CreateDeckItem()
 }
