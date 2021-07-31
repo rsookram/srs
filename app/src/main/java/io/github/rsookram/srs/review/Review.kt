@@ -65,7 +65,10 @@ fun Review(
                 ),
                 navigationIcon = {
                     IconButton(onClick = onUpClick) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.toolbar_up_description),
+                        )
                     }
                 },
                 actions = {

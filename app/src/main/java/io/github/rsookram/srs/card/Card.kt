@@ -86,7 +86,12 @@ fun Card(
                     Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
                             IconButton(onClick = onUpClick) {
-                                Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                                Icon(
+                                    Icons.Filled.ArrowBack,
+                                    contentDescription = stringResource(
+                                        R.string.toolbar_up_description
+                                    ),
+                                )
                             }
                         }
                     }

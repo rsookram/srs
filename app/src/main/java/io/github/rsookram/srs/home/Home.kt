@@ -89,7 +89,10 @@ fun Home(
                     ),
                     actions = {
                         IconButton(onClick = onSearchClick) {
-                            Icon(Icons.Default.Search, contentDescription = null)
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription = stringResource(R.string.search_for_card),
+                            )
                         }
 
                         val expanded = rememberSaveable { mutableStateOf(false) }
@@ -144,11 +147,13 @@ fun Home(
                                 .navigationBarsPadding()
                                 .padding(16.dp),
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = "Add card")
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(R.string.create_card),
+                            )
                         }
                     }
                 }
-
 
                 if (showCreateDeckDialog) {
                     CreateDeckDialog(
@@ -181,7 +186,6 @@ fun Home(
             },
         )
     }
-
 }
 
 @Preview

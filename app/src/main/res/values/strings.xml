@@ -2,6 +2,8 @@
 
     <string name="app_name">srs</string>
 
+    <string name="toolbar_up_description">Navigate up</string>
+    
     <string name="card_deck_list">Decks</string>
 
     <string name="create_card_deck">Create deck</string>
@@ -26,6 +28,7 @@
 
     <string name="search_for_card">Search</string>
 
+    <string name="create_card">Create card</string>
     <string name="front_side_of_card">Front</string>
     <string name="back_side_of_card">Back</string>
     <string name="confirm_changes_to_card">Confirm changes</string>
