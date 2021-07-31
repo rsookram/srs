@@ -105,8 +105,7 @@ private fun DeckCard(deck: DeckStats) {
             )
 
             val answerCount = deck.correctCount + deck.wrongCount
-            val percentCorrect =
-                if (answerCount > 0) deck.correctCount * 100 / answerCount else 0
+            val percentCorrect = if (answerCount > 0) deck.correctCount * 100 / answerCount else 0
             Text(
                 stringResource(
                     R.string.past_month_answer_accuracy,
@@ -162,37 +161,39 @@ private fun VerticalDivider(modifier: Modifier = Modifier) {
 @Composable
 private fun StatsPreview() = SrsTheme {
     Stats(
-        global = GlobalStats(
-            activeCount = 1375,
-            suspendedCount = 278,
-            leechCount = 1,
-            forReviewCount = 37,
-        ),
-        decks = listOf(
-            DeckStats(
-                name = "prog",
-                activeCount = 1177,
-                suspendedCount = 266,
-                leechCount = 0,
-                correctCount = 391,
-                wrongCount = 17,
-            ),
-            DeckStats(
-                name = "中文",
-                activeCount = 60,
-                suspendedCount = 7,
+        global =
+            GlobalStats(
+                activeCount = 1375,
+                suspendedCount = 278,
                 leechCount = 1,
-                correctCount = 40,
-                wrongCount = 1,
+                forReviewCount = 37,
             ),
-            DeckStats(
-                name = "日本語",
-                activeCount = 138,
-                suspendedCount = 5,
-                leechCount = 0,
-                correctCount = 52,
-                wrongCount = 1,
+        decks =
+            listOf(
+                DeckStats(
+                    name = "prog",
+                    activeCount = 1177,
+                    suspendedCount = 266,
+                    leechCount = 0,
+                    correctCount = 391,
+                    wrongCount = 17,
+                ),
+                DeckStats(
+                    name = "中文",
+                    activeCount = 60,
+                    suspendedCount = 7,
+                    leechCount = 1,
+                    correctCount = 40,
+                    wrongCount = 1,
+                ),
+                DeckStats(
+                    name = "日本語",
+                    activeCount = 138,
+                    suspendedCount = 5,
+                    leechCount = 0,
+                    correctCount = 52,
+                    wrongCount = 1,
+                ),
             ),
-        ),
     )
 }

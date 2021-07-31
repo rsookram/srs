@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
 import io.github.rsookram.srs.CardToReview
 import io.github.rsookram.srs.Srs
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,10 +23,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class ReviewViewModel @Inject constructor(
+class ReviewViewModel
+@Inject
+constructor(
     private val srs: Srs,
     savedStateHandle: SavedStateHandle,
     @ApplicationScope private val applicationScope: CoroutineScope,
@@ -42,7 +44,8 @@ class ReviewViewModel @Inject constructor(
     var deckName: Flow<String> = srs.getDeck(deckId).map { it.name }
 
     private val card: StateFlow<CardToReview?> =
-        cardsToReview.map { it?.firstOrNull() }
+        cardsToReview
+            .map { it?.firstOrNull() }
             .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = null)
 
     val currentCardId: Long?
@@ -60,18 +63,14 @@ class ReviewViewModel @Inject constructor(
 
     fun onCorrectClick() {
         val card = card.value ?: return
-        applicationScope.launch {
-            srs.answerCorrect(card.id)
-        }
+        applicationScope.launch { srs.answerCorrect(card.id) }
 
         showAnswer = false
     }
 
     fun onWrongClick() {
         val card = card.value ?: return
-        applicationScope.launch {
-            srs.answerWrong(card.id)
-        }
+        applicationScope.launch { srs.answerWrong(card.id) }
 
         showAnswer = false
     }
@@ -81,9 +80,7 @@ class ReviewViewModel @Inject constructor(
 
         showAnswer = false
 
-        applicationScope.launch {
-            srs.deleteCard(cardId)
-        }
+        applicationScope.launch { srs.deleteCard(cardId) }
     }
 }
 
@@ -94,9 +91,7 @@ fun ReviewScreen(
 ) {
     val isFinished by vm.finishedReview.collectAsState(initial = false)
     if (isFinished) {
-        SideEffect {
-            navController.popBackStack()
-        }
+        SideEffect { navController.popBackStack() }
         return
     }
 

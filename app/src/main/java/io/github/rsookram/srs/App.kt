@@ -10,22 +10,19 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import java.time.Clock
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlin.random.Random
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 private const val DATABASE_NAME = "srs.db"
 
-@HiltAndroidApp
-class App : Application()
+@HiltAndroidApp class App : Application()
 
-@Retention(AnnotationRetention.RUNTIME)
-@Qualifier
-annotation class ApplicationScope
+@Retention(AnnotationRetention.RUNTIME) @Qualifier annotation class ApplicationScope
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -40,15 +37,16 @@ class AppModule {
                     Database.Schema,
                     context,
                     name = DATABASE_NAME,
-                    callback = object : AndroidSqliteDriver.Callback(Database.Schema) {
-                        override fun onOpen(db: SupportSQLiteDatabase) {
-                            // Disabled to simplify the backup / restore process by only needing to
-                            // handle a single file.
-                            db.disableWriteAheadLogging()
+                    callback =
+                        object : AndroidSqliteDriver.Callback(Database.Schema) {
+                            override fun onOpen(db: SupportSQLiteDatabase) {
+                                // Disabled to simplify the backup / restore process by only needing
+                                // to handle a single file.
+                                db.disableWriteAheadLogging()
 
-                            db.execSQL("PRAGMA foreign_keys=ON;")
+                                db.execSQL("PRAGMA foreign_keys=ON;")
+                            }
                         }
-                    }
                 )
             ),
             random = Random.Default,

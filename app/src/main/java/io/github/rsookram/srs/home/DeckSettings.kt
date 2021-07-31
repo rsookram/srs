@@ -52,9 +52,7 @@ fun DeckSettingsDialog(
                 OutlinedTextField(
                     value = deckName,
                     onValueChange = { deckName = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     label = { Text(stringResource(R.string.card_deck_name)) },
                 )
 
@@ -66,9 +64,7 @@ fun DeckSettingsDialog(
                             intervalModifier = parsed
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     label = { Text(stringResource(R.string.review_interval_modifier)) },
                 )
 
@@ -79,15 +75,9 @@ fun DeckSettingsDialog(
 
                     Spacer(Modifier.weight(1f))
 
-                    TextButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.cancel_action))
-                    }
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_action)) }
 
-                    TextButton(
-                        onClick = {
-                            onSaveClick(deckName, intervalModifier)
-                        }
-                    ) {
+                    TextButton(onClick = { onSaveClick(deckName, intervalModifier) }) {
                         Text(stringResource(R.string.save_changes_button))
                     }
                 }
@@ -118,9 +108,7 @@ private fun ConfirmDeleteDeckDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.dismiss_dialog_button))
-            }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.dismiss_dialog_button)) }
         }
     )
 }
@@ -129,12 +117,13 @@ private fun ConfirmDeleteDeckDialog(onConfirm: () -> Unit, onDismiss: () -> Unit
 @Composable
 private fun DeckSettingsDialogPreview() = SrsTheme {
     DeckSettingsDialog(
-        deckWithCount = DeckWithCount(
-            id = 1,
-            name = "日本語",
-            intervalModifier = 100,
-            scheduledCardCount = 12,
-        ),
+        deckWithCount =
+            DeckWithCount(
+                id = 1,
+                name = "日本語",
+                intervalModifier = 100,
+                scheduledCardCount = 12,
+            ),
         onDeleteClick = {},
         onSaveClick = { _, _ -> },
         onDismiss = {},

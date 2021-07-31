@@ -15,14 +15,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.Srs
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class CardViewModel @Inject constructor(
+class CardViewModel
+@Inject
+constructor(
     private val srs: Srs,
     @ApplicationScope private val applicationScope: CoroutineScope,
 ) : ViewModel() {
@@ -92,17 +94,14 @@ class CardViewModel @Inject constructor(
     fun onDeleteCardClick() {
         val id = cardId ?: return
 
-        applicationScope.launch {
-            srs.deleteCard(id)
-        }
+        applicationScope.launch { srs.deleteCard(id) }
     }
 }
 
 @Composable
 fun CardScreen(navController: NavController, cardId: Long?, vm: CardViewModel = hiltViewModel()) {
-    LaunchedEffect(key1 = cardId) {
-        vm.cardId = cardId
-    }
+    // TODO: Get this through saved state handle
+    LaunchedEffect(key1 = cardId) { vm.cardId = cardId }
 
     Card(
         front = vm.front,

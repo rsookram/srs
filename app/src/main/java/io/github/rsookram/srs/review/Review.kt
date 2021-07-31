@@ -59,10 +59,11 @@ fun Review(
         topBar = {
             TopAppBar(
                 title = { Text(deckName) },
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.systemBars,
-                    applyBottom = false,
-                ),
+                contentPadding =
+                    rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.systemBars,
+                        applyBottom = false,
+                    ),
                 navigationIcon = {
                     IconButton(onClick = onUpClick) {
                         Icon(
@@ -83,25 +84,15 @@ fun Review(
                                 expanded.value = false
                                 showConfirmDeleteDialog = true
                             }
-                        ) {
-                            Text(stringResource(R.string.delete_card))
-                        }
+                        ) { Text(stringResource(R.string.delete_card)) }
                     }
                 }
             )
         },
-        bottomBar = {
-            Spacer(
-                Modifier
-                    .navigationBarsHeight()
-                    .fillMaxWidth()
-            )
-        }
+        bottomBar = { Spacer(Modifier.navigationBarsHeight().fillMaxWidth()) }
     ) { contentPadding ->
         Column(
-            Modifier
-                .padding(contentPadding)
-                .navigationBarsPadding(bottom = false),
+            Modifier.padding(contentPadding).navigationBarsPadding(bottom = false),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -115,16 +106,12 @@ fun Review(
 
                 Text(
                     text = back,
-                    Modifier
-                        .padding(horizontal = 16.dp, vertical = 48.dp)
-                        .weight(1f),
+                    Modifier.padding(horizontal = 16.dp, vertical = 48.dp).weight(1f),
                     style = MaterialTheme.typography.h5,
                 )
 
                 AnswerButtons(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
+                    Modifier.fillMaxWidth().height(56.dp),
                     onCorrectClick,
                     onWrongClick,
                 )
@@ -133,12 +120,8 @@ fun Review(
 
                 TextButton(
                     onClick = onShowAnswerClick,
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                ) {
-                    Text(stringResource(R.string.show_answer_to_card))
-                }
+                    Modifier.fillMaxWidth().height(56.dp),
+                ) { Text(stringResource(R.string.show_answer_to_card)) }
             }
         }
 
@@ -161,9 +144,7 @@ private fun AnswerButtons(
     onWrongClick: () -> Unit,
 ) {
     Row(modifier) {
-        val size = Modifier
-            .fillMaxHeight()
-            .weight(1f)
+        val size = Modifier.fillMaxHeight().weight(1f)
 
         IconButton(onWrongClick, size) {
             Icon(

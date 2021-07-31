@@ -45,29 +45,25 @@ fun Browser(
     Scaffold(
         topBar = {
             SearchField(
-                contentPadding = rememberInsetsPaddingValues(
-                    insets = LocalWindowInsets.current.systemBars,
-                    applyBottom = false,
-                ),
+                contentPadding =
+                    rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.systemBars,
+                        applyBottom = false,
+                    ),
                 query,
                 onQueryChange
             )
         },
-        bottomBar = {
-            Spacer(
-                Modifier
-                    .navigationBarsHeight()
-                    .fillMaxWidth()
-            )
-        },
+        bottomBar = { Spacer(Modifier.navigationBarsHeight().fillMaxWidth()) },
     ) { contentPadding ->
         LazyColumn(
-            contentPadding = rememberInsetsPaddingValues(
-                insets = LocalWindowInsets.current.navigationBars,
-                applyBottom = false,
-                additionalTop = contentPadding.calculateTopPadding(),
-                additionalBottom = contentPadding.calculateBottomPadding(),
-            )
+            contentPadding =
+                rememberInsetsPaddingValues(
+                    insets = LocalWindowInsets.current.navigationBars,
+                    applyBottom = false,
+                    additionalTop = contentPadding.calculateTopPadding(),
+                    additionalBottom = contentPadding.calculateBottomPadding(),
+                )
         ) {
             items(cardItems) { item ->
                 val modifier = Modifier.heightIn(min = 48.dp)
@@ -94,35 +90,24 @@ private fun SearchField(
                 onQueryChange,
                 Modifier.fillMaxWidth(),
                 leadingIcon = {
-                    Icon(
-                        Icons.Filled.Search,
-                        contentDescription = null,
-                        Modifier.padding(8.dp)
-                    )
+                    Icon(Icons.Filled.Search, contentDescription = null, Modifier.padding(8.dp))
                 },
                 placeholder = { Text(stringResource(R.string.search_for_card)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 // The Surface below handles the shape and the background colour
                 shape = RectangleShape,
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent
-                ),
+                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
             )
         }
     }
 }
 
 @Composable
-private fun Card(
-    modifier: Modifier,
-    card: BrowserCard,
-    onClick: (cardId: Long) -> Unit
-) {
+private fun Card(modifier: Modifier, card: BrowserCard, onClick: (cardId: Long) -> Unit) {
     Text(
         card.front,
-        Modifier
-            .clickable { onClick(card.id) }
+        Modifier.clickable { onClick(card.id) }
             .background(
                 if (card.isLeech) {
                     MaterialTheme.colors.onSurface.copy(alpha = 0.12f)

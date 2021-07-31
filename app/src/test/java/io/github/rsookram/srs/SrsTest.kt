@@ -1,33 +1,33 @@
 package io.github.rsookram.srs
 
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
 
 class SrsTest {
 
-    private val inMemorySqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).apply {
-        Database.Schema.create(this)
-    }
+    private val inMemorySqlDriver =
+        JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY).apply { Database.Schema.create(this) }
 
     private val now = Instant.parse("2021-07-19T21:52:30.00Z")
 
     private val clock = AdjustableClock(now)
 
-    private val srs = Srs(
-        Database(inMemorySqlDriver),
-        NotRandom(),
-        clock,
-        Dispatchers.Unconfined,
-        getZoneId = { ZoneOffset.UTC },
-    )
+    private val srs =
+        Srs(
+            Database(inMemorySqlDriver),
+            NotRandom(),
+            clock,
+            Dispatchers.Unconfined,
+            getZoneId = { ZoneOffset.UTC },
+        )
 
     @Test
     fun emptyDb() = runBlocking {
@@ -39,7 +39,10 @@ class SrsTest {
         assertEquals(
             Pair(
                 GlobalStats(
-                    activeCount = 0, suspendedCount = 0, leechCount = 0, forReviewCount = 0
+                    activeCount = 0,
+                    suspendedCount = 0,
+                    leechCount = 0,
+                    forReviewCount = 0
                 ),
                 emptyList<DeckStats>(),
             ),
@@ -108,7 +111,10 @@ class SrsTest {
         assertEquals(
             Pair(
                 GlobalStats(
-                    activeCount = 1, suspendedCount = 0, leechCount = 0, forReviewCount = 0
+                    activeCount = 1,
+                    suspendedCount = 0,
+                    leechCount = 0,
+                    forReviewCount = 0
                 ),
                 listOf(
                     DeckStats(
@@ -312,9 +318,7 @@ class SrsTest {
         val deck = createAndReturnDeck("testName")
         val card = createAndReturnCard(deck, "front", "back")
 
-        repeat(4) {
-            srs.answerWrong(card.id)
-        }
+        repeat(4) { srs.answerWrong(card.id) }
 
         card.assertNotScheduled()
     }
@@ -351,9 +355,7 @@ class SrsTest {
     private suspend fun createAndReturnCard(deck: Deck, front: String, back: String): Card {
         srs.createCard(deck.id, front, back)
 
-        val cardToReview = srs.getCardsToReview(deck.id)
-            .first()
-            .find { it.front == front }!!
+        val cardToReview = srs.getCardsToReview(deck.id).first().find { it.front == front }!!
 
         return srs.getCardAndDeck(cardToReview.id)!!.first
     }

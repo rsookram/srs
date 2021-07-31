@@ -12,6 +12,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.Srs
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 @HiltViewModel
 class BrowserViewModel @Inject constructor(srs: Srs) : ViewModel() {
@@ -28,20 +28,21 @@ class BrowserViewModel @Inject constructor(srs: Srs) : ViewModel() {
     val queries: Flow<String> = _queries
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val pagers: Flow<PagingData<BrowserCard>> = _queries
-        .debounce(300)
-        .map { query ->
-            Pager(
-                PagingConfig(
-                    pageSize = 30,
-                    enablePlaceholders = true,
-                ),
-                pagingSourceFactory = {
-                    if (query.isNotEmpty()) srs.searchCards(query) else srs.browseCards()
-                },
-            )
-        }
-        .flatMapLatest { it.flow }
+    val pagers: Flow<PagingData<BrowserCard>> =
+        _queries
+            .debounce(300)
+            .map { query ->
+                Pager(
+                    PagingConfig(
+                        pageSize = 30,
+                        enablePlaceholders = true,
+                    ),
+                    pagingSourceFactory = {
+                        if (query.isNotEmpty()) srs.searchCards(query) else srs.browseCards()
+                    },
+                )
+            }
+            .flatMapLatest { it.flow }
 
     fun onQueryChange(q: String) {
         _queries.value = q
@@ -56,8 +57,6 @@ fun BrowserScreen(navController: NavController, vm: BrowserViewModel = hiltViewM
         cardItems,
         vm.queries.collectAsState("").value,
         vm::onQueryChange,
-        onCardClick = { cardId ->
-            navController.navigate("card/$cardId")
-        }
+        onCardClick = { cardId -> navController.navigate("card/$cardId") }
     )
 }

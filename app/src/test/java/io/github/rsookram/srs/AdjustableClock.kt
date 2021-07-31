@@ -6,8 +6,8 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 
 /**
- * Implementation of a clock that always returns the user-defined instant. Similar to
- * [Clock.fixed], but allows the instant to be changed after creation.
+ * Implementation of a clock that always returns the user-defined instant. Similar to [Clock.fixed],
+ * but allows the instant to be changed after creation.
  */
 class AdjustableClock(var instant: Instant) : Clock() {
 

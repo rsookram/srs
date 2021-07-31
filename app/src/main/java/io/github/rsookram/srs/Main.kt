@@ -16,17 +16,11 @@ fun Main() {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = "home") {
-        composable("home") {
-            HomeScreen(navController)
-        }
+        composable("home") { HomeScreen(navController) }
 
-        composable("browser") {
-            BrowserScreen(navController)
-        }
+        composable("browser") { BrowserScreen(navController) }
 
-        composable("card") {
-            CardScreen(navController, cardId = null)
-        }
+        composable("card") { CardScreen(navController, cardId = null) }
 
         composable(
             "card/{id}",

@@ -19,9 +19,7 @@ fun ConfirmDeleteCardDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.dismiss_dialog_button))
-            }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.dismiss_dialog_button)) }
         }
     )
 }

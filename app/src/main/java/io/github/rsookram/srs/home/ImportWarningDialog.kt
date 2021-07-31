@@ -12,18 +12,14 @@ fun ImportWarningDialog(onImportClick: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.import_data_title)) },
-        text = {
-            Text(stringResource(R.string.import_warning))
-        },
+        text = { Text(stringResource(R.string.import_warning)) },
         confirmButton = {
             TextButton(onClick = onImportClick) {
                 Text(stringResource(R.string.proceed_with_import))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel_action))
-            }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_action)) }
         },
     )
 }

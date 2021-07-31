@@ -5,6 +5,8 @@ plugins {
 
     id("dagger.hilt.android.plugin")
     id("com.squareup.sqldelight")
+
+    id("com.ncorti.ktfmt.gradle") version "0.6.0"
 }
 
 android {
@@ -108,4 +110,8 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hilt_version"]}")
 
     testImplementation("junit:junit:4.13.2")
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

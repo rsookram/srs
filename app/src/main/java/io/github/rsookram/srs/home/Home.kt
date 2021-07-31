@@ -66,10 +66,11 @@ fun Home(
     onDeckSaveClick: (deckId: Long, DeckName, IntervalModifier) -> Unit,
     onDeckDeleteClick: (deckId: Long) -> Unit,
 ) {
-    val scaffoldState = rememberBackdropScaffoldState(
-        BackdropValue.Concealed,
-        snackbarHostState = snackbarHostState,
-    )
+    val scaffoldState =
+        rememberBackdropScaffoldState(
+            BackdropValue.Concealed,
+            snackbarHostState = snackbarHostState,
+        )
 
     var showImportWarningDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -83,10 +84,11 @@ fun Home(
             appBar = {
                 TopAppBar(
                     title = { Text(stringResource(R.string.app_name)) },
-                    contentPadding = rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.systemBars,
-                        applyBottom = false,
-                    ),
+                    contentPadding =
+                        rememberInsetsPaddingValues(
+                            insets = LocalWindowInsets.current.systemBars,
+                            applyBottom = false,
+                        ),
                     actions = {
                         IconButton(onClick = onSearchClick) {
                             Icon(
@@ -102,27 +104,24 @@ fun Home(
                                     expanded.value = false
                                     onExportClick()
                                 }
-                            ) {
-                                Text(stringResource(R.string.export_data))
-                            }
+                            ) { Text(stringResource(R.string.export_data)) }
                             DropdownMenuItem(
                                 onClick = {
                                     expanded.value = false
                                     showImportWarningDialog = true
                                 }
-                            ) {
-                                Text(stringResource(R.string.import_data))
-                            }
+                            ) { Text(stringResource(R.string.import_data)) }
                         }
                     }
                 )
             },
             backLayerContent = {
                 Stats(
-                    contentPadding = rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.navigationBars,
-                        applyBottom = false,
-                    ),
+                    contentPadding =
+                        rememberInsetsPaddingValues(
+                            insets = LocalWindowInsets.current.navigationBars,
+                            applyBottom = false,
+                        ),
                     global = globalStats,
                     decks = deckStats,
                 )
@@ -142,10 +141,10 @@ fun Home(
                     if (showAddCard) {
                         FloatingActionButton(
                             onClick = onAddCardClick,
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .navigationBarsPadding()
-                                .padding(16.dp),
+                            modifier =
+                                Modifier.align(Alignment.BottomEnd)
+                                    .navigationBarsPadding()
+                                    .padding(16.dp),
                         ) {
                             Icon(
                                 Icons.Default.Add,
@@ -195,42 +194,50 @@ private fun HomePreview() = SrsTheme {
 
     Home(
         snackbarHostState,
-        decks = listOf(
-            DeckWithCount(id = 1, name = "中文", intervalModifier = 100, scheduledCardCount = 0),
-            DeckWithCount(id = 2, name = "日本語", intervalModifier = 100, scheduledCardCount = 12),
-        ),
-        globalStats = GlobalStats(
-            activeCount = 1375,
-            suspendedCount = 278,
-            leechCount = 0,
-            forReviewCount = 37,
-        ),
-        deckStats = listOf(
-            DeckStats(
-                name = "prog",
-                activeCount = 1177,
-                suspendedCount = 266,
-                leechCount = 0,
-                correctCount = 391,
-                wrongCount = 17,
+        decks =
+            listOf(
+                DeckWithCount(id = 1, name = "中文", intervalModifier = 100, scheduledCardCount = 0),
+                DeckWithCount(
+                    id = 2,
+                    name = "日本語",
+                    intervalModifier = 100,
+                    scheduledCardCount = 12
+                ),
             ),
-            DeckStats(
-                name = "中文",
-                activeCount = 60,
-                suspendedCount = 7,
+        globalStats =
+            GlobalStats(
+                activeCount = 1375,
+                suspendedCount = 278,
                 leechCount = 0,
-                correctCount = 40,
-                wrongCount = 1,
+                forReviewCount = 37,
             ),
-            DeckStats(
-                name = "日本語",
-                activeCount = 138,
-                suspendedCount = 5,
-                leechCount = 0,
-                correctCount = 52,
-                wrongCount = 1,
+        deckStats =
+            listOf(
+                DeckStats(
+                    name = "prog",
+                    activeCount = 1177,
+                    suspendedCount = 266,
+                    leechCount = 0,
+                    correctCount = 391,
+                    wrongCount = 17,
+                ),
+                DeckStats(
+                    name = "中文",
+                    activeCount = 60,
+                    suspendedCount = 7,
+                    leechCount = 0,
+                    correctCount = 40,
+                    wrongCount = 1,
+                ),
+                DeckStats(
+                    name = "日本語",
+                    activeCount = 138,
+                    suspendedCount = 5,
+                    leechCount = 0,
+                    correctCount = 52,
+                    wrongCount = 1,
+                ),
             ),
-        ),
         onSearchClick = {},
         onExportClick = {},
         onImportClick = {},
@@ -252,9 +259,10 @@ private fun DeckList(
     onCreateClick: () -> Unit,
 ) {
     LazyColumn(
-        contentPadding = rememberInsetsPaddingValues(
-            insets = LocalWindowInsets.current.navigationBars,
-        )
+        contentPadding =
+            rememberInsetsPaddingValues(
+                insets = LocalWindowInsets.current.navigationBars,
+            )
     ) {
         item {
             Text(
@@ -275,9 +283,7 @@ private fun DeckList(
             )
         }
 
-        item {
-            CreateDeckItem(Modifier.clickable(onClick = onCreateClick))
-        }
+        item { CreateDeckItem(Modifier.clickable(onClick = onCreateClick)) }
     }
 }
 
@@ -290,9 +296,7 @@ private fun DeckItem(
     Row(modifier.heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             deckName,
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp),
+            Modifier.weight(1f).padding(horizontal = 16.dp),
         )
 
         Text(scheduledCardCount.toString(), Modifier.padding(end = 16.dp))
@@ -320,9 +324,7 @@ private fun CreateDeckItem(modifier: Modifier = Modifier) {
 
         Text(
             stringResource(R.string.create_card_deck),
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp),
+            Modifier.weight(1f).padding(horizontal = 16.dp),
         )
     }
 }

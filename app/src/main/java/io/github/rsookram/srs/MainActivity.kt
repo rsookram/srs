@@ -27,15 +27,9 @@ class MainActivity : ComponentActivity() {
                 val systemUiController = rememberSystemUiController()
                 val isLight = MaterialTheme.colors.isLight
 
-                SideEffect {
-                    systemUiController.applyTheme(isLight)
-                }
+                SideEffect { systemUiController.applyTheme(isLight) }
 
-                ProvideWindowInsets {
-                    Surface(color = MaterialTheme.colors.background) {
-                        Main()
-                    }
-                }
+                ProvideWindowInsets { Surface(color = MaterialTheme.colors.background) { Main() } }
             }
         }
     }
@@ -47,10 +41,11 @@ class MainActivity : ComponentActivity() {
         setStatusBarColor(systemBar)
         setNavigationBarColor(systemBar)
 
-        window.decorView.systemUiVisibility = if (isLight) {
-            window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else {
-            window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        }
+        window.decorView.systemUiVisibility =
+            if (isLight) {
+                window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            }
     }
 }

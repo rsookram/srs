@@ -21,8 +21,6 @@ fun OverflowMenu(expanded: MutableState<Boolean>, content: @Composable () -> Uni
             )
         }
 
-        DropdownMenu(expanded.value, onDismissRequest = { expanded.value = false }) {
-            content()
-        }
+        DropdownMenu(expanded.value, onDismissRequest = { expanded.value = false }) { content() }
     }
 }

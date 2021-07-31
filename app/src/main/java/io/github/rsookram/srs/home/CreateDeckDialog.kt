@@ -48,10 +48,10 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
                 OutlinedTextField(
                     value = deckName,
                     onValueChange = { deckName = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .focusRequester(focusRequester),
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .focusRequester(focusRequester),
                     label = { Text(stringResource(R.string.card_deck_name)) },
                 )
 
@@ -59,18 +59,14 @@ fun CreateDeckDialog(onCreateClick: (DeckName) -> Unit, onDismiss: () -> Unit) {
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                 ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.cancel_action))
-                    }
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel_action)) }
 
                     TextButton(
                         onClick = {
                             onCreateClick(deckName)
                             onDismiss()
                         }
-                    ) {
-                        Text(stringResource(R.string.create_deck_button))
-                    }
+                    ) { Text(stringResource(R.string.create_deck_button)) }
                 }
             }
         }

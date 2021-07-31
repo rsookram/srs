@@ -76,21 +76,21 @@ fun Card(
         topBar = {
             Surface(color = MaterialTheme.colors.primarySurface) {
                 TopAppBar(
-                    modifier = Modifier.padding(
-                        rememberInsetsPaddingValues(
-                            insets = LocalWindowInsets.current.systemBars,
-                            applyBottom = false,
-                        )
-                    ),
+                    modifier =
+                        Modifier.padding(
+                            rememberInsetsPaddingValues(
+                                insets = LocalWindowInsets.current.systemBars,
+                                applyBottom = false,
+                            )
+                        ),
                 ) {
                     Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
                         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
                             IconButton(onClick = onUpClick) {
                                 Icon(
                                     Icons.Filled.ArrowBack,
-                                    contentDescription = stringResource(
-                                        R.string.toolbar_up_description
-                                    ),
+                                    contentDescription =
+                                        stringResource(R.string.toolbar_up_description),
                                 )
                             }
                         }
@@ -100,8 +100,7 @@ fun Card(
 
                     Box(Modifier.weight(1f)) {
                         Box(
-                            Modifier
-                                .clickable { deckListExpanded = true }
+                            Modifier.clickable { deckListExpanded = true }
                                 .fillMaxHeight()
                                 .widthIn(min = 128.dp),
                             Alignment.CenterStart,
@@ -137,7 +136,6 @@ fun Card(
             ) {
                 Icon(
                     Icons.Default.Check,
-                    // contentDescription = Strings.confirmChangesToCard(),
                     contentDescription = stringResource(R.string.confirm_changes_to_card),
                 )
             }
@@ -146,8 +144,7 @@ fun Card(
         val windowInsets = LocalWindowInsets.current
 
         Column(
-            Modifier
-                .verticalScroll(rememberScrollState())
+            Modifier.verticalScroll(rememberScrollState())
                 .padding(16.dp)
                 .padding(
                     rememberInsetsPaddingValues(
@@ -193,19 +190,18 @@ private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
                 expanded.value = false
                 onDeleteClick()
             }
-        ) {
-            Text(stringResource(R.string.delete_card))
-        }
+        ) { Text(stringResource(R.string.delete_card)) }
     }
 }
 
 @Preview
 @Composable
 private fun CardPreview() = SrsTheme {
-    val decks = listOf(
-        Deck(id = 1, name = "中文", creationTimestamp = "", intervalModifier = 100),
-        Deck(id = 2, name = "日本語", creationTimestamp = "", intervalModifier = 100),
-    )
+    val decks =
+        listOf(
+            Deck(id = 1, name = "中文", creationTimestamp = "", intervalModifier = 100),
+            Deck(id = 2, name = "日本語", creationTimestamp = "", intervalModifier = 100),
+        )
 
     Card(
         front = "",
