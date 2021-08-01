@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
 
     val accompanist_version by extra("0.15.0")
@@ -17,6 +19,19 @@ buildscript {
 
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
         classpath("com.squareup.sqldelight:gradle-plugin:$sqldelight_version")
+    }
+}
+
+allprojects {
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            freeCompilerArgs += listOf(
+                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi", // Modifier.combinedClickable
+                "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi", // BackdropScaffold
+                "-Xopt-in=kotlinx.coroutines.FlowPreview", // Flow.debounce
+                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi", // Flow.flatMapLatest
+            )
+        }
     }
 }
 

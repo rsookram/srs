@@ -1,6 +1,5 @@
 package io.github.rsookram.srs.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -14,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -49,7 +47,6 @@ import io.github.rsookram.srs.ui.theme.SrsTheme
 
 typealias DeckName = String
 
-@OptIn(ExperimentalMaterialApi::class) // For BackdropScaffold
 @Composable
 fun Home(
     snackbarHostState: SnackbarHostState,
@@ -250,7 +247,6 @@ private fun HomePreview() = SrsTheme {
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class) // For Modifier.combinedClickable
 @Composable
 private fun DeckList(
     decks: List<DeckWithCount>,

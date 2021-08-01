@@ -13,8 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.Srs
 import javax.inject.Inject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -27,7 +25,6 @@ class BrowserViewModel @Inject constructor(srs: Srs) : ViewModel() {
     private val _queries = MutableStateFlow("")
     val queries: Flow<String> = _queries
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val pagers: Flow<PagingData<BrowserCard>> =
         _queries
             .debounce(300)
