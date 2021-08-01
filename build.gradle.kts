@@ -25,6 +25,8 @@ buildscript {
 allprojects {
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
+            allWarningsAsErrors = true
+
             freeCompilerArgs += listOf(
                 "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi", // Modifier.combinedClickable
                 "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi", // BackdropScaffold
