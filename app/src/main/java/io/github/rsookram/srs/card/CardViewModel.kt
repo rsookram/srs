@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/** ViewModel for [Card]. */
 @HiltViewModel
 class CardViewModel
 @Inject
@@ -30,6 +31,7 @@ constructor(
     @ApplicationScope private val applicationScope: CoroutineScope,
 ) : ViewModel() {
 
+    /** The ID of the card being edited. null when creating a card. */
     val cardId: Long? = savedStateHandle.get<Long>("id")
 
     var front by mutableStateOf("")
@@ -98,6 +100,7 @@ constructor(
     }
 }
 
+/** Composable to bind [CardViewModel] to [Card]. */
 @Composable
 fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()) {
     Card(
