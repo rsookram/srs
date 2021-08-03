@@ -1,13 +1,13 @@
 package io.github.rsookram.srs.card
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -21,38 +21,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/** ViewModel for [Card]. */
 @HiltViewModel
 class CardViewModel
 @Inject
 constructor(
     private val srs: Srs,
+    savedStateHandle: SavedStateHandle,
     @ApplicationScope private val applicationScope: CoroutineScope,
 ) : ViewModel() {
 
-    var cardId: Long? = null
-        set(value) {
-            field = value
-
-            enableDeletion = value != null
-
-            viewModelScope.launch {
-                if (value != null) {
-                    val cardAndDeck = srs.getCardAndDeck(value)
-                    if (cardAndDeck != null) {
-                        val (card, deck) = cardAndDeck
-
-                        front = card.front
-                        back = card.back
-
-                        this@CardViewModel.deck = deck
-                    }
-                } else {
-                    // Default the new card to being in the first deck returned
-                    val decks = srs.getDecks().first()
-                    deck = decks.first()
-                }
-            }
-        }
+    /** The ID of the card being edited. null when creating a card. */
+    val cardId: Long? = savedStateHandle.get<Long>("id")
 
     var front by mutableStateOf("")
         private set
@@ -65,6 +45,28 @@ constructor(
     val selectedDeckName: String by derivedStateOf { deck?.name.orEmpty() }
 
     var enableDeletion by mutableStateOf(false)
+
+    init {
+        enableDeletion = cardId != null
+
+        viewModelScope.launch {
+            if (cardId != null) {
+                val cardAndDeck = srs.getCardAndDeck(cardId)
+                if (cardAndDeck != null) {
+                    val (card, deck) = cardAndDeck
+
+                    front = card.front
+                    back = card.back
+
+                    this@CardViewModel.deck = deck
+                }
+            } else {
+                // Default the new card to being in the first deck returned
+                val decks = srs.getDecks().first()
+                deck = decks.first()
+            }
+        }
+    }
 
     fun onFrontChange(s: String) {
         front = s
@@ -98,11 +100,9 @@ constructor(
     }
 }
 
+/** Composable to bind [CardViewModel] to [Card]. */
 @Composable
-fun CardScreen(navController: NavController, cardId: Long?, vm: CardViewModel = hiltViewModel()) {
-    // TODO: Get this through saved state handle
-    LaunchedEffect(key1 = cardId) { vm.cardId = cardId }
-
+fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()) {
     Card(
         front = vm.front,
         onFrontChange = vm::onFrontChange,
