@@ -15,27 +15,22 @@ import io.github.rsookram.srs.review.ReviewScreen
 fun Main() {
     val navController = rememberNavController()
 
+    // Arguments are retrieved through SavedStateHandle
     NavHost(navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
 
         composable("browser") { BrowserScreen(navController) }
 
-        composable("card") { CardScreen(navController, cardId = null) }
+        composable("card") { CardScreen(navController) }
 
         composable(
             "card/{id}",
             listOf(navArgument("id") { type = NavType.LongType }),
-        ) { backStackEntry ->
-            val cardId = backStackEntry.arguments?.getLong("id")!!
-            CardScreen(navController, cardId)
-        }
+        ) { CardScreen(navController) }
 
         composable(
             "review/{deckId}",
             listOf(navArgument("deckId") { type = NavType.LongType }),
-        ) {
-            // deckId is retrieved through SavedStateHandle
-            ReviewScreen(navController)
-        }
+        ) { ReviewScreen(navController) }
     }
 }
