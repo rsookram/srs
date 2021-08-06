@@ -21,6 +21,9 @@ jobs:
       - name: Check formatting
         run: ./gradlew ktfmtCheck
 
+      - name: Lint
+        run: ./gradlew lintRelease
+
       - name: Test
         run: ./gradlew testDebug
 
