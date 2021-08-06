@@ -32,6 +32,11 @@ android {
 
         isWarningsAsErrors = true
         isAbortOnError = true
+
+        // This check goes against the Material Design guidelines:
+        // https://material.io/components/dialogs#actions
+        // https://material.io/components/buttons#anatomy
+        disable("ButtonCase")
     }
 
     packagingOptions.resources {
