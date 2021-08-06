@@ -25,8 +25,13 @@ android {
     }
 
     lint {
-        // TODO: Run lint on CI
+        // Lint is run on CI
         isCheckReleaseBuilds = false
+
+        textReport = true
+
+        isWarningsAsErrors = true
+        isAbortOnError = true
     }
 
     packagingOptions.resources {
