@@ -2,23 +2,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
 
-    val accompanist_version by extra("0.16.0")
-    val compose_version by extra("1.0.1")
-    val coroutines_version by extra("1.5.1")
-    val hilt_version by extra("2.38.1")
-    val sqldelight_version by extra("1.5.1")
-
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
+        // TODO: Remove this when on Gradle 7.2. https://github.com/gradle/gradle/pull/17394
+        val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs") as org.gradle.accessors.dm.LibrariesForLibs
 
-        classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
-        classpath("com.squareup.sqldelight:gradle-plugin:$sqldelight_version")
+        classpath(libs.agp)
+        classpath(libs.kotlin.gradlePlugin)
+
+        classpath(libs.hilt.gradlePlugin)
+        classpath(libs.sqldelight.gradlePlugin)
     }
 }
 
