@@ -88,38 +88,38 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.activity:activity-compose:1.3.1")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha12")
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.hiltNavigationCompose)
+    implementation(libs.androidx.viewmodelCompose)
+    implementation(libs.androidx.navigation)
+    implementation(libs.androidx.paging)
 
-    implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.uiTooling)
 
-    implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["accompanist_version"]}")
-    implementation("com.google.accompanist:accompanist-insets-ui:${rootProject.extra["accompanist_version"]}")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:${rootProject.extra["accompanist_version"]}")
+    implementation(libs.accompanist.insets)
+    implementation(libs.accompanist.insetsUi)
+    implementation(libs.accompanist.systemuicontroller)
 
-    implementation("com.squareup.sqldelight:android-driver:${rootProject.extra["sqldelight_version"]}")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${rootProject.extra["sqldelight_version"]}")
-    implementation("com.squareup.sqldelight:android-paging3-extensions:${rootProject.extra["sqldelight_version"]}")
-    testImplementation("com.squareup.sqldelight:sqlite-driver:${rootProject.extra["sqldelight_version"]}")
+    implementation(libs.sqldelight.android)
+    implementation(libs.sqldelight.coroutines)
+    implementation(libs.sqldelight.paging)
+    testImplementation(libs.sqldelight.test)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines_version"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.extra["coroutines_version"]}")
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
 
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
-    kapt("com.google.dagger:hilt-compiler:${rootProject.extra["hilt_version"]}")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 }
 
 ktfmt {
