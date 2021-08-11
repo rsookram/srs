@@ -199,8 +199,8 @@ private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
 private fun CardPreview() = SrsTheme {
     val decks =
         listOf(
-            Deck(id = 1, name = "中文", creationTimestamp = "", intervalModifier = 100),
-            Deck(id = 2, name = "日本語", creationTimestamp = "", intervalModifier = 100),
+            Deck(id = 1, name = "中文", creationTimestamp = 0, intervalModifier = 100),
+            Deck(id = 2, name = "日本語", creationTimestamp = 0, intervalModifier = 100),
         )
 
     Card(
