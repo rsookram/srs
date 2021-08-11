@@ -3,7 +3,7 @@ CREATE TABLE Card(
     deckId INTEGER NOT NULL REFERENCES Deck(id) ON DELETE CASCADE,
     front TEXT NOT NULL,
     back TEXT NOT NULL,
-    creationTimestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    creationTimestamp INTEGER NOT NULL -- In milliseconds since Unix epoch
 );
 
 CREATE INDEX cardCreationTimestamp ON Card(creationTimestamp);
@@ -13,7 +13,7 @@ select:
 SELECT * FROM Card WHERE id = ?;
 
 insert:
-INSERT INTO Card(deckId, front, back) VALUES (?, ?, ?);
+INSERT INTO Card(deckId, front, back, creationTimestamp) VALUES (?, ?, ?, ?);
 
 getLastCreatedId:
 SELECT last_insert_rowid();

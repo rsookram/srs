@@ -39,7 +39,9 @@ class Srs(
             .asFlow()
             .mapToList()
 
-    suspend fun createDeck(name: String) = withContext(ioDispatcher) { db.deckQueries.insert(name) }
+    suspend fun createDeck(
+        name: String,
+    ) = withContext(ioDispatcher) { db.deckQueries.insert(name, clock.millis()) }
 
     suspend fun editDeck(
         id: Long,
@@ -89,7 +91,7 @@ class Srs(
     suspend fun createCard(deckId: Long, front: String, back: String) =
         withContext(ioDispatcher) {
             db.transaction {
-                db.cardQueries.insert(deckId, front, back)
+                db.cardQueries.insert(deckId, front, back, creationTimestamp = clock.millis())
 
                 val id = db.cardQueries.getLastCreatedId().executeAsOne()
                 db.scheduleQueries.insert(

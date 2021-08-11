@@ -1,7 +1,7 @@
 CREATE TABLE Answer(
     cardId INTEGER NOT NULL REFERENCES Card(id) ON DELETE CASCADE,
     isCorrect INTEGER AS Boolean NOT NULL,
-    timestamp INTEGER NOT NULL
+    timestamp INTEGER NOT NULL -- In milliseconds since Unix epoch
 );
 
 CREATE INDEX answerCardId ON Answer(cardId);
