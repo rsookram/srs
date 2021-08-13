@@ -94,17 +94,25 @@ constructor(
     fun onConfirmClick() {
         val deck = deck ?: return
 
+        val currentFront = front
+        val currentBack = back
+
         applicationScope.launch {
             val id = cardId
             if (id == null) {
-                srs.createCard(deck.id, front, back)
+                srs.createCard(deck.id, currentFront, currentBack)
             } else {
-                srs.editCard(id, deck.id, front, back)
+                srs.editCard(id, deck.id, currentFront, currentBack)
             }
         }
 
-        // TODO: Add support for adding multiple cards without leaving screen
-        viewModelScope.launch { _upNavigations.send(Unit) }
+        if (cardId != null) {
+            viewModelScope.launch { _upNavigations.send(Unit) }
+        } else {
+            // Allow multiple cards to be added without leaving the screen
+            front = ""
+            back = ""
+        }
     }
 
     fun onDeleteCardClick() {
