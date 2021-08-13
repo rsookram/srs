@@ -1,6 +1,7 @@
 package io.github.rsookram.srs.card
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -17,8 +18,11 @@ import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.Srs
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 /** ViewModel for [Card]. */
@@ -45,6 +49,9 @@ constructor(
     val selectedDeckName: String by derivedStateOf { deck?.name.orEmpty() }
 
     var enableDeletion by mutableStateOf(false)
+
+    private val _upNavigations = Channel<Unit>()
+    val upNavigations = _upNavigations.receiveAsFlow()
 
     init {
         enableDeletion = cardId != null
@@ -80,6 +87,10 @@ constructor(
         this.deck = deck
     }
 
+    fun onUpClick() {
+        viewModelScope.launch { _upNavigations.send(Unit) }
+    }
+
     fun onConfirmClick() {
         val deck = deck ?: return
 
@@ -91,18 +102,25 @@ constructor(
                 srs.editCard(id, deck.id, front, back)
             }
         }
+
+        // TODO: Add support for adding multiple cards without leaving screen
+        viewModelScope.launch { _upNavigations.send(Unit) }
     }
 
     fun onDeleteCardClick() {
         val id = cardId ?: return
 
         applicationScope.launch { srs.deleteCard(id) }
+
+        viewModelScope.launch { _upNavigations.send(Unit) }
     }
 }
 
 /** Composable to bind [CardViewModel] to [Card]. */
 @Composable
 fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()) {
+    LaunchedEffect(vm.upNavigations) { vm.upNavigations.collect { navController.popBackStack() } }
+
     Card(
         front = vm.front,
         onFrontChange = vm::onFrontChange,
@@ -111,16 +129,9 @@ fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()
         selectedDeckName = vm.selectedDeckName,
         onDeckClick = vm::onDeckClick,
         decks = vm.decks.collectAsState(emptyList()).value,
-        onUpClick = { navController.popBackStack() },
-        onConfirmClick = {
-            // TODO: Add support for adding multiple cards without leaving screen
-            vm.onConfirmClick()
-            navController.popBackStack()
-        },
+        onUpClick = vm::onUpClick,
+        onConfirmClick = vm::onConfirmClick,
         enableDeletion = vm.enableDeletion,
-        onDeleteCardClick = {
-            vm.onDeleteCardClick()
-            navController.popBackStack()
-        }
+        onDeleteCardClick = vm::onDeleteCardClick,
     )
 }
