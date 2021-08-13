@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
@@ -34,6 +35,7 @@ import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.R
+import io.github.rsookram.srs.ui.theme.SrsTheme
 
 @Composable
 fun Browser(
@@ -96,6 +98,12 @@ private fun SearchField(
     }
 }
 
+@Preview
+@Composable
+private fun SearchFieldPreview() = SrsTheme {
+    SearchField(contentPadding = PaddingValues(), query = "", onQueryChange = {})
+}
+
 @Composable
 private fun Content(
     contentPadding: PaddingValues,
@@ -134,5 +142,27 @@ private fun Card(modifier: Modifier, label: String, isLeech: Boolean, onClick: (
             .fillMaxWidth()
             .then(modifier)
             .padding(16.dp)
+    )
+}
+
+@Preview
+@Composable
+private fun CardPreview() = SrsTheme {
+    Card(
+        Modifier.heightIn(min = 48.dp),
+        label = "card is not leech",
+        isLeech = false,
+        onClick = {},
+    )
+}
+
+@Preview
+@Composable
+private fun LeechCardPreview() = SrsTheme {
+    Card(
+        Modifier.heightIn(min = 48.dp),
+        label = "card is leech",
+        isLeech = true,
+        onClick = {},
     )
 }
