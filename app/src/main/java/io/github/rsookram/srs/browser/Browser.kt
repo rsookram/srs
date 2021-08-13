@@ -37,7 +37,7 @@ import io.github.rsookram.srs.R
 
 @Composable
 fun Browser(
-    cardItems: LazyPagingItems<BrowserCard>,
+    cards: LazyPagingItems<BrowserCard>,
     query: String,
     onQueryChange: (String) -> Unit,
     onCardClick: (cardId: Long) -> Unit,
@@ -56,24 +56,17 @@ fun Browser(
         },
         bottomBar = { Spacer(Modifier.navigationBarsWithImePadding().fillMaxWidth()) },
     ) { contentPadding ->
-        LazyColumn(
+        Content(
             contentPadding =
                 rememberInsetsPaddingValues(
                     insets = LocalWindowInsets.current.navigationBars,
                     applyBottom = false,
                     additionalTop = contentPadding.calculateTopPadding(),
                     additionalBottom = contentPadding.calculateBottomPadding(),
-                )
-        ) {
-            items(cardItems) { item ->
-                val modifier = Modifier.heightIn(min = 48.dp)
-                if (item != null) {
-                    Card(modifier, item, onCardClick)
-                } else {
-                    Spacer(modifier)
-                }
-            }
-        }
+                ),
+            cards,
+            onCardClick,
+        )
     }
 }
 
@@ -104,12 +97,35 @@ private fun SearchField(
 }
 
 @Composable
-private fun Card(modifier: Modifier, card: BrowserCard, onClick: (cardId: Long) -> Unit) {
+private fun Content(
+    contentPadding: PaddingValues,
+    cards: LazyPagingItems<BrowserCard>,
+    onCardClick: (cardId: Long) -> Unit,
+) {
+    LazyColumn(contentPadding = contentPadding) {
+        items(cards) { item ->
+            val modifier = Modifier.heightIn(min = 48.dp)
+            if (item != null) {
+                Card(
+                    modifier,
+                    item.front,
+                    item.isLeech,
+                    onClick = { onCardClick(item.id) },
+                )
+            } else {
+                Spacer(modifier)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Card(modifier: Modifier, label: String, isLeech: Boolean, onClick: () -> Unit) {
     Text(
-        card.front,
-        Modifier.clickable { onClick(card.id) }
+        label,
+        Modifier.clickable { onClick() }
             .background(
-                if (card.isLeech) {
+                if (isLeech) {
                     MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
                 } else {
                     Color.Transparent
