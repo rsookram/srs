@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.R
@@ -54,7 +54,7 @@ fun Browser(
                 onQueryChange
             )
         },
-        bottomBar = { Spacer(Modifier.navigationBarsHeight().fillMaxWidth()) },
+        bottomBar = { Spacer(Modifier.navigationBarsWithImePadding().fillMaxWidth()) },
     ) { contentPadding ->
         LazyColumn(
             contentPadding =
