@@ -20,16 +20,13 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -74,58 +71,54 @@ fun Card(
 
     Scaffold(
         topBar = {
-            Surface(color = MaterialTheme.colors.primarySurface) {
-                TopAppBar(
-                    modifier =
-                        Modifier.padding(
-                            rememberInsetsPaddingValues(
-                                insets = LocalWindowInsets.current.systemBars,
-                                applyBottom = false,
-                            )
-                        ),
-                ) {
-                    Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
-                            IconButton(onClick = onUpClick) {
-                                Icon(
-                                    Icons.Filled.ArrowBack,
-                                    contentDescription =
-                                        stringResource(R.string.toolbar_up_description),
-                                )
-                            }
-                        }
-                    }
-
-                    var deckListExpanded by remember { mutableStateOf(false) }
-
-                    Box(Modifier.weight(1f)) {
-                        Box(
-                            Modifier.clickable { deckListExpanded = true }
-                                .fillMaxHeight()
-                                .widthIn(min = 128.dp),
-                            Alignment.CenterStart,
-                        ) {
-                            Text(
-                                text = selectedDeckName,
-                                Modifier.padding(horizontal = 16.dp),
+            TopAppBar(
+                modifier =
+                    Modifier.padding(
+                        rememberInsetsPaddingValues(
+                            insets = LocalWindowInsets.current.systemBars,
+                            applyBottom = false,
+                        )
+                    ),
+            ) {
+                Row(Modifier.width(68.dp), verticalAlignment = Alignment.CenterVertically) {
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                        IconButton(onClick = onUpClick) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                contentDescription =
+                                    stringResource(R.string.toolbar_up_description),
                             )
                         }
+                    }
+                }
 
-                        DropdownMenu(
-                            expanded = deckListExpanded,
-                            onDismissRequest = { deckListExpanded = false }
-                        ) {
-                            decks.forEach { deck ->
-                                DropdownMenuItem(onClick = { onDeckClick(deck) }) {
-                                    Text(deck.name)
-                                }
-                            }
+                var deckListExpanded by remember { mutableStateOf(false) }
+
+                Box(Modifier.weight(1f)) {
+                    Box(
+                        Modifier.clickable { deckListExpanded = true }
+                            .fillMaxHeight()
+                            .widthIn(min = 128.dp),
+                        Alignment.CenterStart,
+                    ) {
+                        Text(
+                            text = selectedDeckName,
+                            Modifier.padding(horizontal = 16.dp),
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = deckListExpanded,
+                        onDismissRequest = { deckListExpanded = false }
+                    ) {
+                        decks.forEach { deck ->
+                            DropdownMenuItem(onClick = { onDeckClick(deck) }) { Text(deck.name) }
                         }
                     }
+                }
 
-                    if (enableDeletion) {
-                        DeleteOverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
-                    }
+                if (enableDeletion) {
+                    DeleteOverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
                 }
             }
         },
