@@ -91,30 +91,7 @@ fun Card(
                     }
                 }
 
-                var deckListExpanded by remember { mutableStateOf(false) }
-
-                Box(Modifier.weight(1f)) {
-                    Box(
-                        Modifier.clickable { deckListExpanded = true }
-                            .fillMaxHeight()
-                            .widthIn(min = 128.dp),
-                        Alignment.CenterStart,
-                    ) {
-                        Text(
-                            text = selectedDeckName,
-                            Modifier.padding(horizontal = 16.dp),
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = deckListExpanded,
-                        onDismissRequest = { deckListExpanded = false }
-                    ) {
-                        decks.forEach { deck ->
-                            DropdownMenuItem(onClick = { onDeckClick(deck) }) { Text(deck.name) }
-                        }
-                    }
-                }
+                DeckDropdownMenu(Modifier.weight(1f), selectedDeckName, decks, onDeckClick)
 
                 if (enableDeletion) {
                     DeleteOverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
@@ -172,20 +149,6 @@ fun Card(
     }
 }
 
-@Composable
-private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
-    val expanded = remember { mutableStateOf(false) }
-
-    OverflowMenu(expanded) {
-        DropdownMenuItem(
-            onClick = {
-                expanded.value = false
-                onDeleteClick()
-            }
-        ) { Text(stringResource(R.string.delete_card)) }
-    }
-}
-
 @Preview
 @Composable
 private fun CardPreview() = SrsTheme {
@@ -208,4 +171,50 @@ private fun CardPreview() = SrsTheme {
         enableDeletion = false,
         onDeleteCardClick = {},
     )
+}
+
+@Composable
+private fun DeckDropdownMenu(
+    modifier: Modifier = Modifier,
+    selectedDeckName: DeckName,
+    decks: List<Deck>,
+    onDeckClick: (Deck) -> Unit,
+) {
+    var deckListExpanded by remember { mutableStateOf(false) }
+
+    Box(modifier) {
+        Box(
+            Modifier.clickable { deckListExpanded = true }.fillMaxHeight().widthIn(min = 128.dp),
+            Alignment.CenterStart,
+        ) { Text(text = selectedDeckName, Modifier.padding(horizontal = 16.dp)) }
+
+        DropdownMenu(
+            expanded = deckListExpanded,
+            onDismissRequest = { deckListExpanded = false },
+        ) {
+            decks.forEach { deck ->
+                DropdownMenuItem(onClick = { onDeckClick(deck) }) { Text(deck.name) }
+            }
+        }
+    }
+}
+
+@Preview(heightDp = 56)
+@Composable
+private fun DeckDropdownMenuPreview() = SrsTheme {
+    DeckDropdownMenu(selectedDeckName = "日本語", decks = emptyList(), onDeckClick = {})
+}
+
+@Composable
+private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
+    val expanded = remember { mutableStateOf(false) }
+
+    OverflowMenu(expanded) {
+        DropdownMenuItem(
+            onClick = {
+                expanded.value = false
+                onDeleteClick()
+            }
+        ) { Text(stringResource(R.string.delete_card)) }
+    }
 }
