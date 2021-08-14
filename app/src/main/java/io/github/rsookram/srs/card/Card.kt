@@ -210,7 +210,12 @@ private fun DeckDropdownMenu(
             onDismissRequest = { deckListExpanded = false },
         ) {
             decks.forEach { deck ->
-                DropdownMenuItem(onClick = { onDeckClick(deck) }) { Text(deck.name) }
+                DropdownMenuItem(
+                    onClick = {
+                        onDeckClick(deck)
+                        deckListExpanded = false
+                    }
+                ) { Text(deck.name) }
             }
         }
     }
