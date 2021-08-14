@@ -3,6 +3,7 @@ package io.github.rsookram.srs.card
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -35,7 +37,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
@@ -182,11 +186,24 @@ private fun DeckDropdownMenu(
 ) {
     var deckListExpanded by remember { mutableStateOf(false) }
 
+    // Replace with ExposedDropdownMenu when available:
+    // https://issuetracker.google.com/issues/172170247
     Box(modifier) {
-        Box(
-            Modifier.clickable { deckListExpanded = true }.fillMaxHeight().widthIn(min = 128.dp),
-            Alignment.CenterStart,
-        ) { Text(text = selectedDeckName, Modifier.padding(horizontal = 16.dp)) }
+        Row(
+            Modifier.clickable { deckListExpanded = true }
+                .fillMaxHeight()
+                .widthIn(min = 128.dp, max = 144.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(text = selectedDeckName, Modifier.weight(1f), overflow = TextOverflow.Ellipsis)
+
+            Icon(
+                Icons.Filled.ArrowDropDown,
+                contentDescription = null,
+                modifier = Modifier.rotate(if (deckListExpanded) 180f else 0f),
+            )
+        }
 
         DropdownMenu(
             expanded = deckListExpanded,
@@ -199,7 +216,7 @@ private fun DeckDropdownMenu(
     }
 }
 
-@Preview(heightDp = 56)
+@Preview(widthDp = 156, heightDp = 56)
 @Composable
 private fun DeckDropdownMenuPreview() = SrsTheme {
     DeckDropdownMenu(selectedDeckName = "日本語", decks = emptyList(), onDeckClick = {})
