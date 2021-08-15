@@ -90,6 +90,13 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -120,6 +127,9 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.compose.junit)
+    testImplementation(libs.robolectric)
+    debugImplementation(libs.compose.testManifest)
 }
 
 ktfmt {

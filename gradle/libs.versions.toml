@@ -22,6 +22,8 @@ androidx-paging = { module = "androidx.paging:paging-compose", version = "1.0.0-
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
 compose-uiTooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-junit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-testManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -32,7 +34,9 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 
 junit = { module = "junit:junit", version = "4.13.2" }
 
-kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version = "1.5.21"}
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version = "1.5.21" }
+
+robolectric = { module = "org.robolectric:robolectric", version = "4.6.1" }
 
 sqldelight-gradlePlugin = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 sqldelight-android = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
