@@ -1,7 +1,7 @@
 package io.github.rsookram.srs.review
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -91,7 +91,7 @@ fun ReviewScreen(
 ) {
     val isFinished by vm.finishedReview.collectAsState(initial = false)
     if (isFinished) {
-        SideEffect { navController.popBackStack() }
+        LaunchedEffect(isFinished) { navController.popBackStack() }
         return
     }
 
