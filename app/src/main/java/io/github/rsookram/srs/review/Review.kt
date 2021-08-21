@@ -76,9 +76,13 @@ fun Review(
                     val expanded = rememberSaveable { mutableStateOf(false) }
 
                     OverflowMenu(expanded) {
-                        DropdownMenuItem(onClick = onEditCardClick) {
-                            Text(stringResource(R.string.edit_card))
-                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded.value = false
+                                onEditCardClick()
+                            }
+                        ) { Text(stringResource(R.string.edit_card)) }
+
                         DropdownMenuItem(
                             onClick = {
                                 expanded.value = false
