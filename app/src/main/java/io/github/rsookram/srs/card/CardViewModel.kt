@@ -3,7 +3,6 @@ package io.github.rsookram.srs.card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -46,7 +45,8 @@ constructor(
     val decks: Flow<List<Deck>> = srs.getDecks()
 
     private var deck by mutableStateOf<Deck?>(null)
-    val selectedDeckName: String by derivedStateOf { deck?.name.orEmpty() }
+    val selectedDeckName: String
+        get() = deck?.name.orEmpty()
 
     var enableDeletion by mutableStateOf(false)
 
