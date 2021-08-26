@@ -16,6 +16,8 @@ import io.github.rsookram.srs.ApplicationScope
 import io.github.rsookram.srs.CardToReview
 import io.github.rsookram.srs.Srs
 import javax.inject.Inject
+import kotlin.random.Random
+import kotlin.random.nextInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,7 +47,7 @@ constructor(
 
     private val card: StateFlow<CardToReview?> =
         cardsToReview
-            .map { it?.firstOrNull() }
+            .map { it?.selectForReview() }
             .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = null)
 
     val currentCardId: Long?
@@ -81,6 +83,17 @@ constructor(
         showAnswer = false
 
         applicationScope.launch { srs.deleteCard(cardId) }
+    }
+
+    /** Selects a random card from the list for review */
+    private fun List<CardToReview>.selectForReview(): CardToReview? {
+        val seed = firstOrNull()?.id ?: return null
+
+        // Ensure that the same card is picked if this method is called multiple times on the same
+        // list. This prevents problems from the DB being re-queried and emitting the same items,
+        // while allowing for the order of the cards to be randomized (to prevent learning the
+        // answers based on the order of the cards).
+        return this[Random(seed).nextInt(indices)]
     }
 }
 
