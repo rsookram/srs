@@ -34,7 +34,7 @@ class SrsTest {
         assertEquals(emptyList<Deck>(), srs.getDecks().first())
         assertEquals(emptyList<DeckWithCount>(), srs.getDecksWithCount().first())
 
-        assertEquals(null, srs.getCardAndDeck(id = 1))
+        assertEquals(null, srs.getCard(id = 1))
 
         assertEquals(
             Pair(
@@ -138,7 +138,7 @@ class SrsTest {
 
         srs.editCard(card.id, deck.id, "new front", "new back")
 
-        val (editedCard, _) = srs.getCardAndDeck(card.id)!!
+        val editedCard = srs.getCard(card.id)!!
         assertEquals(deck.id, editedCard.deckId)
         assertEquals("new front", editedCard.front)
         assertEquals("new back", editedCard.back)
@@ -152,7 +152,7 @@ class SrsTest {
 
         srs.editCard(card.id, deck2.id, card.front, card.back)
 
-        val (editedCard, _) = srs.getCardAndDeck(card.id)!!
+        val editedCard = srs.getCard(card.id)!!
         assertEquals(deck2.id, editedCard.deckId)
         assertEquals("front", editedCard.front)
         assertEquals("back", editedCard.back)
@@ -174,7 +174,7 @@ class SrsTest {
 
         srs.deleteCard(card.id)
 
-        assertNull(srs.getCardAndDeck(card.id))
+        assertNull(srs.getCard(card.id))
     }
 
     @Test
@@ -357,6 +357,6 @@ class SrsTest {
 
         val cardToReview = srs.getCardsToReview(deck.id).first().find { it.front == front }!!
 
-        return srs.getCardAndDeck(cardToReview.id)!!.first
+        return srs.getCard(cardToReview.id)!!
     }
 }

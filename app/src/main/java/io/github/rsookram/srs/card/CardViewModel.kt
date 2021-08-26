@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rsookram.srs.ApplicationScope
+import io.github.rsookram.srs.Card
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.Srs
 import javax.inject.Inject
@@ -24,13 +25,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+private const val KEY_DECK_ID = "deck_id"
+
 /** ViewModel for [Card]. */
 @HiltViewModel
 class CardViewModel
 @Inject
 constructor(
     private val srs: Srs,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     @ApplicationScope private val applicationScope: CoroutineScope,
 ) : ViewModel() {
 
@@ -57,20 +60,28 @@ constructor(
         enableDeletion = cardId != null
 
         viewModelScope.launch {
+            var card: Card? = null
             if (cardId != null) {
-                val cardAndDeck = srs.getCardAndDeck(cardId)
-                if (cardAndDeck != null) {
-                    val (card, deck) = cardAndDeck
-
+                card = srs.getCard(cardId)
+                if (card != null) {
                     front = card.front
                     back = card.back
-
-                    this@CardViewModel.deck = deck
                 }
-            } else {
-                // Default the new card to being in the first deck returned
-                val decks = srs.getDecks().first()
-                deck = decks.first()
+            }
+
+            val savedDeckId = savedStateHandle.get<Long>(KEY_DECK_ID)
+            when {
+                savedDeckId != null -> {
+                    setDeckAndId(srs.getDeck(savedDeckId).first())
+                }
+                card != null -> {
+                    setDeckAndId(srs.getDeck(card.deckId).first())
+                }
+                else -> {
+                    // Default the new card to being in the first deck returned
+                    val decks = srs.getDecks().first()
+                    setDeckAndId(decks.first())
+                }
             }
         }
     }
@@ -84,7 +95,12 @@ constructor(
     }
 
     fun onDeckClick(deck: Deck) {
+        setDeckAndId(deck)
+    }
+
+    private fun setDeckAndId(deck: Deck) {
         this.deck = deck
+        savedStateHandle.set(KEY_DECK_ID, deck.id)
     }
 
     fun onUpClick() {
