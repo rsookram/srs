@@ -53,16 +53,8 @@ class Srs(
 
     suspend fun deleteDeck(id: Long) = withContext(ioDispatcher) { db.deckQueries.delete(id) }
 
-    suspend fun getCardAndDeck(id: Long): Pair<Card, Deck>? =
-        withContext(ioDispatcher) {
-            val card = db.cardQueries.select(id).executeAsOneOrNull()
-
-            if (card != null) {
-                card to db.deckQueries.select(card.deckId).executeAsOne()
-            } else {
-                null
-            }
-        }
+    suspend fun getCard(id: Long): Card? =
+        withContext(ioDispatcher) { db.cardQueries.select(id).executeAsOneOrNull() }
 
     fun browseCards(): PagingSource<Long, BrowserCard> {
         val cardQueries = db.cardQueries
