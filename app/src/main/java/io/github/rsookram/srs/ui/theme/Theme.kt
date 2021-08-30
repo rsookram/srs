@@ -15,10 +15,11 @@ fun SrsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable ()
     val spec = tween<Color>(durationMillis = 600)
 
     val primary by animateColorAsState(Color(if (darkTheme) 0xFFFFFFFF else 0xFF121212), spec)
-    val primaryVariant by animateColorAsState(
-        Color(if (darkTheme) 0xFFE0E0E0 else 0xFF000000),
-        spec,
-    )
+    val primaryVariant by
+        animateColorAsState(
+            Color(if (darkTheme) 0xFFE0E0E0 else 0xFF000000),
+            spec,
+        )
     val secondary by animateColorAsState(Color(if (darkTheme) 0xFF757575 else 0xFFE0E0E0), spec)
     val background by animateColorAsState(Color(if (darkTheme) 0xFF121212 else 0xFFFFFFFF), spec)
     val error by animateColorAsState(Color(if (darkTheme) 0xFFCF6679 else 0xFFB00020), spec)
