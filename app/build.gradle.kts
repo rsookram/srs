@@ -6,7 +6,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.squareup.sqldelight")
 
-    id("com.ncorti.ktfmt.gradle") version "0.6.0"
+    id("com.ncorti.ktfmt.gradle") version "0.7.0"
 }
 
 android {

@@ -8,14 +8,11 @@ buildscript {
     }
 
     dependencies {
-        // TODO: Remove this when on Gradle 7.2. https://github.com/gradle/gradle/pull/17394
-        val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs") as org.gradle.accessors.dm.LibrariesForLibs
-
         classpath(libs.agp)
-        classpath(libs.kotlin.gradlePlugin)
+        classpath(libs.kotlin.gradle)
 
-        classpath(libs.hilt.gradlePlugin)
-        classpath(libs.sqldelight.gradlePlugin)
+        classpath(libs.hilt.gradle)
+        classpath(libs.sqldelight.gradle)
     }
 }
 
