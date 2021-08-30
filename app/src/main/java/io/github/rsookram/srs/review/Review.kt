@@ -25,9 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
@@ -97,11 +97,11 @@ fun Review(
     ) { contentPadding ->
         Column(
             Modifier.padding(contentPadding).navigationBarsPadding(bottom = false),
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = front,
-                Modifier.padding(horizontal = 16.dp, vertical = 48.dp),
+                Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 48.dp),
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h5,
             )
 
@@ -110,7 +110,10 @@ fun Review(
 
                 Text(
                     text = back,
-                    Modifier.padding(horizontal = 16.dp, vertical = 48.dp).weight(1f),
+                    Modifier.fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 48.dp)
+                        .weight(1f),
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h5,
                 )
 
