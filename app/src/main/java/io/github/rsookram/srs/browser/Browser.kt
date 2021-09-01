@@ -21,7 +21,11 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
@@ -44,14 +48,20 @@ fun Browser(
     onQueryChange: (String) -> Unit,
     onCardClick: (cardId: Long) -> Unit,
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
+
     Scaffold(
         topBar = {
             SearchField(
-                contentPadding =
-                    rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.systemBars,
-                        applyBottom = false,
-                    ),
+                Modifier.padding(
+                        rememberInsetsPaddingValues(
+                            insets = LocalWindowInsets.current.systemBars,
+                            applyBottom = false,
+                        )
+                    )
+                    .focusRequester(focusRequester),
                 query,
                 onQueryChange
             )
@@ -74,11 +84,11 @@ fun Browser(
 
 @Composable
 private fun SearchField(
-    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
     query: String,
     onQueryChange: (String) -> Unit,
 ) {
-    Box(modifier = Modifier.padding(contentPadding)) {
+    Box(modifier) {
         Surface(Modifier.padding(8.dp), RoundedCornerShape(4.dp), elevation = 4.dp) {
             TextField(
                 query,
@@ -100,9 +110,7 @@ private fun SearchField(
 
 @Preview
 @Composable
-private fun SearchFieldPreview() = SrsTheme {
-    SearchField(contentPadding = PaddingValues(), query = "", onQueryChange = {})
-}
+private fun SearchFieldPreview() = SrsTheme { SearchField(query = "", onQueryChange = {}) }
 
 @Composable
 private fun Content(
