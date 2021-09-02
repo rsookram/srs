@@ -145,13 +145,18 @@ constructor(
 fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()) {
     LaunchedEffect(vm.upNavigations) { vm.upNavigations.collect { navController.popBackStack() } }
 
+    val cardState =
+        CardState(
+            front = vm.front,
+            onFrontChange = vm::onFrontChange,
+            back = vm.back,
+            onBackChange = vm::onBackChange,
+            selectedDeckName = vm.selectedDeckName,
+            onDeckClick = vm::onDeckClick,
+        )
+
     Card(
-        front = vm.front,
-        onFrontChange = vm::onFrontChange,
-        back = vm.back,
-        onBackChange = vm::onBackChange,
-        selectedDeckName = vm.selectedDeckName,
-        onDeckClick = vm::onDeckClick,
+        cardState,
         decks = vm.decks.collectAsState(emptyList()).value,
         onUpClick = vm::onUpClick,
         onConfirmClick = vm::onConfirmClick,
