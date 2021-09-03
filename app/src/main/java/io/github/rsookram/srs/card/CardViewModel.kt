@@ -5,7 +5,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusRequester
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -56,6 +58,9 @@ constructor(
     private val _upNavigations = Channel<Unit>()
     val upNavigations = _upNavigations.receiveAsFlow()
 
+    private val _frontFocuses = Channel<Unit>()
+    val frontFocuses = _frontFocuses.receiveAsFlow()
+
     init {
         enableDeletion = cardId != null
 
@@ -67,6 +72,8 @@ constructor(
                     front = card.front
                     back = card.back
                 }
+            } else {
+                _frontFocuses.send(Unit)
             }
 
             val savedDeckId = savedStateHandle.get<Long>(KEY_DECK_ID)
@@ -117,6 +124,7 @@ constructor(
             val id = cardId
             if (id == null) {
                 srs.createCard(deck.id, currentFront, currentBack)
+                _frontFocuses.send(Unit)
             } else {
                 srs.editCard(id, deck.id, currentFront, currentBack)
             }
@@ -145,6 +153,7 @@ constructor(
 fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()) {
     LaunchedEffect(vm.upNavigations) { vm.upNavigations.collect { navController.popBackStack() } }
 
+    val focusRequester = remember { FocusRequester() }
     val cardState =
         CardState(
             front = vm.front,
@@ -153,7 +162,12 @@ fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()
             onBackChange = vm::onBackChange,
             selectedDeckName = vm.selectedDeckName,
             onDeckClick = vm::onDeckClick,
+            frontFocusRequester = focusRequester,
         )
+
+    LaunchedEffect(vm.frontFocuses) {
+        vm.frontFocuses.collect { cardState.frontFocusRequester.requestFocus() }
+    }
 
     Card(
         cardState,

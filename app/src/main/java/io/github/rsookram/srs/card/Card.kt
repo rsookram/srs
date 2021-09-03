@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,13 +54,14 @@ import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
 import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
-data class CardState(
+class CardState(
     val front: String,
     val onFrontChange: (String) -> Unit,
     val back: String,
     val onBackChange: (String) -> Unit,
     val selectedDeckName: DeckName,
     val onDeckClick: (Deck) -> Unit,
+    val frontFocusRequester: FocusRequester,
 )
 
 /**
@@ -139,7 +142,7 @@ fun Card(
             OutlinedTextField(
                 value = cardState.front,
                 onValueChange = cardState.onFrontChange,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().focusRequester(cardState.frontFocusRequester),
                 label = { Text(stringResource(R.string.front_side_of_card)) },
             )
 
@@ -179,6 +182,7 @@ private fun CardPreview() = SrsTheme {
             onBackChange = {},
             selectedDeckName = decks.first().name,
             onDeckClick = {},
+            frontFocusRequester = FocusRequester(),
         ),
         decks = decks,
         onUpClick = {},
