@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,18 +54,23 @@ import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
 import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
+class CardState(
+    val front: String,
+    val onFrontChange: (String) -> Unit,
+    val back: String,
+    val onBackChange: (String) -> Unit,
+    val selectedDeckName: DeckName,
+    val onDeckClick: (Deck) -> Unit,
+    val frontFocusRequester: FocusRequester,
+)
+
 /**
  * Screen which allows the user to enter the content of a new card, or to edit the content of an
  * existing one.
  */
 @Composable
 fun Card(
-    front: String,
-    onFrontChange: (String) -> Unit,
-    back: String,
-    onBackChange: (String) -> Unit,
-    selectedDeckName: DeckName,
-    onDeckClick: (Deck) -> Unit,
+    cardState: CardState,
     decks: List<Deck>,
     onUpClick: () -> Unit,
     onConfirmClick: () -> Unit,
@@ -95,7 +102,12 @@ fun Card(
                     }
                 }
 
-                DeckDropdownMenu(Modifier.weight(1f), selectedDeckName, decks, onDeckClick)
+                DeckDropdownMenu(
+                    Modifier.weight(1f),
+                    cardState.selectedDeckName,
+                    decks,
+                    cardState.onDeckClick
+                )
 
                 if (enableDeletion) {
                     DeleteOverflowMenu(onDeleteClick = { showConfirmDeleteDialog = true })
@@ -128,17 +140,17 @@ fun Card(
                 )
         ) {
             OutlinedTextField(
-                value = front,
-                onValueChange = onFrontChange,
-                modifier = Modifier.fillMaxWidth(),
+                value = cardState.front,
+                onValueChange = cardState.onFrontChange,
+                modifier = Modifier.fillMaxWidth().focusRequester(cardState.frontFocusRequester),
                 label = { Text(stringResource(R.string.front_side_of_card)) },
             )
 
             Spacer(Modifier.height(16.dp))
 
             OutlinedTextField(
-                value = back,
-                onValueChange = onBackChange,
+                value = cardState.back,
+                onValueChange = cardState.onBackChange,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.back_side_of_card)) },
             )
@@ -163,14 +175,17 @@ private fun CardPreview() = SrsTheme {
         )
 
     Card(
-        front = "",
-        onFrontChange = {},
-        back = "",
-        onBackChange = {},
-        selectedDeckName = decks.first().name,
+        CardState(
+            front = "",
+            onFrontChange = {},
+            back = "",
+            onBackChange = {},
+            selectedDeckName = decks.first().name,
+            onDeckClick = {},
+            frontFocusRequester = FocusRequester(),
+        ),
         decks = decks,
         onUpClick = {},
-        onDeckClick = {},
         onConfirmClick = {},
         enableDeletion = false,
         onDeleteCardClick = {},
