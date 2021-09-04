@@ -42,6 +42,8 @@ android {
     packagingOptions.resources {
         excludes += setOf(
             "kotlin/**",
+            "**/DebugProbesKt.bin",
+
             "META-INF/*.version",
         )
     }

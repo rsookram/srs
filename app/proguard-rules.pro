@@ -19,3 +19,9 @@
 -keepclassmembers enum * {
     public static **[] values();
 }
+
+# https://issuetracker.google.com/issues/155947700
+-assumenosideeffects public class kotlin.coroutines.jvm.internal.BaseContinuationImpl {
+    public java.lang.StackTraceElement getStackTraceElement() return null;
+}
+-checkdiscard class kotlin.coroutines.jvm.internal.DebugMetadata
