@@ -37,6 +37,7 @@ import androidx.paging.compose.items
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.systemBarsPadding
 import io.github.rsookram.srs.BrowserCard
 import io.github.rsookram.srs.R
 import io.github.rsookram.srs.ui.theme.SrsTheme
@@ -55,13 +56,7 @@ fun Browser(
     Scaffold(
         topBar = {
             SearchField(
-                Modifier.padding(
-                        rememberInsetsPaddingValues(
-                            insets = LocalWindowInsets.current.systemBars,
-                            applyBottom = false,
-                        )
-                    )
-                    .focusRequester(focusRequester),
+                Modifier.systemBarsPadding(bottom = false).focusRequester(focusRequester),
                 query,
                 onQueryChange
             )

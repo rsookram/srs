@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.systemBarsPadding
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.R
 import io.github.rsookram.srs.home.DeckName
@@ -81,15 +82,7 @@ fun Card(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                modifier =
-                    Modifier.padding(
-                        rememberInsetsPaddingValues(
-                            insets = LocalWindowInsets.current.systemBars,
-                            applyBottom = false,
-                        )
-                    ),
-            ) {
+            TopAppBar(Modifier.systemBarsPadding(bottom = false)) {
                 Box(Modifier.width(68.dp)) {
                     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
                         IconButton(onClick = onUpClick) {
