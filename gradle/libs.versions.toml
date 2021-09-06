@@ -1,5 +1,5 @@
 [versions]
-accompanist = "0.17.0"
+accompanist = "0.18.0"
 compose = "1.0.2"
 coroutines = "1.5.1"
 hilt = "2.38.1"
