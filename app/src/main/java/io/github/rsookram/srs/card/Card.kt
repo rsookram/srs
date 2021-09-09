@@ -3,6 +3,7 @@ package io.github.rsookram.srs.card
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -44,9 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.systemBarsPadding
 import io.github.rsookram.srs.Deck
 import io.github.rsookram.srs.R
@@ -55,6 +54,15 @@ import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
 import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
+/**
+ * State for [Card] composable component.
+ *
+ * @param front the text that will be shown on the front side of the card (the question)
+ * @param back the text that will be shown on the back side of the card (the answer)
+ * @param selectedDeckName the name of the deck that the card is part of. Empty string for a new
+ * card that isn't part of a deck yet.
+ * @param frontFocusRequester used to move the focus to the field displaying [front]
+ */
 class CardState(
     val front: String,
     val onFrontChange: (String) -> Unit,
@@ -119,16 +127,14 @@ fun Card(
             }
         }
     ) { contentPadding ->
-        val windowInsets = LocalWindowInsets.current
-
         Column(
             Modifier.verticalScroll(rememberScrollState())
                 .padding(16.dp)
+                .navigationBarsWithImePadding()
                 .padding(
-                    rememberInsetsPaddingValues(
-                        insets = windowInsets.navigationBars + LocalWindowInsets.current.ime,
-                        additionalTop = contentPadding.calculateTopPadding(),
-                        additionalBottom = contentPadding.calculateBottomPadding(),
+                    PaddingValues(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding(),
                     )
                 )
         ) {
@@ -185,6 +191,7 @@ private fun CardPreview() = SrsTheme {
     )
 }
 
+/** Exposed dropdown menu which allows the user to select which deck the card is part of. */
 @Composable
 private fun DeckDropdownMenu(
     modifier: Modifier = Modifier,
@@ -235,6 +242,7 @@ private fun DeckDropdownMenuPreview() = SrsTheme {
     DeckDropdownMenu(selectedDeckName = "日本語", decks = emptyList(), onDeckClick = {})
 }
 
+/** Overflow menu which presents the option to delete the card being edited. */
 @Composable
 private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
     val expanded = remember { mutableStateOf(false) }
