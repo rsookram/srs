@@ -54,6 +54,15 @@ import io.github.rsookram.srs.ui.ConfirmDeleteCardDialog
 import io.github.rsookram.srs.ui.OverflowMenu
 import io.github.rsookram.srs.ui.theme.SrsTheme
 
+/**
+ * State for [Card] composable component.
+ *
+ * @param front the text that will be shown on the front side of the card (the question)
+ * @param back the text that will be shown on the back side of the card (the answer)
+ * @param selectedDeckName the name of the deck that the card is part of. Empty string for a new
+ * card that isn't part of a deck yet.
+ * @param frontFocusRequester used to move the focus to the field displaying [front]
+ */
 class CardState(
     val front: String,
     val onFrontChange: (String) -> Unit,
@@ -182,6 +191,7 @@ private fun CardPreview() = SrsTheme {
     )
 }
 
+/** Exposed dropdown menu which allows the user to select which deck the card is part of. */
 @Composable
 private fun DeckDropdownMenu(
     modifier: Modifier = Modifier,
@@ -232,6 +242,7 @@ private fun DeckDropdownMenuPreview() = SrsTheme {
     DeckDropdownMenu(selectedDeckName = "日本語", decks = emptyList(), onDeckClick = {})
 }
 
+/** Overflow menu which presents the option to delete the card being edited. */
 @Composable
 private fun DeleteOverflowMenu(onDeleteClick: () -> Unit) {
     val expanded = remember { mutableStateOf(false) }
