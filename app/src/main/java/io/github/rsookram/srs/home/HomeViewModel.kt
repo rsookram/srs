@@ -5,12 +5,16 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +31,11 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -40,15 +47,24 @@ constructor(
     @ApplicationScope private val applicationScope: CoroutineScope,
 ) : ViewModel() {
 
-    val decks: Flow<List<DeckWithCount>> = srs.getDecksWithCount()
+    // Manually refresh the data when the app is foregrounded. The data needs to be refreshed
+    // periodically because it depends on the current time. This refresh is driven by the lifecycle
+    // (rather than the repository layer) so that it refreshes at a time relevant to the user.
+    private val refreshCount = MutableStateFlow(0)
 
-    val stats: Flow<Pair<GlobalStats, List<DeckStats>>> = srs.stats()
+    val decks: Flow<List<DeckWithCount>> = refreshCount.flatMapLatest { srs.getDecksWithCount() }
+
+    val stats: Flow<Pair<GlobalStats, List<DeckStats>>> = refreshCount.flatMapLatest { srs.stats() }
 
     private val _exportResults = Channel<Backup.CreateResult>()
     val exportResults = _exportResults.receiveAsFlow()
 
     private val _importErrors = Channel<Backup.ImportError>()
     val importErrors = _importErrors.receiveAsFlow()
+
+    fun onForegrounded() {
+        refreshCount.update { it + 1 }
+    }
 
     fun onCreateDeckClick(deckName: DeckName) {
         applicationScope.launch { srs.createDeck(deckName) }
@@ -86,10 +102,24 @@ constructor(
 @Composable
 fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val decks by vm.decks.collectAsState(initial = emptyList())
 
     val stats by vm.stats.collectAsState(initial = null)
+
+    // TODO: try repeatOnLifecycle after updating to lifecycle 2.4.0
+    DisposableEffect(lifecycleOwner.lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                vm.onForegrounded()
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     val getOutputFile =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
