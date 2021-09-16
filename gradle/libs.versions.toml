@@ -16,7 +16,7 @@ androidx-core = { module = "androidx.core:core-ktx", version = "1.6.0" }
 androidx-activity = { module = "androidx.activity:activity-compose", version = "1.3.1" }
 androidx-hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0-alpha03" }
 androidx-viewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "1.0.0-alpha07" }
-androidx-navigation = { module = "androidx.navigation:navigation-compose", version = "2.4.0-alpha08" }
+androidx-navigation = { module = "androidx.navigation:navigation-compose", version = "2.4.0-alpha09" }
 androidx-paging = { module = "androidx.paging:paging-compose", version = "1.0.0-alpha12" }
 
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
