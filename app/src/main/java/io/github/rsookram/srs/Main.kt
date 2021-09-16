@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import io.github.rsookram.srs.browser.BrowserScreen
 import io.github.rsookram.srs.card.CardScreen
 import io.github.rsookram.srs.home.HomeScreen
