@@ -5,8 +5,6 @@ plugins {
 
     id("dagger.hilt.android.plugin")
     id("com.squareup.sqldelight")
-
-    id("com.ncorti.ktfmt.gradle") version "0.7.0"
 }
 
 android {
@@ -132,8 +130,4 @@ dependencies {
     testImplementation(libs.compose.junit)
     testImplementation(libs.robolectric)
     debugImplementation(libs.compose.testManifest)
-}
-
-ktfmt {
-    kotlinLangStyle()
 }
