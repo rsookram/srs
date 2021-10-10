@@ -5,8 +5,6 @@ plugins {
 
     id("dagger.hilt.android.plugin")
     id("com.squareup.sqldelight")
-
-    id("com.ncorti.ktfmt.gradle") version "0.7.0"
 }
 
 android {
@@ -40,17 +38,15 @@ android {
     }
 
     packagingOptions.resources {
-        excludes += setOf(
-            "kotlin/**",
-            "**/DebugProbesKt.bin",
-
-            "META-INF/*.version",
-        )
+        excludes +=
+            setOf(
+                "kotlin/**",
+                "**/DebugProbesKt.bin",
+                "META-INF/*.version",
+            )
     }
 
-    dependenciesInfo {
-        includeInApk = false
-    }
+    dependenciesInfo { includeInApk = false }
 
     signingConfigs {
         getByName("debug") {
@@ -71,9 +67,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("debug")
-        }
+        debug { signingConfig = signingConfigs.getByName("debug") }
 
         release {
             signingConfig =
@@ -85,13 +79,9 @@ android {
         }
     }
 
-    buildFeatures {
-        compose = true
-    }
+    buildFeatures { compose = true }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.get()
-    }
+    composeOptions { kotlinCompilerExtensionVersion = libs.versions.compose.get() }
 
     testOptions {
         unitTests {
@@ -132,8 +122,4 @@ dependencies {
     testImplementation(libs.compose.junit)
     testImplementation(libs.robolectric)
     debugImplementation(libs.compose.testManifest)
-}
-
-ktfmt {
-    kotlinLangStyle()
 }

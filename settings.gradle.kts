@@ -5,7 +5,9 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "srs"
+
 include(":app")
 
 // Enable Gradle's version catalog support

@@ -19,7 +19,9 @@ jobs:
           java-version: '11'
 
       - name: Check formatting
-        run: ./gradlew ktfmtCheck
+        uses: "rsookram/ktfmt-action@main"
+        with:
+          style: kotlinlang
 
       - name: Lint
         run: ./gradlew lintRelease
