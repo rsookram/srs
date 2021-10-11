@@ -19,7 +19,7 @@ jobs:
           java-version: '11'
 
       - name: Check formatting
-        uses: "rsookram/ktfmt-action@main"
+        uses: rsookram/ktfmt-action@v1
         with:
           style: kotlinlang
 
