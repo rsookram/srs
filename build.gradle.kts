@@ -22,6 +22,7 @@ allprojects {
 
             freeCompilerArgs +=
                 listOf(
+                    "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi", // AnimatedVisibility
                     "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi", // Modifier.combinedClickable
                     "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi", // BackdropScaffold
                     "-Xopt-in=kotlinx.coroutines.FlowPreview", // Flow.debounce

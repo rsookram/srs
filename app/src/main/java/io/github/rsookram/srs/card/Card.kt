@@ -1,5 +1,8 @@
 package io.github.rsookram.srs.card
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,9 +119,13 @@ fun Card(
             }
         },
         floatingActionButton = {
-            if (onConfirmClick != null) {
+            AnimatedVisibility(
+                visible = onConfirmClick != null,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
                 FloatingActionButton(
-                    onConfirmClick,
+                    onConfirmClick ?: {},
                     Modifier.navigationBarsWithImePadding(),
                 ) {
                     Icon(
