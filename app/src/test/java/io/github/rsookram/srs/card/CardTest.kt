@@ -27,7 +27,7 @@ class CardTest {
         rule.setContent {
             CardWithDefaults(
                 cardState = cardStateWithDefaults(front = "test front", back = "test back"),
-                onConfirmClick = { clicked = true }
+                onConfirmClick = { clicked = true },
             )
         }
 
@@ -36,12 +36,19 @@ class CardTest {
         assertTrue(clicked)
     }
 
+    @Test
+    fun cannotConfirmWhenCardIsFilledOut() {
+        rule.setContent { CardWithDefaults(onConfirmClick = null) }
+
+        rule.onNodeWithContentDescription("Confirm changes").assertDoesNotExist()
+    }
+
     @Composable
     private fun CardWithDefaults(
         cardState: CardState = cardStateWithDefaults(),
         decks: List<Deck> = emptyList(),
         onUpClick: () -> Unit = {},
-        onConfirmClick: () -> Unit = {},
+        onConfirmClick: (() -> Unit)? = null,
         enableDeletion: Boolean = false,
         onDeleteCardClick: () -> Unit = {},
     ) {
@@ -63,13 +70,14 @@ class CardTest {
         selectedDeckName: DeckName = "",
         onDeckClick: (Deck) -> Unit = {},
         frontFocusRequester: FocusRequester = FocusRequester(),
-    ) = CardState(
-        front,
-        onFrontChange,
-        back,
-        onBackChange,
-        selectedDeckName,
-        onDeckClick,
-        frontFocusRequester
-    )
+    ) =
+        CardState(
+            front,
+            onFrontChange,
+            back,
+            onBackChange,
+            selectedDeckName,
+            onDeckClick,
+            frontFocusRequester
+        )
 }

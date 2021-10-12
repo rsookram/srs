@@ -82,7 +82,7 @@ fun Card(
     cardState: CardState,
     decks: List<Deck>,
     onUpClick: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onConfirmClick: (() -> Unit)?,
     enableDeletion: Boolean,
     onDeleteCardClick: () -> Unit,
 ) {
@@ -116,14 +116,16 @@ fun Card(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onConfirmClick,
-                Modifier.navigationBarsWithImePadding(),
-            ) {
-                Icon(
-                    Icons.Default.Check,
-                    contentDescription = stringResource(R.string.confirm_changes_to_card),
-                )
+            if (onConfirmClick != null) {
+                FloatingActionButton(
+                    onConfirmClick,
+                    Modifier.navigationBarsWithImePadding(),
+                ) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = stringResource(R.string.confirm_changes_to_card),
+                    )
+                }
             }
         }
     ) { contentPadding ->

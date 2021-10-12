@@ -114,6 +114,8 @@ constructor(
         viewModelScope.launch { _upNavigations.send(Unit) }
     }
 
+    fun isConfirmEnabled(): Boolean = front.isNotEmpty()
+
     fun onConfirmClick() {
         val deck = deck ?: return
 
@@ -173,7 +175,7 @@ fun CardScreen(navController: NavController, vm: CardViewModel = hiltViewModel()
         cardState,
         decks = vm.decks.collectAsState(emptyList()).value,
         onUpClick = vm::onUpClick,
-        onConfirmClick = vm::onConfirmClick,
+        onConfirmClick = if (vm.isConfirmEnabled()) vm::onConfirmClick else null,
         enableDeletion = vm.enableDeletion,
         onDeleteCardClick = vm::onDeleteCardClick,
     )
