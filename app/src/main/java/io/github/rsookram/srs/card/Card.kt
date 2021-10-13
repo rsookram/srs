@@ -1,5 +1,8 @@
 package io.github.rsookram.srs.card
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -82,7 +85,7 @@ fun Card(
     cardState: CardState,
     decks: List<Deck>,
     onUpClick: () -> Unit,
-    onConfirmClick: () -> Unit,
+    onConfirmClick: (() -> Unit)?,
     enableDeletion: Boolean,
     onDeleteCardClick: () -> Unit,
 ) {
@@ -116,14 +119,20 @@ fun Card(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onConfirmClick,
-                Modifier.navigationBarsWithImePadding(),
+            AnimatedVisibility(
+                visible = onConfirmClick != null,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                Icon(
-                    Icons.Default.Check,
-                    contentDescription = stringResource(R.string.confirm_changes_to_card),
-                )
+                FloatingActionButton(
+                    onConfirmClick ?: {},
+                    Modifier.navigationBarsWithImePadding(),
+                ) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = stringResource(R.string.confirm_changes_to_card),
+                    )
+                }
             }
         }
     ) { contentPadding ->
