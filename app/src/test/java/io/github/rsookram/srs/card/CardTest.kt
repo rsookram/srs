@@ -12,10 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-// https://github.com/robolectric/robolectric/issues/6593
-@Config(instrumentedPackages = ["androidx.loader.content"])
 @RunWith(RobolectricTestRunner::class)
 class CardTest {
 
