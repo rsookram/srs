@@ -41,11 +41,9 @@ class MainActivity : ComponentActivity() {
         setStatusBarColor(systemBar)
         setNavigationBarColor(systemBar)
 
-        window.decorView.systemUiVisibility =
-            if (isLight) {
-                window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            } else {
+        if (!isLight) {
+            window.decorView.systemUiVisibility =
                 window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            }
+        }
     }
 }
