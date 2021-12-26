@@ -1,22 +1,22 @@
 [versions]
-accompanist = "0.20.0"
-compose = "1.0.4"
-coroutines = "1.5.2"
-hilt = "2.40"
-sqldelight = "1.5.2"
+accompanist = "0.20.3"
+compose = "1.0.5"
+coroutines = "1.6.0"
+hilt = "2.40.5"
+sqldelight = "1.5.3"
 
 [libraries]
 accompanist-insets = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanist" }
 accompanist-insetsUi = { module = "com.google.accompanist:accompanist-insets-ui", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 
-agp = { module = "com.android.tools.build:gradle", version = "7.0.2" }
+agp = { module = "com.android.tools.build:gradle", version = "7.0.4" }
 
 androidx-core = { module = "androidx.core:core-ktx", version = "1.7.0" }
 androidx-activity = { module = "androidx.activity:activity-compose", version = "1.4.0" }
-androidx-hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0-alpha03" }
+androidx-hiltNavigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0-rc01" }
 androidx-viewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.4.0" }
-androidx-navigation = { module = "androidx.navigation:navigation-compose", version = "2.4.0-beta01" }
+androidx-navigation = { module = "androidx.navigation:navigation-compose", version = "2.4.0-rc01" }
 androidx-paging = { module = "androidx.paging:paging-compose", version = "1.0.0-alpha14" }
 
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -36,7 +36,7 @@ junit = { module = "junit:junit", version = "4.13.2" }
 
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version = "1.5.31" }
 
-robolectric = { module = "org.robolectric:robolectric", version = "4.6.1" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
 
 sqldelight-gradle = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 sqldelight-android = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
