@@ -24,17 +24,17 @@ android {
 
     lint {
         // Lint is run on CI
-        isCheckReleaseBuilds = false
+        checkReleaseBuilds = false
 
         textReport = true
 
-        isWarningsAsErrors = true
-        isAbortOnError = true
+        warningsAsErrors = true
+        abortOnError = true
 
         // This check goes against the Material Design guidelines:
         // https://material.io/components/dialogs#actions
         // https://material.io/components/buttons#anatomy
-        disable("ButtonCase")
+        disable.add("ButtonCase")
     }
 
     packagingOptions.resources {
