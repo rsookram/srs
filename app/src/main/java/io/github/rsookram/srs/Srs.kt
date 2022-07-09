@@ -157,14 +157,15 @@ class Srs(
         }
 
     /**
-     * Returns a value in (0, 1) used to randomize the next interval for a card. This prevents
-     * cards from getting grouped together based on when they were added.
+     * Returns a value in (0, 1) used to randomize the next interval for a card. This prevents cards
+     * from getting grouped together based on when they were added.
      */
-    private fun fuzzFactor(previousIntervalDays: Long): Double = when {
-        previousIntervalDays < 7 -> 0.25
-        previousIntervalDays < 30 -> 0.15
-        else -> 0.05
-    }
+    private fun fuzzFactor(previousIntervalDays: Long): Double =
+        when {
+            previousIntervalDays < 7 -> 0.25
+            previousIntervalDays < 30 -> 0.15
+            else -> 0.05
+        }
 
     private fun ScheduleQueries.scheduleCardIn(cardId: Long, numDays: Long) {
         setTimestampAndInterval(
@@ -194,8 +195,7 @@ class Srs(
 
         val tomorrowEnd = startOfTomorrow(now).plus(1, ChronoUnit.DAYS)
 
-        val statsQuery =
-            db.deckQueries.globalStats(reviewSpanEnd = tomorrowEnd.toEpochMilli())
+        val statsQuery = db.deckQueries.globalStats(reviewSpanEnd = tomorrowEnd.toEpochMilli())
 
         return statsQuery
             .asFlow()
