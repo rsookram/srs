@@ -108,7 +108,7 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
 
     val stats by vm.stats.collectAsState(initial = null)
 
-    // TODO: try repeatOnLifecycle after updating to lifecycle 2.4.0
+    // TODO: try repeatOnLifecycle
     DisposableEffect(lifecycleOwner.lifecycle) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
@@ -122,7 +122,7 @@ fun HomeScreen(navController: NavController, vm: HomeViewModel = hiltViewModel()
     }
 
     val getOutputFile =
-        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { uri ->
             if (uri != null) {
                 val stream = context.contentResolver.openOutputStream(uri)
                 if (stream != null) {
