@@ -18,7 +18,6 @@ import kotlinx.coroutines.withContext
 
 private const val WRONG_ANSWERS_FOR_LEECH = 4
 private const val WRONG_ANSWER_PENALTY = 0.7
-private const val FUZZ_FACTOR = 0.05
 
 /** See [Srs.startOfTomorrow] */
 private const val START_HOUR_OF_DAY = 4
@@ -127,8 +126,8 @@ class Srs(
                         if (lastAnswer) {
                             val fuzz =
                                 random.nextLong(
-                                    (-intervalDays * FUZZ_FACTOR).roundToLong(),
-                                    (+intervalDays * FUZZ_FACTOR).roundToLong() + 1
+                                    (-intervalDays * fuzzFactor(intervalDays)).roundToLong(),
+                                    (+intervalDays * fuzzFactor(intervalDays)).roundToLong() + 1
                                 )
 
                             val numDays =
@@ -156,6 +155,16 @@ class Srs(
                 }
             }
         }
+
+    /**
+     * Returns a value in (0, 1) used to randomize the next interval for a card. This prevents
+     * cards from getting grouped together based on when they were added.
+     */
+    private fun fuzzFactor(previousIntervalDays: Long): Double = when {
+        previousIntervalDays < 7 -> 0.25
+        previousIntervalDays < 30 -> 0.15
+        else -> 0.05
+    }
 
     private fun ScheduleQueries.scheduleCardIn(cardId: Long, numDays: Long) {
         setTimestampAndInterval(
