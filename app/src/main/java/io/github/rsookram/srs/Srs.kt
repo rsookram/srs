@@ -192,8 +192,9 @@ class Srs(
 
     fun stats(): Flow<Pair<GlobalStats, List<DeckStats>>> {
         val now = clock.instant()
+        val startOfTomorrow = startOfTomorrow(now)
 
-        val tomorrowEnd = startOfTomorrow(now).plus(1, ChronoUnit.DAYS)
+        val tomorrowEnd = startOfTomorrow.plus(1, ChronoUnit.DAYS)
 
         val statsQuery = db.deckQueries.globalStats(reviewSpanEnd = tomorrowEnd.toEpochMilli())
 
@@ -203,7 +204,8 @@ class Srs(
             .combine(
                 db.deckQueries
                     .deckStats(
-                        accuracySinceTimestamp = now.minus(30, ChronoUnit.DAYS).toEpochMilli()
+                        accuracySinceTimestamp =
+                            startOfTomorrow.minus(31, ChronoUnit.DAYS).toEpochMilli()
                     )
                     .asFlow()
                     .mapToList(),
