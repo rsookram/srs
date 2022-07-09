@@ -114,7 +114,7 @@ class SrsTest {
                     activeCount = 1,
                     suspendedCount = 0,
                     leechCount = 0,
-                    forReviewCount = 0
+                    forReviewCount = 1,
                 ),
                 listOf(
                     DeckStats(
