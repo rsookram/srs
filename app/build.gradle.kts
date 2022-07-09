@@ -14,7 +14,7 @@ android {
         applicationId = "io.github.rsookram.srs"
 
         minSdk = 28
-        targetSdk = 31
+        targetSdk = 32
 
         versionCode = 1
         versionName = "1.0"
